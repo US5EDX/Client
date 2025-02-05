@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="Client.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client.Views"
+             xmlns:customcontrols="clr-namespace:Client.CustomControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="boolToVis"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,5" HorizontalAlignment="Right">
+                <TextBlock Text="Пошта: " FontSize="14" VerticalAlignment="Center" />
+                <TextBox Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="150" Height="25" VerticalContentAlignment="Center" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,5" HorizontalAlignment="Right">
+                <TextBlock Text="Пароль: " FontSize="14" VerticalAlignment="Center" />
+                <customcontrols:BindablePasswordBox Height="25" Width="150" Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+            <Button Content="Увійти" Width="80" Height="30" Command="{Binding LoginCommand}" />
+            <Grid>
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <TextBlock Text="Очікування відповіді..." HorizontalAlignment="Center" FontSize="14" Foreground="Green" Margin="0,5,0,0" />
+            </Grid>
+            <Grid>
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                        </Style>
+                </Grid.Style>
+                <TextBlock Text="{Binding ErrorMessage}" Visibility="{Binding HasErrorMessage, Converter={StaticResource boolToVis}}" HorizontalAlignment="Center" FontSize="14" Foreground="Red" Margin="0,5,0,0" />
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,5 +1,5 @@
-﻿using Client.Stores;
-using Client.ViewModels;
+﻿using Client.Stores.NavigationStores;
+using Client.ViewModels.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Client.Services

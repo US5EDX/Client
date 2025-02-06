@@ -1,6 +1,6 @@
-﻿using Client.ViewModels;
+﻿using Client.ViewModels.Interfaces;
 
-namespace Client.Stores
+namespace Client.Stores.NavigationStores
 {
     public class NavigationStore
     {

@@ -3,6 +3,7 @@ using Client.Handlers;
 using Client.HostBuilders;
 using Client.Services;
 using Client.Stores;
+using Client.Stores.NavigationStores;
 using Client.ViewModels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,9 +24,11 @@ namespace Client
         {
             _host = Host.CreateDefaultBuilder()
                 .AddViewModels()
+                .AddPageViewModels()
                 .ConfigureServices((context, services) =>
             {
                 services.AddSingleton<NavigationStore>();
+                services.AddSingleton<FrameNavigationStore>();
                 services.AddSingleton<UserStore>();
 
                 services.AddSingleton(sp =>

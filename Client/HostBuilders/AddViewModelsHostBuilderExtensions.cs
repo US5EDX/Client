@@ -1,5 +1,6 @@
 ﻿using Client.Services;
 using Client.ViewModels;
+using Client.ViewModels.NavigationViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 

@@ -3,6 +3,8 @@ using Client.Handlers;
 using Client.Models;
 using Client.Storages;
 using Client.Stores;
+using Client.ViewModels.Interfaces;
+using Client.ViewModels.NavigationViewModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Text.Json;

@@ -1,7 +1,7 @@
 ﻿using Client.Services;
 using Client.Stores;
 
-namespace Client.ViewModels
+namespace Client.ViewModels.NavigationViewModel
 {
     public partial class SuccsefulLoginViewModel
     {

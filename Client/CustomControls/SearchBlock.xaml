@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="Client.CustomControls.SearchBlock"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client.CustomControls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="25" d:DesignWidth="250">
+
+    <Grid>
+        <DockPanel Width="Auto">
+            <Button x:Name="searchButton" Content="Знайти" Width="75" Height="25" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,0,0" DockPanel.Dock="Right" />
+            <TextBox x:Name="searchText"
+                         materialDesign:HintAssist.Hint="Пошук..." materialDesign:HintAssist.HelperText="Не менше 3 знаків"/>
+        </DockPanel>
+    </Grid>
+</UserControl>

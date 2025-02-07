@@ -1,6 +1,7 @@
 ﻿using Client.API;
 using Client.Handlers;
 using Client.Models;
+using Client.Services;
 using Client.Storages;
 using Client.Stores;
 using Client.ViewModels.Interfaces;
@@ -14,7 +15,7 @@ namespace Client.ViewModels
 {
     public partial class LoginViewModel : ObservableRecipient, IPageViewModel
     {
-        private readonly Endpoints _endpoints;
+        private readonly ApiService _apiService;
         private readonly SuccsefulLoginViewModel _successfulLogin;
         private readonly UserStore _userStore;
 
@@ -33,9 +34,9 @@ namespace Client.ViewModels
 
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
 
-        public LoginViewModel(Endpoints endpoints, SuccsefulLoginViewModel successfulLogin, UserStore userStore)
+        public LoginViewModel(ApiService apiService, SuccsefulLoginViewModel successfulLogin, UserStore userStore)
         {
-            _endpoints = endpoints;
+            _apiService = apiService;
             _successfulLogin = successfulLogin;
             _userStore = userStore;
 
@@ -52,14 +53,13 @@ namespace Client.ViewModels
 
             IsLoading = true;
 
-            bool result = await ProccessLoginApiCall("Auth", "login", new LoginInfo()
+            bool isSuccess = await ProccessLoginApiCall("Auth", "login", new LoginInfo()
             {
                 Email = Email,
                 Password = Password
-            },
-            "Неправильна пошта або пароль");
+            });
 
-            if (result)
+            if (isSuccess)
                 _successfulLogin.NavigateBasedOnRole();
 
             IsLoading = false;
@@ -81,32 +81,21 @@ namespace Client.ViewModels
 
             IsLoading = true;
 
-            bool result = await ProccessLoginApiCall("Auth", "autologin", refreshToken, "Сталась помилка автоматичного входу");
+            bool isSuccess = await ProccessLoginApiCall("Auth", "autologin", refreshToken);
 
-            if (result)
+            if (isSuccess)
                 _successfulLogin.NavigateBasedOnRole();
 
             _userStore.IsTokenTriedForLogin = true;
             IsLoading = false;
         }
 
-        private async Task<bool> ProccessLoginApiCall(string nav, string endpoint, object requestObject, string unauthorizedErrorMessage)
+        private async Task<bool> ProccessLoginApiCall(string nav, string endpoint, object requestObject)
         {
-            var response = await _endpoints.PostCall(nav, endpoint, requestObject);
-
-            ErrorMessage = ApiResponseStatusCodeHandler.HandleApiResponse(response, unauthorizedErrorMessage);
+            (ErrorMessage, var responseObject) = await _apiService.PostAsync<JsonObject>(nav, endpoint, requestObject, null, true);
 
             if (HasErrorMessage)
                 return false;
-
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonSerializer.Deserialize<JsonObject>(responseContent);
-
-            if (responseObject == null)
-            {
-                ErrorMessage = "Некоректна відповідь від сервера";
-                return false;
-            }
 
             _userStore.LoadUserStoreFromJson(responseObject);
             await TokenStorage.SaveTokenAsync(_userStore.RefreshToken);

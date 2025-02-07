@@ -85,7 +85,7 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Frame Margin="10" NavigationUIVisibility="Hidden" Content="{Binding CurrentFrameViewModel}" />
+                <Frame Margin="10, 25, 10, 10" NavigationUIVisibility="Hidden" Content="{Binding CurrentFrameViewModel}" />
             </Grid>
         </Grid>
 

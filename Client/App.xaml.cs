@@ -31,6 +31,8 @@ namespace Client
                 services.AddSingleton<FrameNavigationStore>();
                 services.AddSingleton<UserStore>();
 
+                services.AddSingleton<ApiService>();
+
                 services.AddSingleton(sp =>
                 {
                     var config = sp.GetRequiredService<IConfiguration>();

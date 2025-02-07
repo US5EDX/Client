@@ -19,6 +19,22 @@ namespace Client.API
             _client.DefaultRequestHeaders.Accept.Clear();
         }
 
+        public async Task<HttpResponseMessage?> GetCall(string nav, string endpoint, string accessToken)
+        {
+            try
+            {
+                string apiUrl = $"{_endpoints["Base"]}{_endpoints[nav]}{endpoint}";
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                return await _client.GetAsync(apiUrl);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+
         public async Task<HttpResponseMessage?> PostCall(string nav, string endpoint, object newObject, string? accessToken = null)
         {
             try
@@ -34,6 +50,39 @@ namespace Client.API
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
                 return await _client.PostAsync(apiUrl, content);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<HttpResponseMessage?> PutCall(string nav, string endpoint, object updateObject, string accessToken)
+        {
+            try
+            {
+                string apiUrl = $"{_endpoints["Base"]}{_endpoints[nav]}{endpoint}";
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                var jsonContent = JsonSerializer.Serialize(updateObject);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                return await _client.PutAsync(apiUrl, content);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<HttpResponseMessage?> DeleteCall(string nav, string endpoint, string accessToken)
+        {
+            try
+            {
+                string apiUrl = $"{_endpoints["Base"]}{_endpoints[nav]}{endpoint}";
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                return await _client.DeleteAsync(apiUrl);
             }
             catch
             {

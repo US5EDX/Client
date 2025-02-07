@@ -1,18 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Client.Models
 {
-    public class FacultyInfo
+    public class FacultyInfo : INotifyPropertyChanged
     {
+        private string _facultyName;
+
         [JsonPropertyName("facultyId")]
         public uint FacultyId { get; set; }
 
         [JsonPropertyName("facultyName")]
-        public string FacultyName { get; set; }
+        public string FacultyName
+        {
+            get => _facultyName;
+            set
+            {
+                if (_facultyName != value)
+                {
+                    _facultyName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -10,6 +10,8 @@ namespace Client.Stores
 
         public byte[] UserId { get; set; }
 
+        public string Email { get; set; }
+
         public byte Role { get; set; }
 
         public string AccessToken { get; set; }
@@ -23,6 +25,7 @@ namespace Client.Stores
         public void LoadUserStoreFromJson(JsonObject userInfo)
         {
             UserId = JsonSerializer.Deserialize<byte[]>(userInfo["userId"]);
+            Email = JsonSerializer.Deserialize<string>(userInfo["email"]);
             Role = JsonSerializer.Deserialize<byte>(userInfo["role"]);
             AccessToken = JsonSerializer.Deserialize<string>(userInfo["accessToken"]);
             RefreshToken = JsonSerializer.Deserialize<string>(userInfo["refreshToken"]);

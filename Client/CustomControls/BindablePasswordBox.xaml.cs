@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Client.CustomControls
 {
@@ -30,7 +18,8 @@ namespace Client.CustomControls
 
         static BindablePasswordBox()
         {
-            PasswordProperty = DependencyProperty.Register("Password", typeof(string), typeof(BindablePasswordBox));
+            PasswordProperty = DependencyProperty.Register("Password", typeof(string),
+                typeof(BindablePasswordBox), new PropertyMetadata(string.Empty, OnPasswordPropertyChanged));
         }
 
         public BindablePasswordBox()
@@ -42,6 +31,17 @@ namespace Client.CustomControls
         private void OnPasswordChanged(object sender, RoutedEventArgs e)
         {
             Password = txtPassword.Password;
+        }
+
+        private static void OnPasswordPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is BindablePasswordBox passwordBox && e.NewValue is string newPassword)
+            {
+                if (string.IsNullOrEmpty(newPassword))
+                {
+                    passwordBox.txtPassword.Password = string.Empty;
+                }
+            }
         }
     }
 }

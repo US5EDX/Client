@@ -121,7 +121,7 @@ namespace Client.ViewModels
             await ExecuteWithWaiting(async () =>
             {
                 (ErrorMessage, _) =
-                    await _apiService.DeleteAsync<object>("Faculty", $"deleteFaculty?facultyId={SelectedFaculty.FacultyId}", _userStore.AccessToken);
+                    await _apiService.DeleteAsync<object>("Faculty", $"deleteFaculty/{SelectedFaculty.FacultyId}", _userStore.AccessToken);
 
                 if (!HasErrorMessage)
                 {

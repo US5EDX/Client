@@ -23,8 +23,6 @@
         <StackPanel VerticalAlignment="Center">
             <Button Content="Оновити пароль" Margin="5,0,5,15" Command="{Binding OpenUpdateCommand}" />
             <StackPanel Visibility="{Binding IsUpdateOpen, Converter={StaticResource boolToVis}}">
-                <TextBlock Text="{Binding TestErrors, Mode=OneWay}" TextWrapping="Wrap"
-                    Foreground="Red" />
                 <Label Content="Старий пароль"/>
                 <customcontrols:BindablePasswordBox Margin="5,0,5,15" Password="{Binding OldPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Content="Новий пароль"/>

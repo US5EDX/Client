@@ -1,14 +1,14 @@
 ﻿using Client.Models;
 using Client.Services;
 using Client.Stores;
+using Client.ViewModels.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace Client.ViewModels
 {
-    public partial class HomePageViewModel : ObservableRecipient, IFrameViewModel
+    public partial class HomePageViewModel : ObservableRecipient, IPageViewModel
     {
         private readonly UserStore _userStore;
         private readonly ApiService _apiService;
@@ -68,11 +68,6 @@ namespace Client.ViewModels
             _apiService = apiService;
         }
 
-        public async Task LoadContentAsync()
-        {
-            return;
-        }
-
         [RelayCommand]
         private void OpenUpdate()
         {
@@ -99,7 +94,7 @@ namespace Client.ViewModels
             IsWaiting = true;
 
             (SubmitErrorMessage, _) =
-                await _apiService.PostAsync<object>("User", "updatePassword", new UpdatePasswordInfo()
+                await _apiService.PutAsync<object>("User", "updatePassword", new UpdatePasswordInfo()
                 {
                     UserId = _userStore.UserId,
                     OldPassword = OldPassword,

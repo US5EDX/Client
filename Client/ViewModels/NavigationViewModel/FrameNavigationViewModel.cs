@@ -7,20 +7,18 @@ namespace Client.ViewModels.NavigationViewModel
     {
         private readonly FrameNavigationService<HomePageViewModel> _homeNavigationService;
         private readonly FrameNavigationService<FacultiesPageViewModel> _facultiesNavigationService;
-        //private readonly NavigationService<UsersView> _usersNavigationService;
-        //private readonly NavigationService<FacultiesView> _facultiesNavigationService;
-        //private readonly NavigationService<ConductView> _conductNavigationService;
-        //private readonly NavigationService<DatabaseView> _databaseNavigationService;
-        //private readonly NavigationService<LogView> _logNavigationService;
+        private readonly FrameNavigationService<HoldingPageViewModel> _holdingNavigationService;
 
         public FrameNavigationViewModel(
             FrameNavigationStore frameNavigationStore,
             FrameNavigationService<HomePageViewModel> homeNavigationService,
-            FrameNavigationService<FacultiesPageViewModel> facultiesNavigationService
+            FrameNavigationService<FacultiesPageViewModel> facultiesNavigationService,
+            FrameNavigationService<HoldingPageViewModel> holdingNavigationService
             )
         {
             _homeNavigationService = homeNavigationService;
             _facultiesNavigationService = facultiesNavigationService;
+            _holdingNavigationService = holdingNavigationService;
         }
 
         public async Task SupAdminNavigate(string destination)
@@ -35,7 +33,8 @@ namespace Client.ViewModels.NavigationViewModel
                 case "Faculties":
                     await _facultiesNavigationService.NavigateAsync();
                     break;
-                case "Conduct":
+                case "Holding":
+                    await _holdingNavigationService.NavigateAsync();
                     break;
                 case "Database":
                     break;

@@ -20,6 +20,10 @@ namespace Client.HostBuilders
                 services.AddSingleton<Func<FacultiesPageViewModel>>((s) => () => s.GetRequiredService<FacultiesPageViewModel>());
                 services.AddSingleton<FrameNavigationService<FacultiesPageViewModel>>();
 
+                services.AddTransient<HoldingPageViewModel>();
+                services.AddSingleton<Func<HoldingPageViewModel>>((s) => () => s.GetRequiredService<HoldingPageViewModel>());
+                services.AddSingleton<FrameNavigationService<HoldingPageViewModel>>();
+
                 services.AddScoped<FrameNavigationViewModel>();
             });
 

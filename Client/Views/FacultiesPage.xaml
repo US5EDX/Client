@@ -28,7 +28,8 @@
             <customcontrols:SearchBlock Margin="5,0,0,20" Collection="{Binding Faculties, UpdateSourceTrigger=PropertyChanged}" CanSearch="True" Filter="{Binding Filter}" Height="25"/>
             <StackPanel Margin="5,0,0,0">
                 <Label Content="Назва факультету"/>
-                <TextBox Margin="0,0,0,15" Text="{Binding FacultyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="ФПМ" />
+                <TextBox Margin="0,0,0,15" Text="{Binding FacultyName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                         MaxLength="100" materialDesign:HintAssist.Hint="ФПМ" />
 
                 <TextBlock Margin="5,0,5,15" Text="Очікування результату..." Visibility="{Binding IsWaiting, Converter={StaticResource boolToVis}}"
                                HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Foreground="Green"/>

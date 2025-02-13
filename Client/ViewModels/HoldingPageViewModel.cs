@@ -63,7 +63,7 @@ namespace Client.ViewModels
 
             _holdings.Clear();
 
-            foreach (var holding in holdings)
+            foreach (var holding in holdings ?? Enumerable.Empty<HoldingInfo>())
                 _holdings.Add(holding);
         }
 
@@ -106,9 +106,6 @@ namespace Client.ViewModels
         {
             ErrorMessage = string.Empty;
             IsWaiting = true;
-
-            if (SelectedHolding is null)
-                return;
 
             (ErrorMessage, _) =
                     await _apiService.DeleteAsync<object>(

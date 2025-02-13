@@ -2,6 +2,7 @@
 using Client.Handlers;
 using Client.HostBuilders;
 using Client.Services;
+using Client.Services.MessageService;
 using Client.Stores;
 using Client.Stores.NavigationStores;
 using Client.ViewModels;
@@ -33,6 +34,7 @@ namespace Client
                 services.AddSingleton<UserStore>();
 
                 services.AddSingleton<ApiService>();
+                services.AddSingleton<IMessageService, MessageService>();
 
                 services.AddSingleton(sp =>
                 {

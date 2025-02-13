@@ -71,7 +71,7 @@ namespace Client.ViewModels
 
             _faculties.Clear();
 
-            foreach (var faculty in faculties)
+            foreach (var faculty in faculties ?? Enumerable.Empty<FacultyInfo>())
                 _faculties.Add(faculty);
         }
 

@@ -44,7 +44,10 @@ namespace Client.Handlers
                     return await GetErrorMessage(responseMessage) ?? "Некоректний запит";
 
                 case HttpStatusCode.NotFound:
-                    return await GetErrorMessage(responseMessage) ?? "Дані не знайдено";
+                    {
+                        var message = await GetErrorMessage(responseMessage);
+                        return message is null ? "Дані не знайдено" : message == string.Empty ? "Ресурс не знайдено" : message;
+                    }
 
                 case HttpStatusCode.InternalServerError:
                     return "Сталася помилка сервера";

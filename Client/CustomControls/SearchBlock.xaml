@@ -6,13 +6,17 @@
              xmlns:local="clr-namespace:Client.CustomControls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="25" d:DesignWidth="250">
+             d:DesignHeight="55" d:DesignWidth="250">
 
     <Grid>
-        <DockPanel Width="Auto">
-            <Button x:Name="searchButton" Content="Знайти" Width="75" Height="25" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,0,0" DockPanel.Dock="Right" />
-            <TextBox x:Name="searchText"
+        <StackPanel Height="Auto">
+            <DockPanel Width="Auto">
+                <Button x:Name="searchButton" Content="Знайти" Width="75" Height="25" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,0,0" DockPanel.Dock="Right" />
+                <TextBox x:Name="searchText"
                          materialDesign:HintAssist.Hint="Пошук..." materialDesign:HintAssist.HelperText="Не менше 3 знаків"/>
-        </DockPanel>
+            </DockPanel>
+            <Button x:Name="deepSearchButton" Content="Глибокий пошук" Width="130" Height="25" FontSize="12"
+    HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15,0,0" Visibility="Collapsed"/>
+        </StackPanel>
     </Grid>
 </UserControl>

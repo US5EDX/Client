@@ -26,6 +26,10 @@
             <DataTemplate DataType="{x:Type vms:HoldingPageViewModel}">
                 <views:HoldingPage />
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vms:WorkersPageViewModel}">
+                <views:WorkersPage />
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -39,7 +43,7 @@
             <DockPanel HorizontalAlignment="Stretch">
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,10,10,10" Orientation="Horizontal">
                     <customcontrols:NavButton IsChecked="True" Command="{Binding NavigateCommand}" CommandParameter="Home" ContentInfo="Головна" Margin="10,0,0,0"/>
-                    <customcontrols:NavButton Command="" ContentInfo="Користувачі" Margin="10,0,0,0"/>
+                    <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Users" ContentInfo="Користувачі" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Faculties" ContentInfo="Факультети" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Holding" ContentInfo="Проведення" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="" ContentInfo="Робота з базою даних" Margin="10,0,0,0"/>

@@ -10,6 +10,7 @@ namespace Client.ViewModels.NavigationViewModel
         private readonly FrameNavigationService<HoldingPageViewModel> _holdingNavigationService;
         private readonly FrameNavigationService<WorkersPageViewModel> _usersNavigationService;
         private readonly FrameNavigationService<SpecialtiesPageViewModel> _specialtiesNavigationService;
+        private readonly FrameNavigationService<AcademiciansPageViewModel> _accademiciansNavigationService;
 
         public FrameNavigationViewModel(
             FrameNavigationStore frameNavigationStore,
@@ -17,7 +18,8 @@ namespace Client.ViewModels.NavigationViewModel
             FrameNavigationService<FacultiesPageViewModel> facultiesNavigationService,
             FrameNavigationService<HoldingPageViewModel> holdingNavigationService,
             FrameNavigationService<WorkersPageViewModel> usersNavigationService,
-            FrameNavigationService<SpecialtiesPageViewModel> specialtiesNavigationService
+            FrameNavigationService<SpecialtiesPageViewModel> specialtiesNavigationService,
+            FrameNavigationService<AcademiciansPageViewModel> accademiciansNavigationService
             )
         {
             _homeNavigationService = homeNavigationService;
@@ -25,6 +27,7 @@ namespace Client.ViewModels.NavigationViewModel
             _holdingNavigationService = holdingNavigationService;
             _usersNavigationService = usersNavigationService;
             _specialtiesNavigationService = specialtiesNavigationService;
+            _accademiciansNavigationService = accademiciansNavigationService;
         }
 
         public async Task SupAdminNavigate(string destination)
@@ -60,6 +63,7 @@ namespace Client.ViewModels.NavigationViewModel
                     _homeNavigationService.Navigate();
                     break;
                 case "Academicians":
+                    await _accademiciansNavigationService.NavigateAsync();
                     break;
                 case "Specialties":
                     await _specialtiesNavigationService.NavigateAsync();

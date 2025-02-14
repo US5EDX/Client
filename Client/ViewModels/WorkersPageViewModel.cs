@@ -12,14 +12,16 @@ namespace Client.ViewModels
 {
     public partial class WorkersPageViewModel : ObservableRecipient, IFrameViewModel
     {
+        private const int PAGESIZE = 50;
+
         private readonly ApiService _apiService;
         private readonly UserStore _userStore;
         private readonly IMessageService _messageService;
 
         private readonly ObservableCollection<FacultyInfo> _facultiesInfo;
-        private readonly ObservableCollection<WorkerFullInfo> _workers;
+        private readonly ObservableCollection<UserFullInfo> _workers;
 
-        public IEnumerable<WorkerFullInfo> Workers => _workers;
+        public IEnumerable<UserFullInfo> Workers => _workers;
         public IEnumerable<FacultyInfo> FacultiesInfo => _facultiesInfo;
 
         [ObservableProperty]
@@ -53,7 +55,7 @@ namespace Client.ViewModels
         [NotifyCanExecuteChangedFor(nameof(OpenUpdateModalCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteWorkerCommand))]
         [NotifyCanExecuteChangedFor(nameof(ResetWorkerPasswordCommand))]
-        private WorkerFullInfo? _selectedWorker;
+        private UserFullInfo? _selectedWorker;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(FacultyFilter))]
@@ -79,11 +81,11 @@ namespace Client.ViewModels
 
             _facultiesInfo = new ObservableCollection<FacultyInfo>() { new FacultyInfo() { FacultyId = 0, FacultyName = "Усі" } };
             _selectedFaculty = _facultiesInfo[0];
-            _workers = new ObservableCollection<WorkerFullInfo>();
+            _workers = new ObservableCollection<UserFullInfo>();
 
             WeakReferenceMessenger.Default.Register<WorkerUpdatedMessage>(this, Receive);
 
-            PageSize = 2;
+            PageSize = PAGESIZE;
 
             AdminRegistry = null;
             Filter = FilterWorkers;
@@ -114,8 +116,6 @@ namespace Client.ViewModels
             if (HasErrorMessage)
                 return;
 
-            var test = Math.Ceiling((double)totalSize / PageSize);
-
             TotalPages = (int)Math.Ceiling((double)totalSize / PageSize);
             CurrentPage = 0;
         }
@@ -125,14 +125,14 @@ namespace Client.ViewModels
             await ExecuteWithWaiting(async () =>
             {
                 (ErrorMessage, var workers) =
-                await _apiService.GetAsync<ObservableCollection<WorkerFullInfo>>("Worker",
+                await _apiService.GetAsync<ObservableCollection<UserFullInfo>>("Worker",
                 $"getWorkers?pageNumber={page}&pageSize={PageSize}&{FacultyFilter}", _userStore.AccessToken);
 
                 if (!HasErrorMessage)
                 {
                     _workers.Clear();
 
-                    foreach (var worker in workers ?? Enumerable.Empty<WorkerFullInfo>())
+                    foreach (var worker in workers ?? Enumerable.Empty<UserFullInfo>())
                         _workers.Add(worker);
 
                     if (_workers.Count > 0)
@@ -176,7 +176,7 @@ namespace Client.ViewModels
 
         public void Receive(object recipient, WorkerUpdatedMessage message)
         {
-            WorkerFullInfo workerInfo = message.Value;
+            UserFullInfo workerInfo = message.Value;
 
             if (IsWorkerSelected && SelectedWorker.Id == workerInfo.Id)
             {
@@ -259,7 +259,7 @@ namespace Client.ViewModels
 
         private bool FilterWorkers(object worker, string filter)
         {
-            if (worker is not WorkerFullInfo workerInfo)
+            if (worker is not UserFullInfo workerInfo)
                 return false;
 
             return workerInfo.FullName.Contains(filter, StringComparison.OrdinalIgnoreCase) ||

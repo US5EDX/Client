@@ -22,6 +22,10 @@
                 <views:SpecialtiesPage />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vms:AcademiciansPageViewModel}">
+                <views:AcademiciansPage />
+            </DataTemplate>
+
         </ResourceDictionary>
     </UserControl.Resources>
 

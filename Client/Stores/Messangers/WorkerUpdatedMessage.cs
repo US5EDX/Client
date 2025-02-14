@@ -3,8 +3,8 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace Client.Stores.Messangers
 {
-    public class WorkerUpdatedMessage : ValueChangedMessage<WorkerFullInfo>
+    public class WorkerUpdatedMessage : ValueChangedMessage<UserFullInfo>
     {
-        public WorkerUpdatedMessage(WorkerFullInfo value) : base(value) { }
+        public WorkerUpdatedMessage(UserFullInfo value) : base(value) { }
     }
 }

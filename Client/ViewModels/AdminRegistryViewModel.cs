@@ -102,7 +102,7 @@ namespace Client.ViewModels
         public IAsyncRelayCommand SubmitCommand { get; init; }
 
         public AdminRegistryViewModel(UserStore userStore, ApiService apiService, IEnumerable<FacultyInfo> facultiesInfo,
-            IRelayCommand closeCommand, WorkerFullInfo? WorkerInfo = null)
+            IRelayCommand closeCommand, UserFullInfo? WorkerInfo = null)
         {
             _userStore = userStore;
             _apiService = apiService;
@@ -142,7 +142,7 @@ namespace Client.ViewModels
 
             await ExecuteWithWaiting(async () =>
             {
-                var newWorker = new WorkerFullInfo
+                var newWorker = new UserFullInfo
                 {
                     Email = Email,
                     Role = Role.RoleId,
@@ -154,7 +154,7 @@ namespace Client.ViewModels
                 };
 
                 (ErrorMessage, var addedWorker) =
-                    await _apiService.PostAsync<WorkerFullInfo>("Worker", "addWorker", newWorker, _userStore.AccessToken);
+                    await _apiService.PostAsync<UserFullInfo>("Worker", "addWorker", newWorker, _userStore.AccessToken);
 
                 if (!HasErrorMessage)
                     OnSubmitAccepted(addedWorker);
@@ -166,7 +166,7 @@ namespace Client.ViewModels
         {
             await ExecuteWithWaiting(async () =>
             {
-                var updatedWorker = new WorkerFullInfo
+                var updatedWorker = new UserFullInfo
                 {
                     Id = _id,
                     Email = Email,
@@ -179,14 +179,14 @@ namespace Client.ViewModels
                 };
 
                 (ErrorMessage, _) =
-                    await _apiService.PutAsync<WorkerFullInfo>("Worker", "updateWorker", updatedWorker, _userStore.AccessToken);
+                    await _apiService.PutAsync<UserFullInfo>("Worker", "updateWorker", updatedWorker, _userStore.AccessToken);
 
                 if (!HasErrorMessage)
                     OnSubmitAccepted(updatedWorker);
             });
         }
 
-        private void OnSubmitAccepted(WorkerFullInfo workerInfo)
+        private void OnSubmitAccepted(UserFullInfo workerInfo)
         {
             WeakReferenceMessenger.Default.Send(new WorkerUpdatedMessage(workerInfo));
             CloseCommand.Execute(null);

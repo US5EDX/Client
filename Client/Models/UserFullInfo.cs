@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Client.Models
 {
-    public partial class WorkerFullInfo : ObservableObject
+    public partial class UserFullInfo : ObservableObject
     {
         [JsonPropertyName("id")]
         public string Id { get; set; }

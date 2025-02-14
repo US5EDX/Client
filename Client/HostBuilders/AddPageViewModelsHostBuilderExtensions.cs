@@ -28,6 +28,10 @@ namespace Client.HostBuilders
                 services.AddSingleton<Func<WorkersPageViewModel>>((s) => () => s.GetRequiredService<WorkersPageViewModel>());
                 services.AddSingleton<FrameNavigationService<WorkersPageViewModel>>();
 
+                services.AddTransient<SpecialtiesPageViewModel>();
+                services.AddSingleton<Func<SpecialtiesPageViewModel>>((s) => () => s.GetRequiredService<SpecialtiesPageViewModel>());
+                services.AddSingleton<FrameNavigationService<SpecialtiesPageViewModel>>();
+
                 services.AddScoped<FrameNavigationViewModel>();
             });
 

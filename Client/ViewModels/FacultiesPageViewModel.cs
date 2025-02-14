@@ -78,9 +78,6 @@ namespace Client.ViewModels
         [RelayCommand(CanExecute = nameof(CanAddFaculty))]
         private async Task AddFaculty()
         {
-            ErrorMessage = string.Empty;
-            IsWaiting = true;
-
             await ExecuteWithWaiting(async () =>
             {
                 (ErrorMessage, var newFaculty) =

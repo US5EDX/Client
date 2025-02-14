@@ -33,6 +33,13 @@ namespace Client.ViewModels
             Task.Run(async () => await LoadHomeOnStart());
         }
 
+        protected override void OnDeactivated()
+        {
+            _frameNavigationStore.CurrentFrameViewModelChanged -= OnCurrentFrameViewModelChanged;
+
+            base.OnDeactivated();
+        }
+
         private void OnCurrentFrameViewModelChanged()
         {
             OnPropertyChanged(nameof(CurrentFrameViewModel));

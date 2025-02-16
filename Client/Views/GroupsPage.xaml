@@ -1,0 +1,88 @@
+﻿<Page x:Class="Client.Views.GroupsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Client.Views"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:customcontrols="clr-namespace:Client.CustomControls"
+      xmlns:views="clr-namespace:Client.Views"
+      xmlns:vms="clr-namespace:Client.ViewModels"
+      xmlns:conv="clr-namespace:Client.Converters"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="GroupsPage">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVis"/>
+        <conv:EduLevelToEduLevelNameConverter x:Key="EduLevelToEduLevelName"/>
+
+        <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+
+        <DataTemplate DataType="{x:Type vms:GroupRegistryViewModel}">
+            <views:GroupRegistryPage />
+        </DataTemplate>
+    </Page.Resources>
+
+    <materialDesign:DialogHost IsOpen="{Binding IsRegistryOpen, Mode=OneWay}">
+        <materialDesign:DialogHost.DialogContent>
+            <Frame Content="{Binding GroupRegistry}" Validation.ErrorTemplate="{x:Null}" />
+        </materialDesign:DialogHost.DialogContent>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.75*" />
+                <ColumnDefinition Width="0.25*" />
+            </Grid.ColumnDefinitions>
+
+            <DataGrid CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True"
+  ItemsSource="{Binding Groups, UpdateSourceTrigger=PropertyChanged}"
+  AutoGenerateColumns="False" TextBlock.TextAlignment="Center"
+  SelectedItem="{Binding SelectedGroup, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Код групи" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+                                    Width="Auto" Binding="{Binding GroupCode}" />
+
+                    <DataGridTextColumn Header="Спеціальність" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+                Width="Auto" Binding="{Binding Specialty.SpecialtyName}" />
+
+                    <DataGridTextColumn Header="Курс" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+                Width="Auto" Binding="{Binding Course}" />
+
+                    <DataGridTextColumn Header="Рівень ВО" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+                Width="Auto" Binding="{Binding EduLevel, Converter={StaticResource EduLevelToEduLevelName}}" />
+
+                    <DataGridTextColumn Header="Непарний семестр" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+                Width="Auto" Binding="{Binding Nonparsemester}" />
+
+                    <DataGridTextColumn Header="Парний семестр" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+                Width="Auto" Binding="{Binding Parsemester}" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StackPanel Grid.Column="1">
+                <customcontrols:SearchBlock Margin="5,0,0,20" Collection="{Binding Groups}" Filter="{Binding Filter}" 
+                                        CanSearch="True" Height="25"/>
+                <StackPanel Margin="5,0,0,0" Height="Auto">
+                    <TextBlock Margin="5,0,5,15" Text="Очікування результату..." 
+                           Visibility="{Binding IsWaiting, Converter={StaticResource boolToVis}}"
+           HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Foreground="Green"/>
+                    <TextBlock Text="{Binding ErrorMessage}" Visibility="{Binding HasErrorMessage, Converter={StaticResource boolToVis}}"
+           Margin="5,0,5,15" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red" TextAlignment="Center" />
+
+                    <Button Content="Додати" Margin="0,0,0,15" Command="{Binding OpenAddModalCommand}"/>
+                    <Button Content="Оновити" Margin="0,0,0,15" Command="{Binding OpenUpdateModalCommand}"/>
+                    <Button Content="Видалити" Margin="0,0,0,30" Command="{Binding DeleteGroupCommand}"/>
+
+                    <Button Content="Перейти" Margin="0,0,0,15" Command="{Binding NavigateCommand}"/>
+                    <Button Margin="0,0,0,15" Height="Auto" Command="{Binding UpdateCourseCommand}">
+                        <TextBlock Text="Перевести на наступний курс" MaxWidth="250" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+    </materialDesign:DialogHost>
+</Page>

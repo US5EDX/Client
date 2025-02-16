@@ -111,9 +111,6 @@ namespace Client.ViewModels
         [RelayCommand(CanExecute = nameof(CanSubmit))]
         private async Task AddHolding()
         {
-            ErrorMessage = string.Empty;
-            IsWaiting = true;
-
             await ExecuteWithWaiting(async () =>
             {
                 var newHolding = new HoldingInfo

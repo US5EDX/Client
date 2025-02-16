@@ -9,6 +9,8 @@ namespace Client.Services
         private readonly FrameNavigationStore _frameNavigationStore;
         private readonly Func<TViewModel> _createFrameViewModel;
 
+        public event Func<string, Task> OnNavigationRequested;
+
         public FrameNavigationService(FrameNavigationStore frameNavigationStore, Func<TViewModel> createFrameViewModel)
         {
             _frameNavigationStore = frameNavigationStore;
@@ -25,6 +27,11 @@ namespace Client.Services
             var viewModel = (IFrameViewModel)_createFrameViewModel();
             await viewModel.LoadContentAsync();
             _frameNavigationStore.CurrentFrameViewModel = viewModel;
+        }
+
+        public void RequestNavigation(string destination)
+        {
+            OnNavigationRequested?.Invoke(destination);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Client.Stores.NavigationStores;
+﻿using Client.Services;
+using Client.Stores.NavigationStores;
 using Client.ViewModels.Interfaces;
 using Client.ViewModels.NavigationViewModel;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,6 +11,7 @@ namespace Client.ViewModels
     {
         private readonly FrameNavigationViewModel _frameNavigation;
         private readonly FrameNavigationStore _frameNavigationStore;
+        private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
 
         [ObservableProperty]
         private bool _isLoading;
@@ -24,11 +26,15 @@ namespace Client.ViewModels
 
         public IPageViewModel CurrentFrameViewModel => _frameNavigationStore.CurrentFrameViewModel;
 
-        public AdminViewModel(FrameNavigationStore frameNavigationStore, FrameNavigationViewModel frameNavigation)
+        public AdminViewModel(FrameNavigationStore frameNavigationStore, FrameNavigationViewModel frameNavigation,
+            FrameNavigationService<GroupPageViewModel> groupNavigationService)
         {
             _frameNavigationStore = frameNavigationStore;
             _frameNavigationStore.CurrentFrameViewModelChanged += OnCurrentFrameViewModelChanged;
             _frameNavigation = frameNavigation;
+
+            _groupNavigationService = groupNavigationService;
+            _groupNavigationService.OnNavigationRequested += Navigate;
 
             Task.Run(async () => await LoadHomeOnStart());
         }
@@ -36,6 +42,7 @@ namespace Client.ViewModels
         protected override void OnDeactivated()
         {
             _frameNavigationStore.CurrentFrameViewModelChanged -= OnCurrentFrameViewModelChanged;
+            _groupNavigationService.OnNavigationRequested -= Navigate;
 
             base.OnDeactivated();
         }

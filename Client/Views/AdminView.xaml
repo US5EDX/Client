@@ -26,6 +26,13 @@
                 <views:AcademiciansPage />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vms:GroupsPageViewModel}">
+                <views:GroupsPage />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vms:GroupPageViewModel}">
+                <views:GroupPage />
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 

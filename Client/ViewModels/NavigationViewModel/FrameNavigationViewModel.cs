@@ -11,6 +11,8 @@ namespace Client.ViewModels.NavigationViewModel
         private readonly FrameNavigationService<WorkersPageViewModel> _usersNavigationService;
         private readonly FrameNavigationService<SpecialtiesPageViewModel> _specialtiesNavigationService;
         private readonly FrameNavigationService<AcademiciansPageViewModel> _accademiciansNavigationService;
+        private readonly FrameNavigationService<GroupsPageViewModel> _groupsNavigationService;
+        private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
 
         public FrameNavigationViewModel(
             FrameNavigationStore frameNavigationStore,
@@ -19,7 +21,9 @@ namespace Client.ViewModels.NavigationViewModel
             FrameNavigationService<HoldingPageViewModel> holdingNavigationService,
             FrameNavigationService<WorkersPageViewModel> usersNavigationService,
             FrameNavigationService<SpecialtiesPageViewModel> specialtiesNavigationService,
-            FrameNavigationService<AcademiciansPageViewModel> accademiciansNavigationService
+            FrameNavigationService<AcademiciansPageViewModel> accademiciansNavigationService,
+            FrameNavigationService<GroupsPageViewModel> groupsNavigationService,
+            FrameNavigationService<GroupPageViewModel> groupNavigationService
             )
         {
             _homeNavigationService = homeNavigationService;
@@ -28,6 +32,8 @@ namespace Client.ViewModels.NavigationViewModel
             _usersNavigationService = usersNavigationService;
             _specialtiesNavigationService = specialtiesNavigationService;
             _accademiciansNavigationService = accademiciansNavigationService;
+            _groupsNavigationService = groupsNavigationService;
+            _groupNavigationService = groupNavigationService;
         }
 
         public async Task SupAdminNavigate(string destination)
@@ -71,6 +77,10 @@ namespace Client.ViewModels.NavigationViewModel
                 case "Disciplines":
                     break;
                 case "Groups":
+                    await _groupsNavigationService.NavigateAsync();
+                    break;
+                case "Group":
+                    await _groupNavigationService.NavigateAsync();
                     break;
                 default:
                     break;

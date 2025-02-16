@@ -8,19 +8,24 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace Client.ViewModels
 {
     [ObservableRecipient]
     public partial class AdminRegistryViewModel : ObservableValidator, IPageViewModel
     {
+        private CancellationTokenSource _cts;
+
         private readonly UserStore _userStore;
         private readonly ApiService _apiService;
         private readonly ObservableCollection<FacultyInfo> _facultiesInfo;
         private readonly ObservableCollection<RoleInfo> _rolesInfo;
+        private readonly ObservableCollection<GroupShortInfo> _groupsInfo;
 
         public IEnumerable<FacultyInfo> Faculties => _facultiesInfo;
         public IEnumerable<RoleInfo> Roles => _rolesInfo;
+        public IEnumerable<GroupShortInfo> Groups => _groupsInfo;
 
         [ObservableProperty]
         private string _header;
@@ -75,10 +80,20 @@ namespace Client.ViewModels
         [Length(2, 100)]
         private string _position;
 
-        private readonly GroupShortInfo? _group;
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyCanExecuteChangedFor(nameof(AddWorkerCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateWorkerCommand))]
+        private GroupShortInfo? _group;
 
         [ObservableProperty]
         private bool _isWaiting;
+
+        [ObservableProperty]
+        private string _groupName;
+
+        [ObservableProperty]
+        private bool _isLoading;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(HasErrorMessage))]
@@ -86,6 +101,12 @@ namespace Client.ViewModels
 
         [ObservableProperty]
         private bool _isAddMode;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyCanExecuteChangedFor(nameof(AddWorkerCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateWorkerCommand))]
+        private bool _isCurator;
 
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
 
@@ -95,7 +116,13 @@ namespace Client.ViewModels
             !string.IsNullOrEmpty(Position) &&
             Role is not null &&
             Faculty is not null &&
+            (!IsAdministratorView ||
+            (IsAdministratorView &&
+            (!IsCurator ||
+            (IsCurator && Group is not null)))) &&
             !HasErrors;
+
+        public bool IsAdministratorView { get; init; }
 
         public IRelayCommand CloseCommand { get; init; }
 
@@ -107,31 +134,115 @@ namespace Client.ViewModels
             _userStore = userStore;
             _apiService = apiService;
 
+            if (_userStore.Role > 2)
+                throw new UnauthorizedAccessException("У доступі відмовлено");
+
+            IsAdministratorView = _userStore.Role == 2;
+
             _facultiesInfo = [.. facultiesInfo.Skip(1)];
 
-            _rolesInfo =
-            [
-                new RoleInfo { RoleId = 2, RoleName = "Адміністратор" },
-            ];
+            _rolesInfo = new ObservableCollection<RoleInfo>();
 
-            if (WorkerInfo is not null)
+            if (_userStore.Role == 1)
+            {
+                Header = WorkerInfo is null ? "Додати адміністратора" : "Редагувати інформацію про адмістратора";
+
+                _rolesInfo.Add(new RoleInfo { RoleId = 2, RoleName = "Адміністратор" });
+
+                if (WorkerInfo is not null)
+                    _rolesInfo.Add(new RoleInfo { RoleId = 3, RoleName = "Викладач" });
+
+                int role = WorkerInfo?.Role ?? 2;
+                _role = _rolesInfo[role - 2];
+
+                _group = WorkerInfo?.Group;
+            }
+            else
+            {
+                Header = WorkerInfo is null ? "Додати викладача" : "Редагувати інформацію про викладача";
+
+                _groupsInfo = new ObservableCollection<GroupShortInfo>();
+
                 _rolesInfo.Add(new RoleInfo { RoleId = 3, RoleName = "Викладач" });
+                _role = _rolesInfo[0];
+
+                _groupsInfo = new ObservableCollection<GroupShortInfo>();
+
+                if (WorkerInfo is not null && WorkerInfo.Group is not null)
+                {
+                    _isCurator = true;
+                    _groupsInfo.Add(WorkerInfo.Group);
+                    Group = _groupsInfo[0];
+                    _groupName = Group.GroupCode;
+                }
+            }
 
             CloseCommand = closeCommand;
             SubmitCommand = WorkerInfo is null ? AddWorkerCommand : UpdateWorkerCommand;
 
-            Header = WorkerInfo is null ? "Додати адміністратора" : "Редагувати інформацію про адмістратора";
             IsAddMode = WorkerInfo is null;
 
             _id = WorkerInfo?.Id;
             _email = WorkerInfo?.Email ?? string.Empty;
-            int role = WorkerInfo?.Role ?? 2;
-            _role = _rolesInfo[role - 2];
             _fullName = WorkerInfo?.FullName ?? string.Empty;
             _faculty = _facultiesInfo.FirstOrDefault(f => f.FacultyId == WorkerInfo?.Faculty.FacultyId);
             _department = WorkerInfo?.Department ?? string.Empty;
             _position = WorkerInfo?.Position ?? string.Empty;
-            _group = WorkerInfo?.Group;
+        }
+
+        partial void OnGroupNameChanged(string value)
+        {
+            if (Group is not null && Group.GroupCode == value)
+                return;
+
+            if (value.Length < 3)
+            {
+                _groupsInfo.Clear();
+                Group = null;
+                return;
+            }
+
+            _cts?.Cancel();
+            _cts = new CancellationTokenSource();
+            var token = _cts.Token;
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(500);
+
+                if (token.IsCancellationRequested)
+                    return;
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    _groupsInfo.Clear();
+                    _groupsInfo.Add(new GroupShortInfo { GroupCode = "Пошук..." });
+                    IsLoading = true;
+                });
+
+                var result = await LoadGroupsFromDatabase(value);
+
+                if (token.IsCancellationRequested)
+                    return;
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    _groupsInfo.Clear();
+                    foreach (var item in result)
+                        _groupsInfo.Add(item);
+                    IsLoading = false;
+                });
+            }, token);
+        }
+
+        private async Task<IEnumerable<GroupShortInfo>> LoadGroupsFromDatabase(string searchFilter)
+        {
+            (ErrorMessage, var groups) =
+                await _apiService.GetAsync<ObservableCollection<GroupShortInfo>>("Group",
+                $"getGroupsByCodeSearch?facultyId={_userStore.WorkerInfo.Faculty.FacultyId}" +
+                $"&codeFilter={searchFilter}", _userStore.AccessToken);
+
+            return groups ?? Enumerable.Empty<GroupShortInfo>();
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]
@@ -150,7 +261,7 @@ namespace Client.ViewModels
                     Faculty = Faculty,
                     Department = Department,
                     Position = Position,
-                    Group = _group
+                    Group = !IsAdministratorView ? Group : (IsCurator ? null : Group)
                 };
 
                 (ErrorMessage, var addedWorker) =
@@ -175,7 +286,7 @@ namespace Client.ViewModels
                     Faculty = Faculty,
                     Department = Department,
                     Position = Position,
-                    Group = _group
+                    Group = !IsAdministratorView ? Group : (IsCurator ? Group : null)
                 };
 
                 (ErrorMessage, _) =

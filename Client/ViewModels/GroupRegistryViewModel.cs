@@ -108,16 +108,16 @@ namespace Client.ViewModels
 
             EduLevels = new List<EduLevelInfo>()
             {
-                new EduLevelInfo() { EduLevelID = 1, LevelName = "Бакалавр" },
-                new EduLevelInfo() { EduLevelID = 2, LevelName = "Магістр" },
-                new EduLevelInfo() { EduLevelID = 3, LevelName = "PHD" },
+                new EduLevelInfo() { EduLevelId = 1, LevelName = "Бакалавр" },
+                new EduLevelInfo() { EduLevelId = 2, LevelName = "Магістр" },
+                new EduLevelInfo() { EduLevelId = 3, LevelName = "PHD" },
             };
 
             _groupId = groupInfo?.GroupId ?? 0;
             GroupCode = groupInfo?.GroupCode;
             Specialty = Specialties.FirstOrDefault(sp => sp.SpecialtyId == groupInfo?.Specialty.SpecialtyId);
             Course = groupInfo?.Course;
-            EduLevel = EduLevels.FirstOrDefault(level => level.EduLevelID == groupInfo?.EduLevel);
+            EduLevel = EduLevels.FirstOrDefault(level => level.EduLevelId == groupInfo?.EduLevel);
             Nonparsemester = groupInfo?.Nonparsemester;
             Parsemester = groupInfo?.Parsemester;
         }
@@ -133,7 +133,7 @@ namespace Client.ViewModels
                     GroupCode = GroupCode,
                     Specialty = Specialty,
                     Course = Course.Value,
-                    EduLevel = EduLevel.EduLevelID,
+                    EduLevel = EduLevel.EduLevelId,
                     Nonparsemester = Nonparsemester.Value,
                     Parsemester = Parsemester.Value
                 };
@@ -157,7 +157,7 @@ namespace Client.ViewModels
                     GroupCode = GroupCode,
                     Specialty = Specialty,
                     Course = Course.Value,
-                    EduLevel = EduLevel.EduLevelID,
+                    EduLevel = EduLevel.EduLevelId,
                     Nonparsemester = Nonparsemester.Value,
                     Parsemester = Parsemester.Value
                 };

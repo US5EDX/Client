@@ -12,7 +12,7 @@ namespace Client.ViewModels
 {
     public partial class AcademiciansPageViewModel : ObservableRecipient, IFrameViewModel
     {
-        private const int PAGESIZE = 1;
+        private const int PAGESIZE = 50;
 
         private readonly ApiService _apiService;
         private readonly UserStore _userStore;

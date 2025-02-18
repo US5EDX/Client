@@ -35,6 +35,7 @@ namespace Client
 
                 services.AddSingleton<ApiService>();
                 services.AddSingleton<IMessageService, MessageService>();
+                services.AddSingleton<DisciplineReaderService>();
 
                 services.AddSingleton(sp =>
                 {

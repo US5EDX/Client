@@ -1,0 +1,99 @@
+﻿<Page x:Class="Client.Views.DisciplineRegistryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Client.Views"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:conv="clr-namespace:Client.Converters"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Height="500" Width="500"
+      Title="DisciplineRegistryPage">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVis"/>
+        <conv:ByteNullableConverter x:Key="ByteNullableConv"/>
+    </Page.Resources>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="30, 10">
+            <TextBlock Text="{Binding Header}" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <Button Content="Завантажити з файлу" Command="{Binding LoadFromFileCommand}" Margin="0,0,0,10" 
+                    Visibility="{Binding IsAddMode, Converter={StaticResource boolToVis}}" />
+
+            <TextBlock Text="Код дисципліни" Margin="0,0,0,5"/>
+            <TextBox Margin="0,0,0,30" Text="{Binding DisciplineCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+  MaxLength="50" materialDesign:HintAssist.Hint="1у-05-041" />
+
+            <TextBlock Text="Назва дисципліни" Margin="0,0,0,5"/>
+            <TextBox Margin="0,0,0,30" VerticalContentAlignment="Stretch" TextWrapping="Wrap" MaxWidth="420"
+                     AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True" xml:lang="uk-UA"
+                     Text="{Binding DisciplineName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+MaxLength="200" materialDesign:HintAssist.Hint="Комп'ютерна графіка та анімація" />
+
+            <TextBlock Text="Тип каталогу" Margin="0,0,0,5"/>
+            <ComboBox Margin="0,0,0,30" SelectedItem="{Binding CatalogType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+ItemsSource="{Binding CatalogTypes}" DisplayMemberPath="CatalogName" materialDesign:HintAssist.Hint="УВК" />
+
+            <TextBlock Text="Спеціальність" Margin="0,0,0,5"/>
+            <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Specialty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            ItemsSource="{Binding Specialties}" DisplayMemberPath="SpecialtyName" materialDesign:HintAssist.Hint="ІПЗ" />
+
+            <TextBlock Text="Рівень ВО" Margin="0,0,0,5"/>
+            <ComboBox Margin="0,0,0,30" SelectedItem="{Binding EduLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+ItemsSource="{Binding EduLevels}" DisplayMemberPath="LevelName" materialDesign:HintAssist.Hint="Бакалавр" />
+
+            <TextBlock Text="Курс" Margin="0,0,0,5"/>
+            <TextBox Margin="0,0,0,30" VerticalContentAlignment="Stretch" TextWrapping="Wrap" Width="420"
+                     AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True" xml:lang="uk-UA"
+                     Text="{Binding Course, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+MaxLength="250" materialDesign:HintAssist.Hint="для 2 - 4 курсів" />
+
+            <TextBlock Text="Семестр" Margin="0,0,0,5"/>
+            <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Semester, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+ItemsSource="{Binding Semesters}" DisplayMemberPath="SemesterName" materialDesign:HintAssist.Hint="Обидва" />
+
+            <TextBlock Text="Пререквізити" Margin="0,0,0,5"/>
+            <TextBox Margin="0,0,0,30" VerticalContentAlignment="Stretch" TextWrapping="Wrap" MaxWidth="420"
+                     AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True" xml:lang="uk-UA"
+                     Text="{Binding Prerequisites, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+MaxLength="500" materialDesign:HintAssist.Hint="Пререквізити" />
+
+            <TextBlock Text="Чому це цікаво/треба вивчати" Margin="0,0,0,5"/>
+            <TextBox Margin="0,0,0,30" VerticalContentAlignment="Stretch" TextWrapping="Wrap" MaxWidth="420"
+                     AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True" xml:lang="uk-UA"
+                     Text="{Binding Interest, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+MaxLength="1000" materialDesign:HintAssist.Hint="Чому це цікаво/треба вивчати" />
+
+            <TextBlock Text="Максимальна кількість здобувачів" Margin="0,0,0,5"/>
+            <TextBox Margin="0,0,0,30" Text="{Binding MaxCount, Mode=TwoWay, 
+            UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ByteNullableConv}}" 
+                 materialDesign:HintAssist.Hint="90" />
+
+            <TextBlock Text="Мінімальна кількість здобувачів" Margin="0,0,0,5"/>
+            <TextBox Margin="0,0,0,30" Text="{Binding MinCount, Mode=TwoWay, 
+            UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ByteNullableConv}}" 
+                 materialDesign:HintAssist.Hint="0" />
+
+            <TextBlock Text="Посилання на документ" Margin="0,0,0,5"/>
+            <TextBox Margin="0,0,0,30" MaxWidth="420" Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+MaxLength="500" materialDesign:HintAssist.Hint="https://www.dnu.dp.ua" />
+
+            <TextBlock Text="Навчальний рік" Margin="0,0,0,5"/>
+            <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Holding, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+ItemsSource="{Binding Holdings}" materialDesign:HintAssist.Hint="2025" />
+
+            <TextBlock Margin="0,0,0,15" Text="Очікування результату..." 
+                Visibility="{Binding IsWaiting, Converter={StaticResource boolToVis}}"
+HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Foreground="Green"/>
+            <TextBlock Text="{Binding ErrorMessage}" Visibility="{Binding HasErrorMessage, Converter={StaticResource boolToVis}}"
+Margin="0,0,0,15" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red" TextAlignment="Center" />
+            <DockPanel LastChildFill="False" HorizontalAlignment="Center">
+                <Button Content="Підтвердити" Command="{Binding SubmitCommand}" Margin="0,0,5,0" />
+                <Button Content="Закрити" Command="{Binding CloseCommand}"/>
+            </DockPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

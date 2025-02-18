@@ -13,6 +13,7 @@ namespace Client.ViewModels.NavigationViewModel
         private readonly FrameNavigationService<AcademiciansPageViewModel> _accademiciansNavigationService;
         private readonly FrameNavigationService<GroupsPageViewModel> _groupsNavigationService;
         private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
+        private readonly FrameNavigationService<DisciplinesPageViewModel> _disciplinesNavigationService;
 
         public FrameNavigationViewModel(
             FrameNavigationStore frameNavigationStore,
@@ -23,7 +24,8 @@ namespace Client.ViewModels.NavigationViewModel
             FrameNavigationService<SpecialtiesPageViewModel> specialtiesNavigationService,
             FrameNavigationService<AcademiciansPageViewModel> accademiciansNavigationService,
             FrameNavigationService<GroupsPageViewModel> groupsNavigationService,
-            FrameNavigationService<GroupPageViewModel> groupNavigationService
+            FrameNavigationService<GroupPageViewModel> groupNavigationService,
+            FrameNavigationService<DisciplinesPageViewModel> disciplinesNavigationService
             )
         {
             _homeNavigationService = homeNavigationService;
@@ -34,6 +36,7 @@ namespace Client.ViewModels.NavigationViewModel
             _accademiciansNavigationService = accademiciansNavigationService;
             _groupsNavigationService = groupsNavigationService;
             _groupNavigationService = groupNavigationService;
+            _disciplinesNavigationService = disciplinesNavigationService;
         }
 
         public async Task SupAdminNavigate(string destination)
@@ -75,6 +78,7 @@ namespace Client.ViewModels.NavigationViewModel
                     await _specialtiesNavigationService.NavigateAsync();
                     break;
                 case "Disciplines":
+                    await _disciplinesNavigationService.NavigateAsync();
                     break;
                 case "Groups":
                     await _groupsNavigationService.NavigateAsync();

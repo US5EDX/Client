@@ -33,6 +33,10 @@
             <DataTemplate DataType="{x:Type vms:GroupPageViewModel}">
                 <views:GroupPage />
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vms:DisciplinesPageViewModel}">
+                <views:DisciplinesPage />
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 

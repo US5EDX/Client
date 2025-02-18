@@ -2,7 +2,7 @@
 {
     public class EduLevelInfo
     {
-        public byte EduLevelID { get; set; }
+        public byte EduLevelId { get; set; }
 
         public string LevelName { get; set; }
     }

@@ -44,6 +44,10 @@ namespace Client.HostBuilders
                 services.AddSingleton<Func<GroupPageViewModel>>((s) => () => s.GetRequiredService<GroupPageViewModel>());
                 services.AddSingleton<FrameNavigationService<GroupPageViewModel>>();
 
+                services.AddTransient<DisciplinesPageViewModel>();
+                services.AddSingleton<Func<DisciplinesPageViewModel>>((s) => () => s.GetRequiredService<DisciplinesPageViewModel>());
+                services.AddSingleton<FrameNavigationService<DisciplinesPageViewModel>>();
+
                 services.AddScoped<FrameNavigationViewModel>();
             });
 

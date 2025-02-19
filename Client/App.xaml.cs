@@ -32,10 +32,12 @@ namespace Client
                 services.AddSingleton<NavigationStore>();
                 services.AddSingleton<FrameNavigationStore>();
                 services.AddSingleton<UserStore>();
+                services.AddSingleton<DisciplineMainInfoStore>();
 
                 services.AddSingleton<ApiService>();
                 services.AddSingleton<IMessageService, MessageService>();
                 services.AddSingleton<DisciplineReaderService>();
+                services.AddSingleton<PdfCreatorService>();
 
                 services.AddSingleton(sp =>
                 {

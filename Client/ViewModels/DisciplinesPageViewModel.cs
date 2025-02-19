@@ -17,8 +17,10 @@ namespace Client.ViewModels
 
         private readonly ApiService _apiService;
         private readonly UserStore _userStore;
+        private readonly DisciplineMainInfoStore _disciplineStore;
         private readonly IMessageService _messageService;
         private readonly DisciplineReaderService _pdfReaderService;
+        private readonly PdfCreatorService _pdfCreatorService;
 
         private readonly List<SpecialtyInfo> _specialtiesInfo;
 
@@ -62,6 +64,7 @@ namespace Client.ViewModels
         [NotifyCanExecuteChangedFor(nameof(DeleteDisciplineCommand))]
         [NotifyCanExecuteChangedFor(nameof(UpdateStatusCommand))]
         [NotifyCanExecuteChangedFor(nameof(NavigateToFullInfoCommand))]
+        [NotifyCanExecuteChangedFor(nameof(NavigateToStudentsCommand))]
         private DisciplineFullInfo? _selectedDiscipline;
 
         [ObservableProperty]
@@ -88,7 +91,8 @@ namespace Client.ViewModels
         public Func<object, string, bool> Filter { get; init; }
 
         public DisciplinesPageViewModel(ApiService apiService, UserStore userStore,
-            IMessageService messageService, DisciplineReaderService pdfReaderService)
+            IMessageService messageService, DisciplineReaderService pdfReaderService,
+            PdfCreatorService pdfCreatorService, DisciplineMainInfoStore disciplineStore)
         {
             _apiService = apiService;
             _userStore = userStore;
@@ -118,6 +122,8 @@ namespace Client.ViewModels
 
             SelectedModal = null;
             Filter = FilterDisciplines;
+            _pdfCreatorService = pdfCreatorService;
+            _disciplineStore = disciplineStore;
         }
 
         public async Task LoadContentAsync()
@@ -317,6 +323,30 @@ namespace Client.ViewModels
         private void NavigateToFullInfo()
         {
             SelectedModal = new DisciplinePreviewViewModel(CloseModalCommand, SelectedDiscipline);
+        }
+
+        [RelayCommand(CanExecute = nameof(IsDisciplineSelected))]
+        private async Task NavigateToStudents()
+        {
+            _disciplineStore.DisciplineId = SelectedDiscipline.DisciplineId;
+            _disciplineStore.DisciplineCode = SelectedDiscipline.DisciplineCode;
+            _disciplineStore.DisciplineName = SelectedDiscipline.DisciplineName;
+            _disciplineStore.Semester = SelectedDiscipline.Semester;
+
+            var viewModel = new SignedStudentsPageViewModel(_apiService, _userStore, _disciplineStore,
+                _messageService, _pdfCreatorService, CloseModalCommand);
+
+            try
+            {
+                await viewModel.LoadContentAsync();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                return;
+            }
+
+            SelectedModal = viewModel;
         }
 
         private async Task ExecuteWithWaiting(Func<Task> action)

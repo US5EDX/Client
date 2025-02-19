@@ -35,6 +35,10 @@
         <DataTemplate DataType="{x:Type vms:DisciplinePreviewViewModel}">
             <views:DisciplinePreviewPage />
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vms:SignedStudentsPageViewModel}">
+            <views:SignedStudentsPage />
+        </DataTemplate>
     </Page.Resources>
 
     <materialDesign:DialogHost IsOpen="{Binding IsModalOpen, Mode=OneWay}">

@@ -288,7 +288,7 @@ namespace Client.ViewModels
         [RelayCommand]
         private void LoadFromFile()
         {
-            var path = _messageService.ShowFileDialog("Оберіть документ",
+            var path = _messageService.ShowOpenFileDialog("Оберіть документ",
                 "Doc files|*.docx;*.doc;*.rtf");
 
             if (path is null)

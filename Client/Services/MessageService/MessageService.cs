@@ -10,7 +10,7 @@ namespace Client.Services.MessageService
             return MessageBox.Show(message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;
         }
 
-        public string? ShowFileDialog(string title, string filter, bool multiSelect = false)
+        public string? ShowOpenFileDialog(string title, string filter, bool multiSelect = false)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -20,6 +20,19 @@ namespace Client.Services.MessageService
 
             if (openFileDialog.ShowDialog() == true)
                 return openFileDialog.FileName;
+
+            return null;
+        }
+
+        public string? ShowSaveFileDialog(string title, string filter)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+
+            saveFileDialog.Title = title;
+            saveFileDialog.Filter = filter;
+
+            if (saveFileDialog.ShowDialog() == true)
+                return saveFileDialog.FileName;
 
             return null;
         }

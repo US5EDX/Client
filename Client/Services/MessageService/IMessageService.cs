@@ -3,6 +3,7 @@
     public interface IMessageService
     {
         bool ShowQuestion(string message, string caption = "Підтвердити дію");
-        string? ShowFileDialog(string title, string filter, bool multiSelect = false);
+        string? ShowOpenFileDialog(string title, string filter, bool multiSelect = false);
+        string? ShowSaveFileDialog(string title, string filter);
     }
 }

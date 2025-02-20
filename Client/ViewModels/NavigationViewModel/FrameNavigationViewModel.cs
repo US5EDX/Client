@@ -14,6 +14,7 @@ namespace Client.ViewModels.NavigationViewModel
         private readonly FrameNavigationService<GroupsPageViewModel> _groupsNavigationService;
         private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
         private readonly FrameNavigationService<DisciplinesPageViewModel> _disciplinesNavigationService;
+        private readonly FrameNavigationService<AllStudentChoicesViewModel> _allStudentChoicesNavigationService;
 
         public FrameNavigationViewModel(
             FrameNavigationStore frameNavigationStore,
@@ -25,7 +26,8 @@ namespace Client.ViewModels.NavigationViewModel
             FrameNavigationService<AcademiciansPageViewModel> accademiciansNavigationService,
             FrameNavigationService<GroupsPageViewModel> groupsNavigationService,
             FrameNavigationService<GroupPageViewModel> groupNavigationService,
-            FrameNavigationService<DisciplinesPageViewModel> disciplinesNavigationService
+            FrameNavigationService<DisciplinesPageViewModel> disciplinesNavigationService,
+            FrameNavigationService<AllStudentChoicesViewModel> allStudentChoicesNavigationService
             )
         {
             _homeNavigationService = homeNavigationService;
@@ -37,6 +39,7 @@ namespace Client.ViewModels.NavigationViewModel
             _groupsNavigationService = groupsNavigationService;
             _groupNavigationService = groupNavigationService;
             _disciplinesNavigationService = disciplinesNavigationService;
+            _allStudentChoicesNavigationService = allStudentChoicesNavigationService;
         }
 
         public async Task SupAdminNavigate(string destination)
@@ -85,6 +88,9 @@ namespace Client.ViewModels.NavigationViewModel
                     break;
                 case "Group":
                     await _groupNavigationService.NavigateAsync();
+                    break;
+                case "AllChoices":
+                    await _allStudentChoicesNavigationService.NavigateAsync();
                     break;
                 default:
                     break;

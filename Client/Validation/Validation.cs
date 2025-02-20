@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 
 namespace Client.Validation
 {
@@ -13,6 +14,11 @@ namespace Client.Validation
                 return "Неправильна пошта або пароль";
 
             return null;
+        }
+
+        public static bool ValidateEmail(string email)
+        {
+            return new EmailAddressAttribute().IsValid(email);
         }
     }
 }

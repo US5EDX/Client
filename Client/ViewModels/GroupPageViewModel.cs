@@ -18,6 +18,9 @@ namespace Client.ViewModels
         private readonly UserStore _userStore;
         private readonly GroupInfoStore _groupInfoStore;
         private readonly IMessageService _messageService;
+        private readonly PdfCreatorService _pdfCreatorService;
+        private readonly StudentsReaderService _studentsReaderService;
+        FrameNavigationService<AllStudentChoicesViewModel> _allStudentCohicesNavigationService;
 
         private readonly ObservableCollection<StudentRecordsInfo> _students;
 
@@ -30,6 +33,7 @@ namespace Client.ViewModels
         [NotifyPropertyChangedFor(nameof(IsStudentSelected))]
         [NotifyCanExecuteChangedFor(nameof(OpenUpdateModalCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteStudentCommand))]
+        [NotifyCanExecuteChangedFor(nameof(NavigateToStudentCommand))]
         private StudentRecordsInfo _selectedStudent;
 
         [ObservableProperty]
@@ -53,16 +57,22 @@ namespace Client.ViewModels
 
         public Func<object, string, bool> Filter { get; init; }
 
-        public GroupPageViewModel(ApiService apiService, UserStore userStore, GroupInfoStore groupInfoStore, IMessageService messageService)
+        public GroupPageViewModel(ApiService apiService, UserStore userStore, GroupInfoStore groupInfoStore,
+            IMessageService messageService, PdfCreatorService pdfCreatorService, StudentsReaderService studentsReaderService,
+            FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService)
         {
             _apiService = apiService;
             _userStore = userStore;
             _groupInfoStore = groupInfoStore;
             _messageService = messageService;
+            _pdfCreatorService = pdfCreatorService;
+            _studentsReaderService = studentsReaderService;
+            _allStudentCohicesNavigationService = allStudentCohicesNavigationService;
 
             _students = new ObservableCollection<StudentRecordsInfo>();
 
             WeakReferenceMessenger.Default.Register<StudentUpdatedMessage>(this, Receive);
+            WeakReferenceMessenger.Default.Register<StudentsAddedMessage>(this, ReceiveNewStudents);
 
             Filter = FilterStudents;
         }
@@ -132,6 +142,16 @@ namespace Client.ViewModels
             SelectedStudent = null;
         }
 
+        public void ReceiveNewStudents(object recipient, StudentsAddedMessage message)
+        {
+            SelectedStudent = null;
+
+            IEnumerable<StudentRegistryInfo> students = message.Value;
+
+            foreach (var student in students)
+                _students.Add(student.ToStudentWithRecords());
+        }
+
         [RelayCommand(CanExecute = nameof(IsStudentSelected))]
         private async Task DeleteStudent()
         {
@@ -151,6 +171,83 @@ namespace Client.ViewModels
                     _students.Remove(SelectedStudent);
                     SelectedStudent = null;
                 }
+            });
+        }
+
+        [RelayCommand(CanExecute = nameof(IsStudentSelected))]
+        public void NavigateToStudent()
+        {
+            _allStudentCohicesNavigationService.RequestNavigation("AllChoices");
+        }
+
+        [RelayCommand]
+        private void GeneratePdf()
+        {
+            ErrorMessage = string.Empty;
+            IsWaiting = true;
+
+            var path = _messageService.ShowSaveFileDialog("Вибіріть місце збереження", "Pdf file|*.pdf");
+
+            if (path is null)
+            {
+                IsWaiting = false;
+                return;
+            }
+
+            try
+            {
+                _pdfCreatorService.SaveStudentsRecords(path, _students, Header, NonparsemesterCount, ParsemesterCount);
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+            }
+            finally
+            {
+                IsWaiting = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task LoadFromFile()
+        {
+            await ExecuteWithWaiting(async () =>
+            {
+                var path = _messageService.ShowOpenFileDialog("Оберіть файл зі списком студентів", "Excel files|*.xlsx;*.xlsm");
+
+                if (path == null)
+                    return;
+
+                List<StudentExcelInfo> studentsList;
+
+                try
+                {
+                    studentsList = _studentsReaderService.GetStudentsInfo(path);
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessage = ex.Message;
+                    return;
+                }
+
+                var newStudents = studentsList.Where(st =>
+                _students.FirstOrDefault(s => s.Email == st.Email) is null)
+                    .Select(st => new StudentRegistryInfo()
+                    {
+                        Email = st.Email,
+                        FullName = st.FullName,
+                        Faculty = _userStore.WorkerInfo?.Faculty.FacultyId ?? _userStore.StudentInfo.Faculty.FacultyId,
+                        Group = _groupInfoStore.GroupId,
+                        Headman = false,
+                    });
+
+                if (!newStudents.Any())
+                {
+                    ErrorMessage = "Немає кого додавати";
+                    return;
+                }
+
+                SelectedModal = new NewStudentsViewModel(_apiService, _userStore, newStudents, CloseModalCommand);
             });
         }
 

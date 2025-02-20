@@ -39,6 +39,7 @@ namespace Client
                 services.AddSingleton<IMessageService, MessageService>();
                 services.AddSingleton<DisciplineReaderService>();
                 services.AddSingleton<PdfCreatorService>();
+                services.AddSingleton<StudentsReaderService>();
 
                 services.AddSingleton(sp =>
                 {

@@ -12,6 +12,7 @@ namespace Client.ViewModels
         private readonly FrameNavigationViewModel _frameNavigation;
         private readonly FrameNavigationStore _frameNavigationStore;
         private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
+        private readonly FrameNavigationService<AllStudentChoicesViewModel> _allStudentCohicesNavigationService;
 
         [ObservableProperty]
         private bool _isLoading;
@@ -27,14 +28,17 @@ namespace Client.ViewModels
         public IPageViewModel CurrentFrameViewModel => _frameNavigationStore.CurrentFrameViewModel;
 
         public AdminViewModel(FrameNavigationStore frameNavigationStore, FrameNavigationViewModel frameNavigation,
-            FrameNavigationService<GroupPageViewModel> groupNavigationService)
+            FrameNavigationService<GroupPageViewModel> groupNavigationService,
+            FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService)
         {
             _frameNavigationStore = frameNavigationStore;
             _frameNavigationStore.CurrentFrameViewModelChanged += OnCurrentFrameViewModelChanged;
             _frameNavigation = frameNavigation;
+            _allStudentCohicesNavigationService = allStudentCohicesNavigationService;
 
             _groupNavigationService = groupNavigationService;
             _groupNavigationService.OnNavigationRequested += Navigate;
+            _allStudentCohicesNavigationService.OnNavigationRequested += Navigate;
 
             Task.Run(async () => await LoadHomeOnStart());
         }
@@ -43,6 +47,7 @@ namespace Client.ViewModels
         {
             _frameNavigationStore.CurrentFrameViewModelChanged -= OnCurrentFrameViewModelChanged;
             _groupNavigationService.OnNavigationRequested -= Navigate;
+            _allStudentCohicesNavigationService.OnNavigationRequested -= Navigate;
 
             base.OnDeactivated();
         }

@@ -33,6 +33,7 @@ namespace Client
                 services.AddSingleton<FrameNavigationStore>();
                 services.AddSingleton<UserStore>();
                 services.AddSingleton<DisciplineMainInfoStore>();
+                services.AddSingleton<GroupInfoStore>();
 
                 services.AddSingleton<ApiService>();
                 services.AddSingleton<IMessageService, MessageService>();

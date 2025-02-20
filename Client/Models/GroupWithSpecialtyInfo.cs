@@ -31,5 +31,18 @@ namespace Client.Models
         [ObservableProperty]
         [property: JsonPropertyName("parsemester")]
         private byte _parsemester;
+
+        public GroupInfo ToGroupInfo()
+        {
+            return new GroupInfo
+            {
+                GroupId = this.GroupId,
+                GroupCode = this.GroupCode,
+                EduLevel = this.EduLevel,
+                Course = this.Course,
+                Nonparsemester = this.Nonparsemester,
+                Parsemester = this.Parsemester
+            };
+        }
     }
 }

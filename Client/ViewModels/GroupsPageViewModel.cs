@@ -20,6 +20,7 @@ namespace Client.ViewModels
         private readonly ApiService _apiService;
         private readonly UserStore _userStore;
         private readonly IMessageService _messenger;
+        private readonly GroupInfoStore _groupStore;
         private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
 
         private readonly ObservableCollection<GroupWithSpecialtyInfo> _groups;
@@ -52,12 +53,13 @@ namespace Client.ViewModels
 
         public Func<object, string, bool> Filter { get; init; }
 
-        public GroupsPageViewModel(ApiService apiService, UserStore userStore,
+        public GroupsPageViewModel(ApiService apiService, UserStore userStore, GroupInfoStore groupStore,
             IMessageService messenger, FrameNavigationService<GroupPageViewModel> groupNavigationService)
         {
             _apiService = apiService;
             _userStore = userStore;
             _messenger = messenger;
+            _groupStore = groupStore;
             _groupNavigationService = groupNavigationService;
 
             _groups = new ObservableCollection<GroupWithSpecialtyInfo>();
@@ -156,6 +158,10 @@ namespace Client.ViewModels
         [RelayCommand(CanExecute = nameof(IsGroupSelected))]
         private async Task Navigate()
         {
+            _groupStore.GroupId = SelectedGroup.GroupId;
+            _groupStore.GetInfoFromModel(SelectedGroup.ToGroupInfo());
+            _groupStore.IsLoadedFromGroupsPage = true;
+
             _groupNavigationService.RequestNavigation("Group");
         }
 

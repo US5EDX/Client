@@ -60,10 +60,10 @@ namespace Client.ViewModels
 
             _semesterInfos = new List<SemesterInfo>();
 
-            if (_disciplineStore.Semester < 2)
+            if (_disciplineStore.Semester == 0 || _disciplineStore.Semester == 1)
                 _semesterInfos.Add(new SemesterInfo() { SemesterId = 1, SemesterName = "Непарний" });
 
-            if (_disciplineStore.Semester < 3)
+            if (_disciplineStore.Semester == 0 || _disciplineStore.Semester == 2)
                 _semesterInfos.Add(new SemesterInfo() { SemesterId = 2, SemesterName = "Парний" });
 
             if (_semesterInfos.Count == 0)

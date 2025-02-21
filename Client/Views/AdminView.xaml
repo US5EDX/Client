@@ -41,6 +41,10 @@
             <DataTemplate DataType="{x:Type vms:AllStudentChoicesViewModel}">
                 <views:AllStudentsChoicePage />
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vms:StudentYearChoicesViewModel}">
+                <views:StudentYearChoicesPage />
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 

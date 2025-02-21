@@ -8,7 +8,64 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="AllStudentsChoicePage">
 
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVis"/>
+
+        <Style TargetType="DataGridCell" x:Key="HeadmanCellStyle" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Headman}" Value="True">
+                    <Setter Property="Background" Value="LightBlue"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+            <Style.Setters>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                <Setter Property="Background" Value="{StaticResource MaterialDesignDarkSeparatorBackground}"/>
+            </Style.Setters>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="CenteredCellStyle" BasedOn="{StaticResource MaterialDesignDataGridTextColumnStyle}">
+            <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </Page.Resources>
+
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.75*" />
+            <ColumnDefinition Width="0.25*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="{Binding Header}" VerticalAlignment="Center" HorizontalAlignment="Center" 
+               FontSize="16" FontWeight="Bold" Margin="0,0,0,5" TextWrapping="WrapWithOverflow"/>
+
+            <DataGrid Grid.Row="1" x:Name="StudentsGrid" Style="{StaticResource MaterialDesignDataGrid}"
+   CanUserAddRows="False"
+   CanUserDeleteRows="False"
+   AutoGenerateColumns="False"
+   IsReadOnly="True"
+   ItemsSource="{Binding Records}"
+   SelectedItem="{Binding SelectedRecord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectionMode="Single"
+   Loaded="StudentsGrid_Loaded" />
+        </Grid>
+
+        <StackPanel Grid.Column="1" Margin="5,25,0,0" Height="Auto">
+            <Button Margin="0,0,0,15" Command="{Binding OpenYearChoicesCommand}" Height="Auto">
+                <TextBlock Text="Перейти до вибору" TextAlignment="Center" TextWrapping="WrapWithOverflow" />
+            </Button>
+            <Button Margin="0,0,0,15" Command="{Binding NavigateBackCommand}" Height="Auto">
+                <TextBlock Text="Повернутись на сторінку групи" TextAlignment="Center" TextWrapping="WrapWithOverflow" />
+            </Button>
+        </StackPanel>
     </Grid>
 </Page>

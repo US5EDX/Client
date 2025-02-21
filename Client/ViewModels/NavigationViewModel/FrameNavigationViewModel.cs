@@ -15,6 +15,7 @@ namespace Client.ViewModels.NavigationViewModel
         private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
         private readonly FrameNavigationService<DisciplinesPageViewModel> _disciplinesNavigationService;
         private readonly FrameNavigationService<AllStudentChoicesViewModel> _allStudentChoicesNavigationService;
+        private readonly FrameNavigationService<StudentYearChoicesViewModel> _studentYearChoicesNavigationService;
 
         public FrameNavigationViewModel(
             FrameNavigationStore frameNavigationStore,
@@ -27,7 +28,8 @@ namespace Client.ViewModels.NavigationViewModel
             FrameNavigationService<GroupsPageViewModel> groupsNavigationService,
             FrameNavigationService<GroupPageViewModel> groupNavigationService,
             FrameNavigationService<DisciplinesPageViewModel> disciplinesNavigationService,
-            FrameNavigationService<AllStudentChoicesViewModel> allStudentChoicesNavigationService
+            FrameNavigationService<AllStudentChoicesViewModel> allStudentChoicesNavigationService,
+            FrameNavigationService<StudentYearChoicesViewModel> studentYearChoicesNavigationService
             )
         {
             _homeNavigationService = homeNavigationService;
@@ -40,6 +42,7 @@ namespace Client.ViewModels.NavigationViewModel
             _groupNavigationService = groupNavigationService;
             _disciplinesNavigationService = disciplinesNavigationService;
             _allStudentChoicesNavigationService = allStudentChoicesNavigationService;
+            _studentYearChoicesNavigationService = studentYearChoicesNavigationService;
         }
 
         public async Task SupAdminNavigate(string destination)
@@ -91,6 +94,9 @@ namespace Client.ViewModels.NavigationViewModel
                     break;
                 case "AllChoices":
                     await _allStudentChoicesNavigationService.NavigateAsync();
+                    break;
+                case "YearChoices":
+                    await _studentYearChoicesNavigationService.NavigateAsync();
                     break;
                 default:
                     break;

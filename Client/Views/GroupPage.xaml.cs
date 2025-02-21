@@ -39,8 +39,8 @@ namespace Client.Views
             var headmanCellStyle = (Style)FindResource("HeadmanCellStyle");
             var centeredCellStyle = (Style)FindResource("CenteredCellStyle");
 
-            grid.Columns.Add(CreateTextColumn("Пошта", "Email", 0.2, headerStyle, headmanCellStyle, centeredCellStyle));
-            grid.Columns.Add(CreateTextColumn("ПІБ", "FullName", 0.2, headerStyle, headmanCellStyle, centeredCellStyle));
+            grid.Columns.Add(CreateTextColumn("Пошта", "Email", 0.15, headerStyle, headmanCellStyle, centeredCellStyle));
+            grid.Columns.Add(CreateTextColumn("ПІБ", "FullName", 0.15, headerStyle, headmanCellStyle, centeredCellStyle));
 
             for (int i = 0; i < viewModel.NonparsemesterCount; i++)
             {
@@ -96,7 +96,7 @@ namespace Client.Views
             cellStyle.Triggers.Add(greenTrigger);
             cellStyle.Triggers.Add(redTrigger);
 
-            var widthFactor = 0.8 / (viewModel.NonparsemesterCount + viewModel.ParsemesterCount);
+            var widthFactor = 0.7 / (viewModel.NonparsemesterCount + viewModel.ParsemesterCount);
 
             return CreateTextColumn(header, $"{bindingPath}.CodeName", widthFactor, headerStyle, cellStyle, elementStyle);
         }

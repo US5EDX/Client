@@ -40,6 +40,7 @@ namespace Client
                 services.AddSingleton<DisciplineReaderService>();
                 services.AddSingleton<PdfCreatorService>();
                 services.AddSingleton<StudentsReaderService>();
+                services.AddSingleton<StudentInfoStore>();
 
                 services.AddSingleton(sp =>
                 {

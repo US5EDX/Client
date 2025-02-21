@@ -20,7 +20,8 @@ namespace Client.ViewModels
         private readonly IMessageService _messageService;
         private readonly PdfCreatorService _pdfCreatorService;
         private readonly StudentsReaderService _studentsReaderService;
-        FrameNavigationService<AllStudentChoicesViewModel> _allStudentCohicesNavigationService;
+        private readonly FrameNavigationService<AllStudentChoicesViewModel> _allStudentCohicesNavigationService;
+        private readonly StudentInfoStore _studentInfoStore;
 
         private readonly ObservableCollection<StudentRecordsInfo> _students;
 
@@ -59,7 +60,8 @@ namespace Client.ViewModels
 
         public GroupPageViewModel(ApiService apiService, UserStore userStore, GroupInfoStore groupInfoStore,
             IMessageService messageService, PdfCreatorService pdfCreatorService, StudentsReaderService studentsReaderService,
-            FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService)
+            FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService,
+            StudentInfoStore studentInfoStore)
         {
             _apiService = apiService;
             _userStore = userStore;
@@ -68,6 +70,7 @@ namespace Client.ViewModels
             _pdfCreatorService = pdfCreatorService;
             _studentsReaderService = studentsReaderService;
             _allStudentCohicesNavigationService = allStudentCohicesNavigationService;
+            _studentInfoStore = studentInfoStore;
 
             _students = new ObservableCollection<StudentRecordsInfo>();
 
@@ -177,6 +180,11 @@ namespace Client.ViewModels
         [RelayCommand(CanExecute = nameof(IsStudentSelected))]
         public void NavigateToStudent()
         {
+            _studentInfoStore.StudentId = SelectedStudent.StudentId;
+            _studentInfoStore.FullName = SelectedStudent.FullName;
+            _studentInfoStore.GroupId = _groupInfoStore.GroupId;
+            _groupInfoStore.IsLoadedFromGroupsPage = true;
+
             _allStudentCohicesNavigationService.RequestNavigation("AllChoices");
         }
 

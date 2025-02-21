@@ -13,6 +13,7 @@ namespace Client.ViewModels
         private readonly FrameNavigationStore _frameNavigationStore;
         private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
         private readonly FrameNavigationService<AllStudentChoicesViewModel> _allStudentCohicesNavigationService;
+        private readonly FrameNavigationService<StudentYearChoicesViewModel> _studentYearChoicesNavigationService;
 
         [ObservableProperty]
         private bool _isLoading;
@@ -29,16 +30,19 @@ namespace Client.ViewModels
 
         public AdminViewModel(FrameNavigationStore frameNavigationStore, FrameNavigationViewModel frameNavigation,
             FrameNavigationService<GroupPageViewModel> groupNavigationService,
-            FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService)
+            FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService,
+            FrameNavigationService<StudentYearChoicesViewModel> studentYearChoicesNavigationService)
         {
             _frameNavigationStore = frameNavigationStore;
             _frameNavigationStore.CurrentFrameViewModelChanged += OnCurrentFrameViewModelChanged;
             _frameNavigation = frameNavigation;
             _allStudentCohicesNavigationService = allStudentCohicesNavigationService;
+            _studentYearChoicesNavigationService = studentYearChoicesNavigationService;
 
             _groupNavigationService = groupNavigationService;
             _groupNavigationService.OnNavigationRequested += Navigate;
             _allStudentCohicesNavigationService.OnNavigationRequested += Navigate;
+            _studentYearChoicesNavigationService.OnNavigationRequested += Navigate;
 
             Task.Run(async () => await LoadHomeOnStart());
         }
@@ -48,6 +52,7 @@ namespace Client.ViewModels
             _frameNavigationStore.CurrentFrameViewModelChanged -= OnCurrentFrameViewModelChanged;
             _groupNavigationService.OnNavigationRequested -= Navigate;
             _allStudentCohicesNavigationService.OnNavigationRequested -= Navigate;
+            _studentYearChoicesNavigationService.OnNavigationRequested -= Navigate;
 
             base.OnDeactivated();
         }

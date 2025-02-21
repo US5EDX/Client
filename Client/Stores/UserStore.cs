@@ -31,14 +31,20 @@ namespace Client.Stores
             RefreshToken = JsonSerializer.Deserialize<string>(userInfo["refreshToken"]);
 
             if (Role == 1)
+            {
+                StudentInfo = null;
+                WorkerInfo = null;
                 return;
+            }
 
             if (Role == 4)
             {
+                WorkerInfo = null;
                 StudentInfo = JsonSerializer.Deserialize<StudentInfo>(userInfo["studentInfo"]);
                 return;
             }
 
+            StudentInfo = null;
             WorkerInfo = JsonSerializer.Deserialize<WorkerInfo>(userInfo["workerInfo"]);
 
             return;

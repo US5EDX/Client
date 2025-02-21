@@ -59,7 +59,7 @@
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Disciplines" ContentInfo="Дисципліни" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Groups" ContentInfo="Групи" Margin="10,0,0,0"/>
                 </StackPanel>
-                <Button Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Вийти"/>
+                <Button Margin="0,0,10,0" Command="{Binding LogoutCommand}" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Вийти"/>
             </DockPanel>
         </Border>
 

@@ -12,23 +12,23 @@ namespace Client.HostBuilders
         {
             hostBuilder.ConfigureServices(services =>
             {
-                services.AddScoped<LoginViewModel>();
+                services.AddTransient<LoginViewModel>();
                 services.AddSingleton<Func<LoginViewModel>>((s) => () => s.GetRequiredService<LoginViewModel>());
                 services.AddSingleton<NavigationService<LoginViewModel>>();
 
-                services.AddScoped<SupAdminViewModel>();
+                services.AddTransient<SupAdminViewModel>();
                 services.AddSingleton<Func<SupAdminViewModel>>((s) => () => s.GetRequiredService<SupAdminViewModel>());
                 services.AddSingleton<NavigationService<SupAdminViewModel>>();
 
-                services.AddScoped<AdminViewModel>();
+                services.AddTransient<AdminViewModel>();
                 services.AddSingleton<Func<AdminViewModel>>((s) => () => s.GetRequiredService<AdminViewModel>());
                 services.AddSingleton<NavigationService<AdminViewModel>>();
 
-                services.AddScoped<LecturerViewModel>();
+                services.AddTransient<LecturerViewModel>();
                 services.AddSingleton<Func<LecturerViewModel>>((s) => () => s.GetRequiredService<LecturerViewModel>());
                 services.AddSingleton<NavigationService<LecturerViewModel>>();
 
-                services.AddScoped<StudentViewModel>();
+                services.AddTransient<StudentViewModel>();
                 services.AddSingleton<Func<StudentViewModel>>((s) => () => s.GetRequiredService<StudentViewModel>());
                 services.AddSingleton<NavigationService<StudentViewModel>>();
 

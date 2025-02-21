@@ -9,6 +9,7 @@ namespace Client.ViewModels
 {
     public partial class AdminViewModel : ObservableRecipient, IPageViewModel
     {
+        private readonly SuccsefulLoginViewModel _succsefulLoginViewModel;
         private readonly FrameNavigationViewModel _frameNavigation;
         private readonly FrameNavigationStore _frameNavigationStore;
         private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
@@ -28,11 +29,13 @@ namespace Client.ViewModels
 
         public IPageViewModel CurrentFrameViewModel => _frameNavigationStore.CurrentFrameViewModel;
 
-        public AdminViewModel(FrameNavigationStore frameNavigationStore, FrameNavigationViewModel frameNavigation,
+        public AdminViewModel(SuccsefulLoginViewModel succsefulLoginViewModel,
+        FrameNavigationStore frameNavigationStore, FrameNavigationViewModel frameNavigation,
             FrameNavigationService<GroupPageViewModel> groupNavigationService,
             FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService,
             FrameNavigationService<StudentYearChoicesViewModel> studentYearChoicesNavigationService)
         {
+            _succsefulLoginViewModel = succsefulLoginViewModel;
             _frameNavigationStore = frameNavigationStore;
             _frameNavigationStore.CurrentFrameViewModelChanged += OnCurrentFrameViewModelChanged;
             _frameNavigation = frameNavigation;
@@ -105,6 +108,12 @@ namespace Client.ViewModels
         {
             if (HasErrorMessage && !string.IsNullOrEmpty(_lastAttemptedDestination))
                 await Navigate(_lastAttemptedDestination);
+        }
+
+        [RelayCommand]
+        private async Task Logout()
+        {
+            ErrorMessage = await _succsefulLoginViewModel.Logout();
         }
     }
 }

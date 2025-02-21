@@ -49,7 +49,7 @@
                     <customcontrols:NavButton Command="" ContentInfo="Робота з базою даних" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="" ContentInfo="Журнал дій" Margin="10,0,0,0"/>
                 </StackPanel>
-                <Button Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Вийти"/>
+                <Button Command="{Binding LogoutCommand}" Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Вийти"/>
             </DockPanel>
         </Border>
 

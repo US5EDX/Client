@@ -102,7 +102,7 @@ SelectedItem="{Binding SelectedRecord, Mode=TwoWay, UpdateSourceTrigger=Property
               Width="0.1*" Binding="{Binding Semester, Converter={StaticResource SemToSemName}}"
                                             ElementStyle="{StaticResource CenteredCellStyle}"/>
 
-                        <DataGridTextColumn Header="Кількість записаних студентів" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+                        <DataGridTextColumn Header="Кількість записаних на обраний семестр" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
               Width="0.1*" Binding="{Binding SubscribersCount}" ElementStyle="{StaticResource CenteredCellStyle}" />
 
                         <DataGridTextColumn Header="Відкрита до набору" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 

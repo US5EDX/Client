@@ -59,9 +59,6 @@ namespace Client.Models
         [property: JsonPropertyName("url")]
         private string _url;
 
-        [JsonPropertyName("subscribersCount")]
-        public int SubscribersCount { get; set; }
-
         [ObservableProperty]
         [property: JsonPropertyName("holding")]
         private short _holding;
@@ -70,7 +67,26 @@ namespace Client.Models
         [property: JsonPropertyName("isOpen")]
         private bool _isOpen;
 
-        [JsonPropertyName("creatorId")]
-        public string CreatorId { get; set; }
+        public DisciplineFullInfo() { }
+
+        public DisciplineFullInfo(DisciplineFullInfo disciplineFullInfo)
+        {
+            DisciplineId = disciplineFullInfo.DisciplineId;
+            _disciplineCode = disciplineFullInfo._disciplineCode;
+            _catalogType = disciplineFullInfo._catalogType;
+            Faculty = disciplineFullInfo.Faculty;
+            _specialty = disciplineFullInfo._specialty;
+            _disciplineName = disciplineFullInfo._disciplineName;
+            _eduLevel = disciplineFullInfo._eduLevel;
+            _course = disciplineFullInfo._course;
+            _semester = disciplineFullInfo._semester;
+            _prerequisites = disciplineFullInfo._prerequisites;
+            _interest = disciplineFullInfo._interest;
+            _maxCount = disciplineFullInfo._maxCount;
+            _minCount = disciplineFullInfo._minCount;
+            _url = disciplineFullInfo._url;
+            _holding = disciplineFullInfo._holding;
+            _isOpen = disciplineFullInfo._isOpen;
+        }
     }
 }

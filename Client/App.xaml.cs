@@ -6,11 +6,14 @@ using Client.Services.MessageService;
 using Client.Stores;
 using Client.Stores.NavigationStores;
 using Client.ViewModels;
+using MaterialDesignThemes.Wpf;
+using MaterialDesignThemes.Wpf.Themes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Client
 {
@@ -62,6 +65,11 @@ namespace Client
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            PaletteHelper helper = new PaletteHelper();
+            Theme theme = helper.GetTheme();
+            theme.SetPrimaryColor(Color.FromRgb(63, 81, 181));
+            helper.SetTheme(theme);
+
             _host.Start();
 
             var navService = _host.Services.GetRequiredService<NavigationService<LoginViewModel>>();

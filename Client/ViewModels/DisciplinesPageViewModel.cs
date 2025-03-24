@@ -26,9 +26,9 @@ namespace Client.ViewModels
 
         private readonly List<CatalogTypeInfo> _catalogTypes;
         private readonly List<short> _holdings;
-        private readonly ObservableCollection<DisciplineFullInfo> _disciplines;
+        private readonly ObservableCollection<DisciplineWithSubCounts> _disciplines;
 
-        public IEnumerable<DisciplineFullInfo> Disciplines => _disciplines;
+        public IEnumerable<DisciplineWithSubCounts> Disciplines => _disciplines;
         public IEnumerable<short> Holdings => _holdings;
         public IEnumerable<CatalogTypeInfo> CatalogTypes => _catalogTypes;
 
@@ -65,7 +65,7 @@ namespace Client.ViewModels
         [NotifyCanExecuteChangedFor(nameof(UpdateStatusCommand))]
         [NotifyCanExecuteChangedFor(nameof(NavigateToFullInfoCommand))]
         [NotifyCanExecuteChangedFor(nameof(NavigateToStudentsCommand))]
-        private DisciplineFullInfo? _selectedDiscipline;
+        private DisciplineWithSubCounts? _selectedDiscipline;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CatalogFilter))]
@@ -112,7 +112,7 @@ namespace Client.ViewModels
             _selectedCatalog = _catalogTypes[0];
 
             _holdings = new List<short>();
-            _disciplines = new ObservableCollection<DisciplineFullInfo>();
+            _disciplines = new ObservableCollection<DisciplineWithSubCounts>();
 
             _specialtiesInfo = new List<SpecialtyInfo>();
 
@@ -179,7 +179,7 @@ namespace Client.ViewModels
             await ExecuteWithWaiting(async () =>
             {
                 (ErrorMessage, var disciplines) =
-                await _apiService.GetAsync<ObservableCollection<DisciplineFullInfo>>("Discipline",
+                await _apiService.GetAsync<ObservableCollection<DisciplineWithSubCounts>>("Discipline",
                 $"getDisciplines?pageNumber={page}&pageSize={PageSize}" +
                 $"&facultyId={_userStore.WorkerInfo.Faculty.FacultyId}{HoldingFilter}{CatalogFilter}",
                 _userStore.AccessToken);
@@ -188,7 +188,7 @@ namespace Client.ViewModels
                 {
                     _disciplines.Clear();
 
-                    foreach (var discipline in disciplines ?? Enumerable.Empty<DisciplineFullInfo>())
+                    foreach (var discipline in disciplines ?? Enumerable.Empty<DisciplineWithSubCounts>())
                         _disciplines.Add(discipline);
 
                     if (_disciplines.Count > 0)
@@ -259,7 +259,7 @@ namespace Client.ViewModels
                 return;
             }
 
-            _disciplines.Add(discipline);
+            _disciplines.Add(new DisciplineWithSubCounts(discipline));
             SelectedDiscipline = null;
         }
 

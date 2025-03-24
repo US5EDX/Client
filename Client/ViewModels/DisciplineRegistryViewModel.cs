@@ -32,7 +32,6 @@ namespace Client.ViewModels
         private readonly FacultyInfo _faculty;
         private readonly int _subscribersCount;
         private readonly bool _isOpen;
-        private readonly string _creatorId;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -225,9 +224,7 @@ namespace Client.ViewModels
 
             _disciplineId = discipline?.DisciplineId ?? 0;
             _faculty = discipline?.Faculty ?? _userStore.WorkerInfo.Faculty;
-            _subscribersCount = discipline?.SubscribersCount ?? 0;
             _isOpen = discipline?.IsOpen ?? true;
-            _creatorId = discipline?.CreatorId ?? _userStore.UserId;
 
             _disciplineCode = discipline?.DisciplineCode ?? null;
             _disciplineName = discipline?.DisciplineName ?? null;
@@ -260,7 +257,7 @@ namespace Client.ViewModels
                     await _apiService.PostAsync<DisciplineFullInfo>("Discipline", "addDiscipline", newDiscipline, _userStore.AccessToken);
 
                 if (!HasErrorMessage)
-                    OnSubmitAccepted(addedDiscipline);
+                    OnSubmitAccepted(newDiscipline);
             });
         }
 
@@ -277,7 +274,7 @@ namespace Client.ViewModels
                 var updatedDiscipline = InitializeDiscipline();
 
                 (ErrorMessage, _) =
-                    await _apiService.PutAsync<DisciplineFullInfo>("Discipline", "updateDiscipline",
+                    await _apiService.PutAsync<object>("Discipline", "updateDiscipline",
                     updatedDiscipline, _userStore.AccessToken);
 
                 if (!HasErrorMessage)
@@ -312,7 +309,7 @@ namespace Client.ViewModels
                 CatalogType = code.Contains('у') ? CatalogTypes[0] : CatalogTypes[1];
 
             var eduLevel = data.ElementAtOrDefault(1);
-            var eduLevelId = eduLevel.Contains("Перший") ? 1 : (eduLevel.Contains("Другий") ? 2 : 3);
+            var eduLevelId = eduLevel.ToLower().Contains("перший") ? 1 : (eduLevel.ToLower().Contains("другий") ? 2 : 3);
 
             EduLevel = EduLevels.First(level => level.EduLevelId == eduLevelId);
             Course = data.ElementAtOrDefault(2);
@@ -360,10 +357,8 @@ namespace Client.ViewModels
                 MaxCount = MaxCount ?? 0,
                 MinCount = MinCount ?? 0,
                 Url = Url,
-                SubscribersCount = _subscribersCount,
                 Holding = Holding.Value,
-                IsOpen = _isOpen,
-                CreatorId = _creatorId
+                IsOpen = _isOpen
             };
         }
     }

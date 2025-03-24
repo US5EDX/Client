@@ -75,8 +75,11 @@ SelectedItem="{Binding SelectedDiscipline, Mode=TwoWay, UpdateSourceTrigger=Prop
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
 
-                        <DataGridTextColumn Header="Кількість студентів" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-              Width="Auto" Binding="{Binding SubscribersCount}" ElementStyle="{StaticResource CenteredCell}" />
+                        <DataGridTextColumn Header="Кількість студентів на непарний" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+              Width="Auto" Binding="{Binding NonparsemesterCount}" ElementStyle="{StaticResource CenteredCell}" />
+
+                        <DataGridTextColumn Header="Кількість студентів на парний" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+              Width="Auto" Binding="{Binding ParsemesterCount}" ElementStyle="{StaticResource CenteredCell}" />
 
                         <DataGridTextColumn Header="Статус" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
               Width="Auto" Binding="{Binding IsOpen, Converter={StaticResource BoolToStatus}}" ElementStyle="{StaticResource CenteredCell}" />

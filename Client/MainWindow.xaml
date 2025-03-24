@@ -8,7 +8,7 @@
         xmlns:views="clr-namespace:Client.Views"
         xmlns:vms="clr-namespace:Client.ViewModels"
         mc:Ignorable="d"
-        Title="Title" Height="450" Width="800">
+        Title="Студентський вибір ДНУ" Height="450" Width="800">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type vms:LoginViewModel}">

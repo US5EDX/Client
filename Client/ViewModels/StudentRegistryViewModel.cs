@@ -99,7 +99,7 @@ namespace Client.ViewModels
                 var updatedstudent = CreateNewInfo();
 
                 (ErrorMessage, _) =
-                    await _apiService.PutAsync<GroupWithSpecialtyInfo>("Student", "updateStudent", updatedstudent, _userStore.AccessToken);
+                    await _apiService.PutAsync<StudentRegistryInfo>("Student", "updateStudent", updatedstudent, _userStore.AccessToken);
 
                 if (!HasErrorMessage)
                     OnSubmitAccepted(updatedstudent);

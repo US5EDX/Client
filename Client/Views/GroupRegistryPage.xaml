@@ -39,6 +39,24 @@
         <TextBox Margin="0,0,0,30" Text="{Binding Parsemester, Mode=TwoWay, 
             UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ByteNullableConv}}" 
                  materialDesign:HintAssist.Hint="2" />
+
+        <TextBlock Text="Група" Margin="0,0,0,5"/>
+        <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Worker}"
+          ItemsSource="{Binding Workers}" IsEditable="True" Text="{Binding WorkerFullName}" 
+          DisplayMemberPath="FullName" materialDesign:HintAssist.Hint="Іванов Іван Іванович">
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem" BasedOn="{StaticResource MaterialDesignComboBoxItemStyle}">
+                    <Setter Property="IsEnabled" Value="True"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DataContext.IsLoading, RelativeSource={RelativeSource AncestorType=Page}}" 
+                             Value="True">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ComboBox.ItemContainerStyle>
+        </ComboBox>
+
         <TextBlock Margin="0,0,0,15" Text="Очікування результату..." 
                 Visibility="{Binding IsWaiting, Converter={StaticResource boolToVis}}"
 HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Foreground="Green"/>

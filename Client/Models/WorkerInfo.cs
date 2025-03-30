@@ -20,8 +20,5 @@ namespace Client.Models
 
         [JsonPropertyName("position")]
         public string Position { get; set; }
-
-        [JsonPropertyName("group")]
-        public uint? Group { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Client.Models
 {
-    public partial class GroupWithSpecialtyInfo : ObservableObject
+    public partial class GroupFullInfo : ObservableObject
     {
         [JsonPropertyName("groupId")]
         public uint GroupId { get; set; }
@@ -31,6 +31,10 @@ namespace Client.Models
         [ObservableProperty]
         [property: JsonPropertyName("parsemester")]
         private byte _parsemester;
+
+        [ObservableProperty]
+        [property: JsonPropertyName("curatorInfo")]
+        private WorkerShortInfo? _curatorInfo;
 
         public GroupInfo ToGroupInfo()
         {

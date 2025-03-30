@@ -195,7 +195,6 @@ namespace Client.ViewModels
                 SelectedAcademician.Faculty = workerInfo.Faculty;
                 SelectedAcademician.Department = workerInfo.Department;
                 SelectedAcademician.Position = workerInfo.Position;
-                SelectedAcademician.Group = workerInfo.Group;
                 SelectedAcademician = null;
                 return;
             }

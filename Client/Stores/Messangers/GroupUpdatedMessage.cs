@@ -3,8 +3,8 @@ using CommunityToolkit.Mvvm.Messaging.Messages;
 
 namespace Client.Stores.Messangers
 {
-    public class GroupUpdatedMessage : ValueChangedMessage<GroupWithSpecialtyInfo>
+    public class GroupUpdatedMessage : ValueChangedMessage<GroupFullInfo>
     {
-        public GroupUpdatedMessage(GroupWithSpecialtyInfo value) : base(value) { }
+        public GroupUpdatedMessage(GroupFullInfo value) : base(value) { }
     }
 }

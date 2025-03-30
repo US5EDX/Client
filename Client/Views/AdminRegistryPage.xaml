@@ -34,26 +34,6 @@ MaxLength="150" materialDesign:HintAssist.Hint="Доцент" />
         <TextBlock Text="Роль" Margin="0,0,0,5"/>
         <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Role, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     ItemsSource="{Binding Roles}" DisplayMemberPath="RoleName" materialDesign:HintAssist.Hint="Адміністратор" />
-        <CheckBox Content="Чи є куратором" FontSize="12" Margin="0,0,0,5"
-                  IsChecked="{Binding IsCurator}" Visibility="{Binding IsAdministratorView, Converter={StaticResource boolToVis}}" />
-        <StackPanel Visibility="{Binding IsCurator, Converter={StaticResource boolToVis}}">
-            <TextBlock Text="Група" Margin="0,0,0,5"/>
-            <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Group}"
-                      ItemsSource="{Binding Groups}" IsEditable="True" Text="{Binding GroupName}" 
-                      DisplayMemberPath="GroupCode" materialDesign:HintAssist.Hint="ПЗ-21-1">
-                <ComboBox.ItemContainerStyle>
-                    <Style TargetType="ComboBoxItem" BasedOn="{StaticResource MaterialDesignComboBoxItemStyle}">
-                        <Setter Property="IsEnabled" Value="True"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding DataContext.IsLoading, RelativeSource={RelativeSource AncestorType=Page}}" 
-                                         Value="True">
-                                <Setter Property="IsEnabled" Value="False"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </ComboBox.ItemContainerStyle>
-            </ComboBox>
-        </StackPanel>
         <TextBlock Margin="0,0,0,15" Text="Очікування результату..." 
                 Visibility="{Binding IsWaiting, Converter={StaticResource boolToVis}}"
 HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Foreground="Green"/>

@@ -23,10 +23,10 @@ namespace Client.ViewModels
         private readonly GroupInfoStore _groupStore;
         private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
 
-        private readonly ObservableCollection<GroupWithSpecialtyInfo> _groups;
+        private readonly ObservableCollection<GroupFullInfo> _groups;
         private readonly List<SpecialtyInfo> _specialtiesInfo;
 
-        public IEnumerable<GroupWithSpecialtyInfo> Groups => _groups;
+        public IEnumerable<GroupFullInfo> Groups => _groups;
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsRegistryOpen))]
@@ -46,7 +46,7 @@ namespace Client.ViewModels
         [NotifyCanExecuteChangedFor(nameof(OpenUpdateModalCommand))]
         [NotifyCanExecuteChangedFor(nameof(DeleteGroupCommand))]
         [NotifyCanExecuteChangedFor(nameof(NavigateCommand))]
-        private GroupWithSpecialtyInfo? _selectedGroup;
+        private GroupFullInfo? _selectedGroup;
 
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
         public bool IsGroupSelected => SelectedGroup is not null;
@@ -62,7 +62,7 @@ namespace Client.ViewModels
             _groupStore = groupStore;
             _groupNavigationService = groupNavigationService;
 
-            _groups = new ObservableCollection<GroupWithSpecialtyInfo>();
+            _groups = new ObservableCollection<GroupFullInfo>();
             _specialtiesInfo = new List<SpecialtyInfo>();
 
             WeakReferenceMessenger.Default.Register<GroupUpdatedMessage>(this, Receive);
@@ -74,7 +74,7 @@ namespace Client.ViewModels
         public async Task LoadContentAsync()
         {
             (ErrorMessage, var groups) =
-                await _apiService.GetAsync<ObservableCollection<GroupWithSpecialtyInfo>>
+                await _apiService.GetAsync<ObservableCollection<GroupFullInfo>>
                 ("Group", $"getByFacultyId?facultyId={_userStore.WorkerInfo.Faculty.FacultyId}", _userStore.AccessToken);
 
             if (HasErrorMessage)
@@ -82,7 +82,7 @@ namespace Client.ViewModels
 
             _groups.Clear();
 
-            foreach (var group in groups ?? Enumerable.Empty<GroupWithSpecialtyInfo>())
+            foreach (var group in groups ?? Enumerable.Empty<GroupFullInfo>())
                 _groups.Add(group);
 
             (ErrorMessage, var specialties) =
@@ -118,7 +118,7 @@ namespace Client.ViewModels
 
         public void Receive(object recipient, GroupUpdatedMessage message)
         {
-            GroupWithSpecialtyInfo groupInfo = message.Value;
+            GroupFullInfo groupInfo = message.Value;
 
             if (IsGroupSelected && SelectedGroup.GroupId == groupInfo.GroupId)
             {
@@ -128,6 +128,7 @@ namespace Client.ViewModels
                 SelectedGroup.EduLevel = groupInfo.EduLevel;
                 SelectedGroup.Nonparsemester = groupInfo.Nonparsemester;
                 SelectedGroup.Parsemester = groupInfo.Parsemester;
+                SelectedGroup.CuratorInfo = groupInfo.CuratorInfo;
                 SelectedGroup = null;
                 return;
             }
@@ -200,10 +201,13 @@ namespace Client.ViewModels
 
         private bool FilterGroups(object group, string filter)
         {
-            if (group is not GroupWithSpecialtyInfo groupInfo)
+            if (group is not GroupFullInfo groupInfo)
                 return false;
 
-            return groupInfo.GroupCode.Contains(filter, StringComparison.OrdinalIgnoreCase);
+            return groupInfo.GroupCode.Contains(filter, StringComparison.OrdinalIgnoreCase)
+                || (groupInfo.CuratorInfo is not null ?
+                groupInfo.CuratorInfo.FullName.Contains(filter, StringComparison.OrdinalIgnoreCase) :
+                "Без куратора".Contains(filter, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

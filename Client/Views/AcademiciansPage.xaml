@@ -60,14 +60,11 @@ SelectedItem="{Binding SelectedAcademician, Mode=TwoWay, UpdateSourceTrigger=Pro
                         <DataGridTextColumn Header="Факультет" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
               Width="Auto" Binding="{Binding Faculty.FacultyName}" />
 
-                        <DataGridTextColumn Header="Кафедра" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+                        <DataGridTextColumn Header="Розміщення" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
               Width="Auto" Binding="{Binding Department}" />
 
                         <DataGridTextColumn Header="Посада" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
               Width="Auto" Binding="{Binding Position}" />
-
-                        <DataGridTextColumn Header="Група" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-              Width="Auto" Binding="{Binding Group.GroupCode}" />
                     </DataGrid.Columns>
                 </DataGrid>
 

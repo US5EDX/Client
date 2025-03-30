@@ -32,9 +32,5 @@ namespace Client.Models
         [JsonRequired]
         [property: JsonPropertyName("position")]
         private string _position;
-
-        [ObservableProperty]
-        [property: JsonPropertyName("group")]
-        private GroupShortInfo? _group;
     }
 }

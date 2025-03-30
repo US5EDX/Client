@@ -13,6 +13,6 @@ namespace Client.Models
         private string _specialtyName;
 
         [JsonPropertyName("facultyId")]
-        public uint FacultyId { get; set; }
+        public uint? FacultyId { get; set; }
     }
 }

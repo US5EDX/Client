@@ -59,6 +59,9 @@
 
                     <DataGridTextColumn Header="Парний семестр" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
                 Width="Auto" Binding="{Binding Parsemester}" />
+
+                    <DataGridTextColumn Header="Куратор групи" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+                Width="Auto" Binding="{Binding CuratorInfo.FullName, FallbackValue='Без куратора'}" />
                 </DataGrid.Columns>
             </DataGrid>
 

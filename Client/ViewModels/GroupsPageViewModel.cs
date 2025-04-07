@@ -1,17 +1,12 @@
 ﻿using Client.Models;
 using Client.Services;
-using Client.Stores.Messangers;
+using Client.Services.MessageService;
 using Client.Stores;
+using Client.Stores.Messangers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Client.Services.MessageService;
 
 namespace Client.ViewModels
 {
@@ -126,8 +121,11 @@ namespace Client.ViewModels
                 SelectedGroup.Specialty = groupInfo.Specialty;
                 SelectedGroup.Course = groupInfo.Course;
                 SelectedGroup.EduLevel = groupInfo.EduLevel;
+                SelectedGroup.DurationOfStudy = groupInfo.DurationOfStudy;
+                SelectedGroup.AdmissionYear = groupInfo.AdmissionYear;
                 SelectedGroup.Nonparsemester = groupInfo.Nonparsemester;
                 SelectedGroup.Parsemester = groupInfo.Parsemester;
+                SelectedGroup.HasEnterChoise = groupInfo.HasEnterChoise;
                 SelectedGroup.CuratorInfo = groupInfo.CuratorInfo;
                 SelectedGroup = null;
                 return;
@@ -164,39 +162,6 @@ namespace Client.ViewModels
             _groupStore.IsLoadedFromGroupsPage = true;
 
             _groupNavigationService.RequestNavigation("Group");
-        }
-
-        [RelayCommand]
-        private async Task UpdateCourse()
-        {
-            bool yes = _messenger.ShowQuestion("Ви впевнені, що хочете перевести групи на новий курс?");
-
-            if (!yes)
-                return;
-
-            yes = _messenger.ShowQuestion("Ви точно впевнені?");
-
-            if (!yes)
-                return;
-
-            (ErrorMessage, _) = await _apiService.PutAsync<object>(
-                        "Group", $"updateGroupsCourse/{_userStore.WorkerInfo.Faculty.FacultyId}", null, _userStore.AccessToken);
-
-            if (HasErrorMessage)
-                return;
-
-            foreach (var groupInfo in _groups)
-            {
-                if (groupInfo.Course == 0)
-                    continue;
-
-                var newCourse = groupInfo.Course + 1;
-
-                if (newCourse == 5 || newCourse == 7 || newCourse == 13)
-                    newCourse = 0;
-
-                groupInfo.Course = (byte)newCourse;
-            }
         }
 
         private bool FilterGroups(object group, string filter)

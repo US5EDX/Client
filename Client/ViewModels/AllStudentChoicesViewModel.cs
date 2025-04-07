@@ -69,7 +69,7 @@ namespace Client.ViewModels
 
             (errorMessage, var records) =
                     await _apiService.GetAsync<List<StudentYearRecords>>
-                    ("Record", $"getByStudentIdAndCourse?studentId={_studentInfoStore.StudentId}&course={_groupInfoStore.Course}",
+                    ("Record", $"getByStudentIdAndGroupId?studentId={_studentInfoStore.StudentId}&groupId={_groupInfoStore.GroupId}",
                     _userStore.AccessToken);
 
             if (!string.IsNullOrEmpty(errorMessage))

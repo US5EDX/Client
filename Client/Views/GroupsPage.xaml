@@ -16,6 +16,7 @@
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVis"/>
         <conv:EduLevelToEduLevelNameConverter x:Key="EduLevelToEduLevelName"/>
+        <conv:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
 
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -54,11 +55,20 @@
                     <DataGridTextColumn Header="Рівень ВО" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
                 Width="Auto" Binding="{Binding EduLevel, Converter={StaticResource EduLevelToEduLevelName}}" />
 
+                    <DataGridTextColumn Header="Довжина навчання" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+Width="Auto" Binding="{Binding DurationOfStudy}" />
+
+                    <DataGridTextColumn Header="Рік вступу" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+Width="Auto" Binding="{Binding AdmissionYear}" />
+
                     <DataGridTextColumn Header="Непарний семестр" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
                 Width="Auto" Binding="{Binding Nonparsemester}" />
 
                     <DataGridTextColumn Header="Парний семестр" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
                 Width="Auto" Binding="{Binding Parsemester}" />
+
+                    <DataGridTextColumn Header="Чи є вибір при вступі" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+Width="Auto" Binding="{Binding HasEnterChoise, Converter={StaticResource BoolToStatusConverter}}" />
 
                     <DataGridTextColumn Header="Куратор групи" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
                 Width="Auto" Binding="{Binding CuratorInfo.FullName, FallbackValue='Без куратора'}" />
@@ -80,9 +90,9 @@
                     <Button Content="Видалити" Margin="0,0,0,30" Command="{Binding DeleteGroupCommand}"/>
 
                     <Button Content="Перейти" Margin="0,0,0,15" Command="{Binding NavigateCommand}"/>
-                    <Button Margin="0,0,0,15" Height="Auto" Command="{Binding UpdateCourseCommand}">
-                        <TextBlock Text="Перевести на наступний курс" MaxWidth="250" TextWrapping="Wrap" TextAlignment="Center"/>
-                    </Button>
+                    <!--<Button Margin="0,0,0,15" Height="Auto" Command="{Binding UpdateCourseCommand}">
+                        <TextBlock Text="Видалити випущені групи" MaxWidth="250" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </Button>-->
                 </StackPanel>
             </StackPanel>
         </Grid>

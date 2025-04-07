@@ -25,12 +25,24 @@ namespace Client.Models
         private byte _course;
 
         [ObservableProperty]
+        [property: JsonPropertyName("durationOfStudy")]
+        public byte _durationOfStudy;
+
+        [ObservableProperty]
+        [property: JsonPropertyName("admissionYear")]
+        public short _admissionYear;
+
+        [ObservableProperty]
         [property: JsonPropertyName("nonparsemester")]
         private byte _nonparsemester;
 
         [ObservableProperty]
         [property: JsonPropertyName("parsemester")]
         private byte _parsemester;
+
+        [ObservableProperty]
+        [property: JsonPropertyName("hasEnterChoise")]
+        public bool _hasEnterChoise;
 
         [ObservableProperty]
         [property: JsonPropertyName("curatorInfo")]
@@ -44,8 +56,11 @@ namespace Client.Models
                 GroupCode = this.GroupCode,
                 EduLevel = this.EduLevel,
                 Course = this.Course,
+                DurationOfStudy = this.DurationOfStudy,
+                AdmissionYear = this.AdmissionYear,
                 Nonparsemester = this.Nonparsemester,
-                Parsemester = this.Parsemester
+                Parsemester = this.Parsemester,
+                HasEnterChoise = this.HasEnterChoise
             };
         }
     }

@@ -6,7 +6,6 @@ using Client.ViewModels.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using DocumentFormat.OpenXml.EMMA;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -51,19 +50,30 @@ namespace Client.ViewModels
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
-        [Range(0, 12)]
-        [NotifyPropertyChangedFor(nameof(CanSubmit))]
-        [NotifyCanExecuteChangedFor(nameof(AddGroupCommand))]
-        [NotifyCanExecuteChangedFor(nameof(UpdateGroupCommand))]
-        private byte? _course;
-
-        [ObservableProperty]
-        [NotifyDataErrorInfo]
         [Required]
         [NotifyPropertyChangedFor(nameof(CanSubmit))]
         [NotifyCanExecuteChangedFor(nameof(AddGroupCommand))]
         [NotifyCanExecuteChangedFor(nameof(UpdateGroupCommand))]
         private EduLevelInfo? _eduLevel;
+
+        [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Range(1, 4)]
+        [CustomValidation(typeof(GroupRegistryViewModel),
+            nameof(ValidateDurationOfStudy))]
+        [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyCanExecuteChangedFor(nameof(AddGroupCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateGroupCommand))]
+        private byte? _durationOfStudy;
+
+        [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [CustomValidation(typeof(GroupRegistryViewModel),
+            nameof(ValidateAdmissionYear))]
+        [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyCanExecuteChangedFor(nameof(AddGroupCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateGroupCommand))]
+        private DateTime _admissionYear;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -80,6 +90,12 @@ namespace Client.ViewModels
         [NotifyCanExecuteChangedFor(nameof(AddGroupCommand))]
         [NotifyCanExecuteChangedFor(nameof(UpdateGroupCommand))]
         private byte? _parsemester;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyCanExecuteChangedFor(nameof(AddGroupCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateGroupCommand))]
+        private bool _hasEnterChoise;
 
         [ObservableProperty]
         private bool _isWaiting;
@@ -101,14 +117,40 @@ namespace Client.ViewModels
 
         public bool CanSubmit => !HasErrors &&
             EduLevel is not null &&
+            DurationOfStudy is not null &&
             Specialty is not null &&
-            Course is not null &&
             Nonparsemester is not null &&
             Parsemester is not null;
 
         public IRelayCommand CloseCommand { get; init; }
 
         public IAsyncRelayCommand SubmitCommand { get; init; }
+
+        public static ValidationResult ValidateAdmissionYear(string name, ValidationContext context)
+        {
+            GroupRegistryViewModel viewModel = (GroupRegistryViewModel)context.ObjectInstance;
+
+            if (viewModel.AdmissionYear.Year > 2019 && viewModel.AdmissionYear.Year < DateTime.UtcNow.Year + 1)
+                return ValidationResult.Success;
+
+            return new("Навчальний рік повинен бути у межах 2020 - 2155");
+        }
+
+        public static ValidationResult ValidateDurationOfStudy(string name, ValidationContext context)
+        {
+            GroupRegistryViewModel viewModel = (GroupRegistryViewModel)context.ObjectInstance;
+
+            if (viewModel.DurationOfStudy is not null
+                && viewModel.DurationOfStudy == 1 && viewModel.HasEnterChoise == false)
+                return new("Довжина навчання не може дорівнювати 1 року, якщо при вступі немає вибору");
+
+            return ValidationResult.Success;
+        }
+
+        partial void OnHasEnterChoiseChanged(bool value)
+        {
+            ValidateProperty(DurationOfStudy, nameof(DurationOfStudy));
+        }
 
         public GroupRegistryViewModel(UserStore userStore, ApiService apiService, List<SpecialtyInfo> specialtiesInfo,
             IRelayCommand closeCommand, GroupFullInfo? groupInfo = null)
@@ -135,10 +177,12 @@ namespace Client.ViewModels
             _groupId = groupInfo?.GroupId ?? 0;
             GroupCode = groupInfo?.GroupCode;
             Specialty = Specialties.FirstOrDefault(sp => sp.SpecialtyId == groupInfo?.Specialty.SpecialtyId);
-            Course = groupInfo?.Course;
             EduLevel = EduLevels.FirstOrDefault(level => level.EduLevelId == groupInfo?.EduLevel);
+            DurationOfStudy = groupInfo?.DurationOfStudy;
+            AdmissionYear = new DateTime(groupInfo?.AdmissionYear ?? DateTime.Now.Year, 1, 1);
             Nonparsemester = groupInfo?.Nonparsemester;
             Parsemester = groupInfo?.Parsemester;
+            HasEnterChoise = groupInfo?.HasEnterChoise ?? false;
 
             if (groupInfo?.CuratorInfo is not null)
             {
@@ -211,6 +255,8 @@ namespace Client.ViewModels
         [RelayCommand(CanExecute = nameof(CanSubmit))]
         private async Task AddGroup()
         {
+            ValidateAllProperties();
+
             await ExecuteWithWaiting(async () =>
             {
                 var newGroup = InithializeInstance();
@@ -226,6 +272,8 @@ namespace Client.ViewModels
         [RelayCommand(CanExecute = nameof(CanSubmit))]
         private async Task UpdateGroup()
         {
+            ValidateAllProperties();
+
             await ExecuteWithWaiting(async () =>
             {
                 var updatingGroup = InithializeInstance();
@@ -261,10 +309,12 @@ namespace Client.ViewModels
                 GroupId = _groupId == 0 ? null : _groupId,
                 GroupCode = GroupCode,
                 SpecialtyId = Specialty.SpecialtyId,
-                Course = Course.Value,
                 EduLevel = EduLevel.EduLevelId,
+                DurationOfStudy = DurationOfStudy.Value,
+                AdmissionYear = (short)AdmissionYear.Year,
                 Nonparsemester = Nonparsemester.Value,
                 Parsemester = Parsemester.Value,
+                HasEnterChoise = HasEnterChoise,
                 CuratorId = Worker?.WorkerId
             };
         }

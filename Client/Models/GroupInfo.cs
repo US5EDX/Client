@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace Client.Models
 {
@@ -21,10 +16,19 @@ namespace Client.Models
         [JsonPropertyName("course")]
         public byte Course { get; set; }
 
+        [JsonPropertyName("durationOfStudy")]
+        public byte DurationOfStudy { get; set; }
+
+        [JsonPropertyName("admissionYear")]
+        public short AdmissionYear { get; set; }
+
         [JsonPropertyName("nonparsemester")]
         public byte Nonparsemester { get; set; }
 
         [JsonPropertyName("parsemester")]
         public byte Parsemester { get; set; }
+
+        [JsonPropertyName("hasEnterChoise")]
+        public bool HasEnterChoise { get; set; }
     }
 }

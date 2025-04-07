@@ -156,6 +156,11 @@ namespace Client.ViewModels
             }, token);
         }
 
+        partial void OnSemesterChanged(SemesterInfo? value)
+        {
+            DisciplineCodeName = string.Empty;
+        }
+
         private async Task<IEnumerable<DisciplineShortInfo>> LoadDisciplinesFromServer(string searchFilter)
         {
             if (searchFilter.Length < 3 || searchFilter.Length > 50)

@@ -349,6 +349,16 @@ namespace Client.ViewModels
             SelectedModal = viewModel;
         }
 
+        [RelayCommand]
+        private async Task OpenPrint()
+        {
+            if (SelectedHolding is null)
+                return;
+
+            SelectedModal = new PrintDisciplinesPageViewModel(_apiService, _userStore,
+                _messageService, _pdfCreatorService, CloseModalCommand, CatalogTypes.Skip(1), Holdings.Take(3));
+        }
+
         private async Task ExecuteWithWaiting(Func<Task> action)
         {
             ErrorMessage = string.Empty;

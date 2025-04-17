@@ -138,6 +138,11 @@ namespace Client.ViewModels
         [RelayCommand(CanExecute = nameof(IsGroupSelected))]
         private async Task DeleteGroup()
         {
+            bool isOk = _messenger.ShowQuestion($"Ви дійсно хочете видалити групу {SelectedGroup.GroupCode}");
+
+            if (!isOk)
+                return;
+
             ErrorMessage = string.Empty;
             IsWaiting = true;
 

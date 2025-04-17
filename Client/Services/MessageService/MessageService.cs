@@ -5,6 +5,11 @@ namespace Client.Services.MessageService
 {
     public class MessageService : IMessageService
     {
+        public void ShowSuccessMessage(string message, string caption = "Успіх")
+        {
+            MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
         public bool ShowQuestion(string message, string caption = "Підтвердити дію")
         {
             return MessageBox.Show(message, caption, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;

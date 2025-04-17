@@ -39,6 +39,10 @@
         <DataTemplate DataType="{x:Type vms:SignedStudentsPageViewModel}">
             <views:SignedStudentsPage />
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vms:PrintDisciplinesPageViewModel}">
+            <views:PrintDisciplinesPage />
+        </DataTemplate>
     </Page.Resources>
 
     <materialDesign:DialogHost IsOpen="{Binding IsModalOpen, Mode=OneWay}">
@@ -137,7 +141,8 @@ Width="Auto" Binding="{Binding EduLevel, Converter={StaticResource EduLevelToEdu
                             SelectedItem="{Binding SelectedHolding}" IsEnabled="{Binding IsNotLocked}" />
                     <Button Content="Повна інформація" Margin="0,0,0,15" Command="{Binding NavigateToFullInfoCommand}" IsEnabled="{Binding IsNotLocked}"/>
                     <Button Content="Список студентів" Margin="0,0,0,15" Command="{Binding NavigateToStudentsCommand}" IsEnabled="{Binding IsNotLocked}"/>
-                    <Button Content="Оновити статус" Command="{Binding UpdateStatusCommand}" IsEnabled="{Binding IsNotLocked}"/>
+                    <Button Content="Оновити статус" Margin="0,0,0,15" Command="{Binding UpdateStatusCommand}" IsEnabled="{Binding IsNotLocked}"/>
+                    <Button Content="Сформувати відомість" Command="{Binding OpenPrintCommand}" IsEnabled="{Binding IsNotLocked}"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

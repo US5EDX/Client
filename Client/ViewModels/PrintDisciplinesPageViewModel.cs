@@ -1,4 +1,5 @@
 ﻿using Client.Models;
+using Client.PdfDoucments;
 using Client.Services;
 using Client.Services.MessageService;
 using Client.Stores;
@@ -15,9 +16,6 @@ namespace Client.ViewModels
         private readonly ApiService _apiService;
         private readonly UserStore _userStore;
         private readonly IMessageService _messageService;
-        private readonly PdfCreatorService _pdfCreatorService;
-
-        private readonly short _eduYear;
 
         private List<DisciplinePrintInfo>? _disciplinesPrintInfos;
         private DisciplineStatusThresholds? _disciplineStatusThresholds;
@@ -66,13 +64,12 @@ namespace Client.ViewModels
         public IRelayCommand CloseCommand { get; init; }
 
         public PrintDisciplinesPageViewModel(ApiService apiService, UserStore userStore,
-            IMessageService messageService, PdfCreatorService pdfCreatorService, IRelayCommand closeCommand,
+            IMessageService messageService, IRelayCommand closeCommand,
             IEnumerable<CatalogTypeInfo> catalogTypes, IEnumerable<short> eduYears)
         {
             _apiService = apiService;
             _userStore = userStore;
             _messageService = messageService;
-            _pdfCreatorService = pdfCreatorService;
             CloseCommand = closeCommand;
 
             CatalogTypeInfos = catalogTypes.ToList();
@@ -131,7 +128,7 @@ namespace Client.ViewModels
                 }
 
                 _disciplinesPrintInfos = (SortOption == 0 ? _disciplinesPrintInfos.OrderBy(d => d.DisciplineCode) :
-                _disciplinesPrintInfos.OrderByDescending(d => d.StudentsCount)).ToList();
+                _disciplinesPrintInfos.OrderByDescending(d => d.StudentsCount).ThenBy(d => d.DisciplineCode)).ToList();
 
                 Dictionary<byte, List<DisciplinePrintInfo>> groupedDisciplines = null;
 
@@ -140,23 +137,22 @@ namespace Client.ViewModels
                         .GroupBy(d => d.EduLevel)
                         .ToDictionary(g => g.Key, g => g.ToList());
 
-                try
-                {
-                    if (IsNeedGrouping)
-                        _pdfCreatorService.SaveDisciplinesInfo(path, groupedDisciplines, _userStore.WorkerInfo.Faculty.FacultyName,
-                            SelectedCatalogInfo.CatalogName, SelectedEduYear.Value, SelectedSemesterInfo.SemesterId, _disciplineStatusThresholds);
-                    else
-                        _pdfCreatorService.SaveDisciplinesInfo(path, _disciplinesPrintInfos, _userStore.WorkerInfo.Faculty.FacultyName,
-                        SelectedCatalogInfo.CatalogName, SelectedEduYear.Value, SelectedSemesterInfo.SemesterId, _disciplineStatusThresholds);
+                var reportDocument = IsNeedGrouping ?
+                new DisciplineReportDocument(groupedDisciplines, _userStore.WorkerInfo.Faculty.FacultyName,
+                    SelectedCatalogInfo.CatalogName, SelectedEduYear.Value, SelectedSemesterInfo.SemesterId,
+                    _disciplineStatusThresholds) :
+                new DisciplineReportDocument(_disciplinesPrintInfos, _userStore.WorkerInfo.Faculty.FacultyName,
+                    SelectedCatalogInfo.CatalogName, SelectedEduYear.Value, SelectedSemesterInfo.SemesterId,
+                    _disciplineStatusThresholds);
 
-                    _messageService.ShowSuccessMessage("Відомість успішно сформована", "Успіх");
+                ErrorMessage = await PdfGenerator.GeneratePdf(reportDocument, path);
 
-                    CloseCommand.Execute(null);
-                }
-                catch
-                {
-                    ErrorMessage = "Не вдалось сформувати відомість за визначеним шляхом";
-                }
+                if (HasErrorMessage)
+                    return;
+
+                _messageService.ShowSuccessMessage("Відомість успішно сформована", "Успіх");
+
+                CloseCommand.Execute(null);
             });
         }
 

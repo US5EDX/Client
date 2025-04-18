@@ -1,5 +1,4 @@
 ﻿using Client.ViewModels;
-using iText.Layout.Element;
 using System;
 using System.Collections.Generic;
 using System.Linq;

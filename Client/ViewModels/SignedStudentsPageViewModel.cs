@@ -1,4 +1,5 @@
 ﻿using Client.Models;
+using Client.PdfDoucments;
 using Client.Services;
 using Client.Services.MessageService;
 using Client.Stores;
@@ -16,7 +17,6 @@ namespace Client.ViewModels
         private readonly UserStore _userStore;
         private readonly DisciplineMainInfoStore _disciplineStore;
         private readonly IMessageService _messageService;
-        private readonly PdfCreatorService _pdfCreatorService;
 
         private readonly ObservableCollection<RecordWithStudentInfo> _records;
         private readonly List<SemesterInfo> _semesterInfos;
@@ -45,14 +45,12 @@ namespace Client.ViewModels
         public Func<object, string, bool> Filter { get; init; }
 
         public SignedStudentsPageViewModel(ApiService apiService, UserStore userStore, DisciplineMainInfoStore disciplineStore,
-            IMessageService messageService, PdfCreatorService pdfCreatorService,
-            IRelayCommand closeCommand)
+            IMessageService messageService, IRelayCommand closeCommand)
         {
             _apiService = apiService;
             _userStore = userStore;
             _disciplineStore = disciplineStore;
             _messageService = messageService;
-            _pdfCreatorService = pdfCreatorService;
 
             Header = $"{_disciplineStore.DisciplineCode} {_disciplineStore.DisciplineName}";
 
@@ -112,7 +110,7 @@ namespace Client.ViewModels
         }
 
         [RelayCommand]
-        private void GeneratePdf()
+        private async Task GeneratePdf()
         {
             ErrorMessage = string.Empty;
             IsWaiting = true;
@@ -125,18 +123,10 @@ namespace Client.ViewModels
                 return;
             }
 
-            try
-            {
-                _pdfCreatorService.SaveSignedStudents(path, _records, Header, SelectedSemester.SemesterName, Total);
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-            }
-            finally
-            {
-                IsWaiting = false;
-            }
+            var reportDocument = new SignedStudentsReportDocument(_records, Header, SelectedSemester.SemesterName, Total);
+            ErrorMessage = await PdfGenerator.GeneratePdf(reportDocument, path);
+
+            IsWaiting = false;
         }
 
         private bool FilterStudents(object record, string filter)

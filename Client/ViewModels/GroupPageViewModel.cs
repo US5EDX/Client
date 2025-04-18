@@ -1,4 +1,5 @@
 ﻿using Client.Models;
+using Client.PdfDoucments;
 using Client.Services;
 using Client.Services.MessageService;
 using Client.Stores;
@@ -18,7 +19,6 @@ namespace Client.ViewModels
         private readonly UserStore _userStore;
         private readonly GroupInfoStore _groupInfoStore;
         private readonly IMessageService _messageService;
-        private readonly PdfCreatorService _pdfCreatorService;
         private readonly StudentsReaderService _studentsReaderService;
         private readonly FrameNavigationService<AllStudentChoicesViewModel> _allStudentCohicesNavigationService;
         private readonly StudentInfoStore _studentInfoStore;
@@ -59,7 +59,7 @@ namespace Client.ViewModels
         public Func<object, string, bool> Filter { get; init; }
 
         public GroupPageViewModel(ApiService apiService, UserStore userStore, GroupInfoStore groupInfoStore,
-            IMessageService messageService, PdfCreatorService pdfCreatorService, StudentsReaderService studentsReaderService,
+            IMessageService messageService, StudentsReaderService studentsReaderService,
             FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService,
             StudentInfoStore studentInfoStore)
         {
@@ -67,7 +67,6 @@ namespace Client.ViewModels
             _userStore = userStore;
             _groupInfoStore = groupInfoStore;
             _messageService = messageService;
-            _pdfCreatorService = pdfCreatorService;
             _studentsReaderService = studentsReaderService;
             _allStudentCohicesNavigationService = allStudentCohicesNavigationService;
             _studentInfoStore = studentInfoStore;
@@ -189,7 +188,7 @@ namespace Client.ViewModels
         }
 
         [RelayCommand]
-        private void GeneratePdf()
+        private async Task GeneratePdf()
         {
             ErrorMessage = string.Empty;
             IsWaiting = true;
@@ -202,18 +201,10 @@ namespace Client.ViewModels
                 return;
             }
 
-            try
-            {
-                _pdfCreatorService.SaveStudentsRecords(path, _students, Header, NonparsemesterCount, ParsemesterCount);
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-            }
-            finally
-            {
-                IsWaiting = false;
-            }
+            var reportDocument = new StudentsRecordsDocument(_students, Header, NonparsemesterCount, ParsemesterCount);
+            ErrorMessage = await PdfGenerator.GeneratePdf(reportDocument, path);
+
+            IsWaiting = false;
         }
 
         [RelayCommand]

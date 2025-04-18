@@ -20,7 +20,6 @@ namespace Client.ViewModels
         private readonly DisciplineMainInfoStore _disciplineStore;
         private readonly IMessageService _messageService;
         private readonly DisciplineReaderService _pdfReaderService;
-        private readonly PdfCreatorService _pdfCreatorService;
 
         private readonly List<SpecialtyInfo> _specialtiesInfo;
 
@@ -91,8 +90,7 @@ namespace Client.ViewModels
         public Func<object, string, bool> Filter { get; init; }
 
         public DisciplinesPageViewModel(ApiService apiService, UserStore userStore,
-            IMessageService messageService, DisciplineReaderService pdfReaderService,
-            PdfCreatorService pdfCreatorService, DisciplineMainInfoStore disciplineStore)
+            IMessageService messageService, DisciplineReaderService pdfReaderService, DisciplineMainInfoStore disciplineStore)
         {
             _apiService = apiService;
             _userStore = userStore;
@@ -122,7 +120,6 @@ namespace Client.ViewModels
 
             SelectedModal = null;
             Filter = FilterDisciplines;
-            _pdfCreatorService = pdfCreatorService;
             _disciplineStore = disciplineStore;
         }
 
@@ -334,7 +331,7 @@ namespace Client.ViewModels
             _disciplineStore.Semester = SelectedDiscipline.Semester;
 
             var viewModel = new SignedStudentsPageViewModel(_apiService, _userStore, _disciplineStore,
-                _messageService, _pdfCreatorService, CloseModalCommand);
+                _messageService, CloseModalCommand);
 
             try
             {
@@ -356,7 +353,7 @@ namespace Client.ViewModels
                 return;
 
             SelectedModal = new PrintDisciplinesPageViewModel(_apiService, _userStore,
-                _messageService, _pdfCreatorService, CloseModalCommand, CatalogTypes.Skip(1), Holdings.Take(3));
+                _messageService, CloseModalCommand, CatalogTypes.Skip(1), Holdings.Take(3));
         }
 
         private async Task ExecuteWithWaiting(Func<Task> action)

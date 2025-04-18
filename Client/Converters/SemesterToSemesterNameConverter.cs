@@ -21,9 +21,9 @@ namespace Client.Converters
                 case 0:
                     return "Обидва";
                 case 1:
-                    return "Непарний";
+                    return "Осінній";
                 case 2:
-                    return "Парний";
+                    return "Весняний";
                 default:
                     return string.Empty;
             }

@@ -7,13 +7,11 @@ using Client.Stores;
 using Client.Stores.NavigationStores;
 using Client.ViewModels;
 using MaterialDesignThemes.Wpf;
-using MaterialDesignThemes.Wpf.Themes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Globalization;
+using QuestPDF.Infrastructure;
 using System.Windows;
-using System.Windows.Media;
 
 namespace Client
 {
@@ -22,11 +20,12 @@ namespace Client
     /// </summary>
     public partial class App : Application
     {
-
         private readonly IHost _host;
 
         public App()
         {
+            QuestPDF.Settings.License = LicenseType.Community;
+
             _host = Host.CreateDefaultBuilder()
                 .AddViewModels()
                 .AddPageViewModels()
@@ -41,7 +40,6 @@ namespace Client
                 services.AddSingleton<ApiService>();
                 services.AddSingleton<IMessageService, MessageService>();
                 services.AddSingleton<DisciplineReaderService>();
-                services.AddSingleton<PdfCreatorService>();
                 services.AddSingleton<StudentsReaderService>();
                 services.AddSingleton<StudentInfoStore>();
 
@@ -67,7 +65,7 @@ namespace Client
         {
             PaletteHelper helper = new PaletteHelper();
             Theme theme = helper.GetTheme();
-            theme.SetPrimaryColor(Color.FromRgb(63, 81, 181));
+            theme.SetPrimaryColor(System.Windows.Media.Color.FromRgb(63, 81, 181));
             helper.SetTheme(theme);
 
             _host.Start();

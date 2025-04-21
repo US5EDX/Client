@@ -1,4 +1,5 @@
-﻿using Client.Models;
+﻿using Client.ExcelDocuments;
+using Client.Models;
 using Client.PdfDoucments;
 using Client.Services;
 using Client.Services.MessageService;
@@ -10,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Text.Json.Nodes;
 
 namespace Client.ViewModels
 {
@@ -247,6 +249,29 @@ namespace Client.ViewModels
                 }
 
                 SelectedModal = new NewStudentsViewModel(_apiService, _userStore, newStudents, CloseModalCommand);
+            });
+        }
+
+        [RelayCommand]
+        private async Task GenerateExcel()
+        {
+            var path = _messageService.ShowSaveFileDialog("Виберіть місце збереження відомості", "Excel file|*.xlsx");
+
+            if (path is null)
+                return;
+
+            await ExecuteWithWaiting(async () =>
+            {
+                (ErrorMessage, var students) =
+                        await _apiService.GetAsync<List<StudentWithAllRecordsInfo>>("Student", $"getWithAllRecrodsByGroupId/" +
+                        $"{_groupInfoStore.GroupId}", _userStore.AccessToken);
+
+                if (HasErrorMessage)
+                    return;
+
+                var reportDocument = new StudentsRecordsExcelDocument(students, _groupInfoStore);
+
+                ErrorMessage = await reportDocument.GenerateExcelAsync(path);
             });
         }
 

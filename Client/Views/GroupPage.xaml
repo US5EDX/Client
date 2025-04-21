@@ -98,8 +98,11 @@
                     <Button Margin="0,0,0,15" Command="{Binding GeneratePdfCommand}" Height="Auto">
                         <TextBlock Text="Сформувати відомість" TextAlignment="Center" TextWrapping="WrapWithOverflow" />
                     </Button>
-                    <Button Margin="0,0,0,0" Command="{Binding LoadFromFileCommand}" Height="Auto">
+                    <Button Margin="0,0,0,15" Command="{Binding LoadFromFileCommand}" Height="Auto">
                         <TextBlock Text="Завантажити студентів з excel" TextAlignment="Center" TextWrapping="WrapWithOverflow" />
+                    </Button>
+                    <Button Margin="0,0,0,0" Command="{Binding GenerateExcelCommand}" Height="Auto">
+                        <TextBlock Text="Сформувати документ усіх виборів студентів" TextAlignment="Center" TextWrapping="WrapWithOverflow" />
                     </Button>
                 </StackPanel>
             </StackPanel>

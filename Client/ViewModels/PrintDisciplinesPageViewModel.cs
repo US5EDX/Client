@@ -150,7 +150,7 @@ namespace Client.ViewModels
                 if (HasErrorMessage)
                     return;
 
-                _messageService.ShowSuccessMessage("Відомість успішно сформована", "Успіх");
+                _messageService.ShowInfoMessage("Відомість успішно сформована", "Успіх");
 
                 CloseCommand.Execute(null);
             });

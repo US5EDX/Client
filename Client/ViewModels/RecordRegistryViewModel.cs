@@ -32,7 +32,7 @@ namespace Client.ViewModels
 
         public string Header { get; init; }
 
-        private readonly uint _recordId;
+        private readonly uint? _recordId;
         private readonly string _studentId;
         private readonly short _holding;
         private readonly byte _eduLevel;
@@ -105,7 +105,7 @@ namespace Client.ViewModels
                 _disciplineCodeName = _discipline.DisciplineCodeName;
             }
 
-            _recordId = record?.RecordId ?? 0;
+            _recordId = record?.RecordId;
             _studentId = studentId;
             _holding = holding;
             _eduLevel = eduLevel;

@@ -5,7 +5,7 @@ namespace Client.Services.MessageService
 {
     public class MessageService : IMessageService
     {
-        public void ShowSuccessMessage(string message, string caption = "Успіх")
+        public void ShowInfoMessage(string message, string caption = "Успіх")
         {
             MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Information);
         }

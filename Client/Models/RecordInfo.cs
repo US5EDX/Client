@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Client.Models
 {
-    public partial class RecordInfo : ObservableObject
+    public partial class RecordShortInfo : ObservableObject
     {
         [JsonPropertyName("recordId")]
         public uint RecordId { get; set; }
@@ -27,7 +27,10 @@ namespace Client.Models
         [ObservableProperty]
         [property: JsonPropertyName("disciplineName")]
         private string _disciplineName;
+    }
 
+    public partial class RecordInfo : RecordShortInfo
+    {
         [ObservableProperty]
         [property: JsonPropertyName("course")]
         private string _course;

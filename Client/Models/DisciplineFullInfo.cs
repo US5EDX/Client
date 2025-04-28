@@ -64,6 +64,10 @@ namespace Client.Models
         private short _holding;
 
         [ObservableProperty]
+        [property: JsonPropertyName("isYearLong")]
+        private bool _isYearLong;
+
+        [ObservableProperty]
         [property: JsonPropertyName("isOpen")]
         private bool _isOpen;
 
@@ -86,6 +90,7 @@ namespace Client.Models
             _minCount = disciplineFullInfo._minCount;
             _url = disciplineFullInfo._url;
             _holding = disciplineFullInfo._holding;
+            _isYearLong = disciplineFullInfo._isYearLong;
             _isOpen = disciplineFullInfo._isOpen;
         }
     }

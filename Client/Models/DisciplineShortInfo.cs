@@ -14,5 +14,8 @@ namespace Client.Models
 
         [JsonPropertyName("disciplineCodeName")]
         public string DisciplineCodeName { get; set; }
+
+        [JsonPropertyName("isYearLong")]
+        public bool IsYearLong { get; set; }
     }
 }

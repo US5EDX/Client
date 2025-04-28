@@ -55,6 +55,9 @@ MaxLength="250" materialDesign:HintAssist.Hint="для 2 - 4 курсів" />
             <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Semester, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 ItemsSource="{Binding Semesters}" DisplayMemberPath="SemesterName" materialDesign:HintAssist.Hint="Обидва" />
 
+            <CheckBox Content="Чи продовжується у другому семестрі?" IsChecked="{Binding IsYearLong}" Margin="0,0,0,30" 
+                      Visibility="{Binding IsBoth, Converter={StaticResource boolToVis}}"/>
+
             <TextBlock Text="Пререквізити" Margin="0,0,0,5"/>
             <TextBox Margin="0,0,0,30" VerticalContentAlignment="Stretch" TextWrapping="Wrap" MaxWidth="420"
                      AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True" xml:lang="uk-UA"

@@ -27,6 +27,10 @@ namespace Client.Models
         [ObservableProperty]
         [property: JsonPropertyName("disciplineName")]
         private string _disciplineName;
+
+        [ObservableProperty]
+        [property: JsonPropertyName("isYearLong")]
+        private bool _isYearLong;
     }
 
     public partial class RecordInfo : RecordShortInfo

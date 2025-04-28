@@ -30,6 +30,7 @@ namespace Client.ViewModels
                 new PreviewPair("Курс", discipline.Course),
                 new PreviewPair("Семестр",
                     (string)new SemesterToSemesterNameConverter().Convert(discipline.Semester, null, null, null)),
+                new PreviewPair("Розрахована на рік?", discipline.IsYearLong ? "Так" : "Ні"),
                 new PreviewPair("Пререквізити", discipline.Prerequisites),
                 new PreviewPair("Чому це цікаво / треба вивчати", discipline.Interest),
                 new PreviewPair("Максимальна кількість здобувачів",

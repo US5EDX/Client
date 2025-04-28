@@ -83,7 +83,7 @@ namespace Client.ViewModels
             DateTime kyivDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, fleTimeZone);
             var currentDate = DateOnly.FromDateTime(kyivDateTime);
 
-            if (Holding.EduYear == _userStore.StudentInfo.Group.AdmissionYear && _userStore.StudentInfo.Group.HasEnterChoise)
+            if (Holding.EduYear == _userStore.StudentInfo.Group.AdmissionYear && !_userStore.StudentInfo.Group.HasEnterChoise)
             {
                 IsBlocked = true;
                 BlockedMessage = "Для вашої групи наразі не запланований вибір дисциплін";
@@ -221,26 +221,30 @@ namespace Client.ViewModels
 
         private bool ValidateOnRepeat()
         {
-            var uniqueChoices = new HashSet<uint>();
+            var uniqueChoices = new Dictionary<uint, byte>();
 
-            var CheckForDuplicateDisciplines = (in List<DisciplineComboBoxViewModel> semesterChoices) =>
+            bool CheckForDuplicateDisciplines(in List<DisciplineComboBoxViewModel> semesterChoices, byte semester)
             {
                 foreach (var semesterChoice in semesterChoices)
                 {
-                    if (uniqueChoices.Contains(semesterChoice.SelectedDiscipline.DisciplineId))
+                    var disciplineId = semesterChoice.SelectedDiscipline.DisciplineId;
+
+                    if (uniqueChoices.TryGetValue(disciplineId, out byte semesterValue) &&
+                    (semesterValue == semester || !semesterChoice.SelectedDiscipline.IsYearLong))
                     {
                         ErrorMessage = "Вибрані дисципліни повторюються";
                         semesterChoice.ErrorMessage = "Дисципліна вже обрана";
                         return true;
                     }
 
-                    uniqueChoices.Add(semesterChoice.SelectedDiscipline.DisciplineId);
+                    uniqueChoices[disciplineId] = semester;
                 }
 
                 return false;
-            };
+            }
 
-            return CheckForDuplicateDisciplines(OddSemesterChoices) || CheckForDuplicateDisciplines(EvenSemesterChoices);
+            return CheckForDuplicateDisciplines(OddSemesterChoices, FALLSEMESTER) ||
+                CheckForDuplicateDisciplines(EvenSemesterChoices, SPRINGSEMESTER);
         }
 
         private async Task ExecuteWithWaiting(Func<Task> action)

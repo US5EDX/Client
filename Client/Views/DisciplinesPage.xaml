@@ -89,7 +89,18 @@ SelectedItem="{Binding SelectedDiscipline, Mode=TwoWay, UpdateSourceTrigger=Prop
               Width="Auto" Binding="{Binding IsOpen, Converter={StaticResource BoolToStatus}}" ElementStyle="{StaticResource CenteredCell}" />
 
                         <DataGridTextColumn Header="Семестр" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-              Width="Auto" Binding="{Binding Semester, Converter={StaticResource SemToSemName}}" ElementStyle="{StaticResource CenteredCell}"/>
+              Width="Auto">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CenteredCell}">
+                                    <Setter Property="Text" Value="{Binding Semester, Converter={StaticResource SemToSemName}}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsYearLong}" Value="True">
+                                            <Setter Property="Text" Value="Обидва, з продовженням у другому"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <DataGridTextColumn Header="Курс" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
               Width="Auto" Binding="{Binding Course}" ElementStyle="{StaticResource CenteredCell}" />

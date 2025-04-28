@@ -252,6 +252,7 @@ namespace Client.ViewModels
                 SelectedDiscipline.MaxCount = discipline.MaxCount;
                 SelectedDiscipline.MinCount = discipline.MinCount;
                 SelectedDiscipline.Url = discipline.Url;
+                SelectedDiscipline.IsYearLong = discipline.IsYearLong;
                 SelectedDiscipline = null;
                 return;
             }

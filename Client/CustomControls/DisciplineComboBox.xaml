@@ -37,7 +37,7 @@
                 </TextBlock>
             </WrapPanel>
             <DockPanel>
-                <fa:ImageAwesome DockPanel.Dock="Right" Icon="{Binding FaIcon}" Spin="{Binding IsSubmiting}" SpinDuration="10" 
+                <fa:ImageAwesome DockPanel.Dock="Right" Icon="{Binding FaIcon}" Spin="{Binding IsSubmitting}" SpinDuration="10" 
                  Width="20" Height="20" Margin="10,0,0,0" VerticalAlignment="Center">
                     <fa:ImageAwesome.Style>
                         <Style TargetType="fa:ImageAwesome">

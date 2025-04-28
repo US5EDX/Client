@@ -79,6 +79,7 @@ namespace Client.ViewModels.CustomControlsViewModels
             {
                 DisciplineId = recordShortInfo.DisciplineId,
                 DisciplineCodeName = disciplineCodeName,
+                IsYearLong = recordShortInfo.IsYearLong,
             });
 
             _selectedDiscipline = Disciplines.First();

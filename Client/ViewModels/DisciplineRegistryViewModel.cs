@@ -80,6 +80,7 @@ namespace Client.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyPropertyChangedFor(nameof(IsBoth))]
         [NotifyCanExecuteChangedFor(nameof(AddDisciplineCommand))]
         [NotifyCanExecuteChangedFor(nameof(UpdateDisciplineCommand))]
         private SemesterInfo? _semester;
@@ -167,6 +168,11 @@ namespace Client.ViewModels
         private short? _holding;
 
         [ObservableProperty]
+        private bool _isYearLong;
+
+        public bool IsBoth => Semester?.SemesterId == 0;
+
+        [ObservableProperty]
         private bool _isWaiting;
 
         [ObservableProperty]
@@ -239,6 +245,13 @@ namespace Client.ViewModels
             _minCount = discipline?.MinCount ?? 0;
             _url = discipline?.Url ?? null;
             _holding = discipline?.Holding ?? holding;
+            _isYearLong = discipline?.IsYearLong ?? false;
+        }
+
+        partial void OnSemesterChanged(SemesterInfo? value)
+        {
+            if (value?.SemesterId != 0)
+                IsYearLong = false;
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]
@@ -291,7 +304,17 @@ namespace Client.ViewModels
             if (path is null)
                 return;
 
-            var data = _pdfReaderService.ReadDisciplineDocx(path);
+            List<string> data;
+
+            try
+            {
+                data = _pdfReaderService.ReadDisciplineDocx(path);
+            }
+            catch
+            {
+                _messageService.ShowInfoMessage("Не вдалося прочитати документ", "Помилка");
+                return;
+            }
 
             if (data is null)
                 return;
@@ -302,8 +325,8 @@ namespace Client.ViewModels
             if (code is not null)
                 code = code.Contains('_') ? codeAndName?.Split('_')[0] : code;
 
-            DisciplineCode = code;
-            DisciplineName = codeAndName?.Substring(code.Length + 1);
+            DisciplineCode = code.Trim();
+            DisciplineName = codeAndName?.Substring(code.Length + 1).Trim();
 
             if (DisciplineCode is not null)
                 CatalogType = code.Contains('у') ? CatalogTypes[0] : CatalogTypes[1];
@@ -312,9 +335,9 @@ namespace Client.ViewModels
             var eduLevelId = eduLevel.ToLower().Contains("перший") ? 1 : (eduLevel.ToLower().Contains("другий") ? 2 : 3);
 
             EduLevel = EduLevels.First(level => level.EduLevelId == eduLevelId);
-            Course = data.ElementAtOrDefault(2);
-            Prerequisites = data.ElementAtOrDefault(3);
-            Interest = data.ElementAtOrDefault(4);
+            Course = data.ElementAtOrDefault(2).Trim();
+            Prerequisites = data.ElementAtOrDefault(3).Trim();
+            Interest = data.ElementAtOrDefault(4).Trim();
 
             var isSuccess = int.TryParse(data.ElementAtOrDefault(5), out int maxCount);
             MaxCount = isSuccess ? maxCount : 0;
@@ -358,6 +381,7 @@ namespace Client.ViewModels
                 MinCount = MinCount ?? 0,
                 Url = Url,
                 Holding = Holding.Value,
+                IsYearLong = IsYearLong,
                 IsOpen = _isOpen
             };
         }

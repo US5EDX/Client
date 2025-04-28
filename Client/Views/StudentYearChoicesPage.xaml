@@ -99,8 +99,18 @@ SelectedItem="{Binding SelectedRecord, Mode=TwoWay, UpdateSourceTrigger=Property
                                             ElementStyle="{StaticResource CenteredCellStyle}"/>
 
                         <DataGridTextColumn Header="Доступні семестри" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-              Width="0.1*" Binding="{Binding Semester, Converter={StaticResource SemToSemName}}"
-                                            ElementStyle="{StaticResource CenteredCellStyle}"/>
+              Width="0.1*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource CenteredCellStyle}">
+                                    <Setter Property="Text" Value="{Binding Semester, Converter={StaticResource SemToSemName}}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsYearLong}" Value="True">
+                                            <Setter Property="Text" Value="Обидва, з продовженням у другому"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
 
                         <DataGridTextColumn Header="Кількість записаних на обраний семестр" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
               Width="0.1*" Binding="{Binding SubscribersCount}" ElementStyle="{StaticResource CenteredCellStyle}" />

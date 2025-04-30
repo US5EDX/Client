@@ -64,6 +64,10 @@ namespace Client.HostBuilders
                 services.AddSingleton<Func<DisciplinesForStudentViewModel>>((s) => () => s.GetRequiredService<DisciplinesForStudentViewModel>());
                 services.AddSingleton<FrameNavigationService<DisciplinesForStudentViewModel>>();
 
+                services.AddTransient<StudentChoicesViewModel>();
+                services.AddSingleton<Func<StudentChoicesViewModel>>((s) => () => s.GetRequiredService<StudentChoicesViewModel>());
+                services.AddSingleton<FrameNavigationService<StudentChoicesViewModel>>();
+
                 services.AddScoped<FrameNavigationViewModel>();
             });
 

@@ -369,7 +369,7 @@ namespace Client.ViewModels
 
         private bool FilterDisciplines(object discipline, string filter)
         {
-            if (discipline is not DisciplineFullInfo disciplineInfo)
+            if (discipline is not DisciplineWithSubCounts disciplineInfo)
                 return false;
 
             return disciplineInfo.DisciplineName.Contains(filter, StringComparison.OrdinalIgnoreCase) ||

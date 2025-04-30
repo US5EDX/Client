@@ -1,4 +1,5 @@
-﻿using Client.Stores.NavigationStores;
+﻿using Client.Stores;
+using Client.Stores.NavigationStores;
 using Client.ViewModels.Interfaces;
 using Client.ViewModels.NavigationViewModel;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,6 +13,8 @@ namespace Client.ViewModels
         private readonly FrameNavigationViewModel _frameNavigation;
         private readonly FrameNavigationStore _frameNavigationStore;
 
+        private readonly UserStore _userStore;
+
         [ObservableProperty]
         private bool _isLoading;
 
@@ -23,15 +26,20 @@ namespace Client.ViewModels
 
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
 
+        public bool IsHeadmen => _userStore.StudentInfo.Headman;
+
         public IPageViewModel CurrentFrameViewModel => _frameNavigationStore.CurrentFrameViewModel;
 
         public StudentViewModel(SuccsefulLoginViewModel succsefulLoginViewModel,
-            FrameNavigationStore frameNavigationStore, FrameNavigationViewModel frameNavigation)
+            FrameNavigationStore frameNavigationStore, FrameNavigationViewModel frameNavigation,
+            UserStore userStore)
         {
             _succsefulLoginViewModel = succsefulLoginViewModel;
             _frameNavigationStore = frameNavigationStore;
             _frameNavigationStore.CurrentFrameViewModelChanged += OnCurrentFrameViewModelChanged;
             _frameNavigation = frameNavigation;
+
+            _userStore = userStore;
 
             Task.Run(async () => await LoadHomeOnStart());
         }

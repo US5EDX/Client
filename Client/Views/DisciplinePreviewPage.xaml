@@ -63,7 +63,7 @@ AutoGenerateColumns="False" TextBlock.TextAlignment="Center">
         <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
             <Button VerticalAlignment="Top" Margin="0,0,0,15" Content="Закрити" Command="{Binding CloseCommand}" />
             <Button Command="{Binding OpenUrlCommand}" Width="Auto" Height="Auto">
-                <TextBlock Text="Перейти за посиланням" TextWrapping="Wrap" TextAlignment="Center"/>
+                <TextBlock Text="Відкрити повну інформацію в браузері" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
         </StackPanel>
     </Grid>

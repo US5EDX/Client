@@ -23,6 +23,10 @@
                 <views:StudentDisciplineChoosingPage />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type vms:DisciplinesForStudentViewModel}">
+                <views:DisciplinesForStudentPage />
+            </DataTemplate>
+
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -41,6 +45,8 @@
                                               ContentInfo="Дисципліни" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Choices" 
                                               ContentInfo="Вибір дисциплін" Margin="10,0,0,0"/>
+                    <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="MyChoices" 
+                          ContentInfo="Мої вибори" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Group" 
                                               ContentInfo="Моя група" Margin="10,0,0,0" 
                                               Visibility="{Binding IsHeadmen, Converter={StaticResource boolToVis}}"/>

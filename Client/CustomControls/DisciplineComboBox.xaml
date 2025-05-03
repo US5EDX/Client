@@ -12,7 +12,7 @@
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVis"/>
-        <conv:BoolToStatusConverter x:Key="BoolToStatus"/>
+        <conv:ByteStatusToStringConverter x:Key="StatusConverter"/>
     </UserControl.Resources>
 
     <StackPanel IsEnabled="{Binding IsEnabled}" Margin="0,0,0,20">
@@ -20,16 +20,19 @@
         <DockPanel Margin="0,0,0,5">
             <WrapPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
                 <TextBlock Text="Статус вибору: " FontSize="14" />
-                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Status, Converter={StaticResource BoolToStatus}}"
-                       FontSize="14">
+                <TextBlock TextWrapping="WrapWithOverflow" Text="{Binding Status, Converter={StaticResource StatusConverter}}"
+                       FontSize="14" Width="20" Height="20" TextAlignment="Center">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding Status}" Value="False">
+                                <DataTrigger Binding="{Binding Status}" Value="0">
                                     <Setter Property="Foreground" Value="LightPink"/>
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding Status}" Value="True">
+                                <DataTrigger Binding="{Binding Status}" Value="1">
                                     <Setter Property="Foreground" Value="LightGreen"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="2">
+                                    <Setter Property="Foreground" Value="#EBBE4D"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

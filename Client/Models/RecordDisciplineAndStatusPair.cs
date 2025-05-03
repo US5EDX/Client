@@ -13,6 +13,6 @@ namespace Client.Models
         public string CodeName { get; set; }
 
         [JsonPropertyName("approved")]
-        public bool Approved { get; set; }
+        public byte Approved { get; set; }
     }
 }

@@ -15,7 +15,7 @@
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVis"/>
-        <conv:BoolToStatusConverter x:Key="BoolToStatus"/>
+        <conv:BoolStatusToStringConverter x:Key="BoolToStatus"/>
         <conv:SemesterToSemesterNameConverter x:Key="SemToSemName"/>
         <conv:CatalogTypeToCatalogNameConverter x:Key="CatalogTypeToCatalogName"/>
         <conv:EduLevelToEduLevelNameConverter x:Key="EduLevelToEduName"/>

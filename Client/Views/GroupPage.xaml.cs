@@ -79,7 +79,7 @@ namespace Client.Views
             var greenTrigger = new DataTrigger
             {
                 Binding = new Binding($"{bindingPath}.Approved"),
-                Value = true
+                Value = (byte)1
             };
 
             greenTrigger.Setters.Add(new Setter(BackgroundProperty, Brushes.LightGreen));
@@ -87,13 +87,22 @@ namespace Client.Views
             var redTrigger = new DataTrigger
             {
                 Binding = new Binding($"{bindingPath}.Approved"),
-                Value = false
+                Value = (byte)0
             };
 
             redTrigger.Setters.Add(new Setter(BackgroundProperty, Brushes.LightCoral));
 
+            var yellowTrigger = new DataTrigger
+            {
+                Binding = new Binding($"{bindingPath}.Approved"),
+                Value = (byte)2
+            };
+
+            yellowTrigger.Setters.Add(new Setter(BackgroundProperty, Brushes.LightYellow));
+
             cellStyle.Triggers.Add(greenTrigger);
             cellStyle.Triggers.Add(redTrigger);
+            cellStyle.Triggers.Add(yellowTrigger);
 
             var widthFactor = 0.7 / (viewModel.NonparsemesterCount + viewModel.ParsemesterCount);
 

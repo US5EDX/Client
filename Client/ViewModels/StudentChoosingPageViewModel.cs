@@ -106,7 +106,7 @@ namespace Client.ViewModels
                 throw new Exception(ErrorMessage);
 
             var isAllAccepted = madeRecords is not null && madeRecords
-                .All(record => record.Approved == true) && madeRecords.Count == (_nonparSemesterCount + _parSemesterCount);
+                .All(record => record.Approved == 1) && madeRecords.Count == (_nonparSemesterCount + _parSemesterCount);
 
             if (isAllAccepted)
             {

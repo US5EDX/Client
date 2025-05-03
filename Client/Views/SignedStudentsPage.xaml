@@ -14,7 +14,7 @@
 
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVis"/>
-        <conv:BoolToStatusConverter x:Key="BoolToStatus" />
+        <conv:ByteStatusToStringConverter x:Key="StatusConverter" />
         <conv:SemesterToSemesterNameConverter x:Key="SemToSemName"/>
 
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
@@ -66,7 +66,7 @@ AutoGenerateColumns="False" TextBlock.TextAlignment="Center">
                                         ElementStyle="{StaticResource CenteredWrappedCell}"/>
 
                     <DataGridTextColumn Header="Чи схвалено" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-Width="0.15*" Binding="{Binding Approved, Converter={StaticResource BoolToStatus}}" ElementStyle="{StaticResource CenteredWrappedCell}" />
+Width="0.15*" Binding="{Binding Approved, Converter={StaticResource StatusConverter}}" ElementStyle="{StaticResource CenteredWrappedCell}" />
                 </DataGrid.Columns>
             </DataGrid>
 

@@ -76,7 +76,8 @@ namespace Client.PdfDoucments
                         var recordInfo = item.Nonparsemester.ElementAtOrDefault(i);
 
                         SharedElements.AddCell(table, recordInfo?.CodeName ?? "Не обрано",
-                            recordInfo is null ? Colors.White : (recordInfo.Approved ? Colors.Green.Lighten4 : Colors.Red.Lighten4));
+                            recordInfo is null ? Colors.White : (recordInfo.Approved == 1 ? Colors.Green.Lighten4 :
+                            recordInfo.Approved == 2 ? Colors.Yellow.Lighten4 : Colors.Red.Lighten4));
                     }
 
                     for (int i = 0; i < _parsemester; i++)
@@ -84,7 +85,8 @@ namespace Client.PdfDoucments
                         var recordInfo = item.Parsemester.ElementAtOrDefault(i);
 
                         SharedElements.AddCell(table, recordInfo?.CodeName ?? "Не обрано",
-                           recordInfo is null ? Colors.White : (recordInfo.Approved ? Colors.Green.Lighten4 : Colors.Red.Lighten4));
+                           recordInfo is null ? Colors.White : (recordInfo.Approved == 1 ? Colors.Green.Lighten4 :
+                           recordInfo.Approved == 2 ? Colors.Yellow.Lighten4 : Colors.Red.Lighten4));
                     }
                 }
             });

@@ -11,7 +11,7 @@
 
     <Page.Resources>
         <conv:SemesterToSemesterNameConverter x:Key="SemToSemName"/>
-        <conv:BoolToStatusConverter x:Key="BoolToStatusConverter" />
+        <conv:ByteStatusToStringConverter x:Key="StatusConverter" />
     </Page.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -58,20 +58,23 @@
                                                         <DataTemplate>
                                                             <Border Margin="5,2" Padding="5" Background="#cccccc" CornerRadius="4">
                                                                 <DockPanel VerticalAlignment="Center">
-                                                                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Margin="10,0,0,0">
+                                                                    <TextBlock DockPanel.Dock="Right" VerticalAlignment="Center" Width="25" TextAlignment="Center" Margin="10,0,0,0">
                                                                         <TextBlock.Text>
                                                                             <MultiBinding StringFormat="[{0}]">
-                                                                                <Binding Path="Approved" Converter="{StaticResource BoolToStatusConverter}" />
+                                                                                <Binding Path="Approved" Converter="{StaticResource StatusConverter}" />
                                                                             </MultiBinding>
                                                                         </TextBlock.Text>
                                                                         <TextBlock.Style>
                                                                             <Style TargetType="TextBlock">
                                                                                 <Style.Triggers>
-                                                                                    <DataTrigger Binding="{Binding Approved}" Value="True">
+                                                                                    <DataTrigger Binding="{Binding Approved}" Value="1">
                                                                                         <Setter Property="Foreground" Value="Green"/>
                                                                                     </DataTrigger>
-                                                                                    <DataTrigger Binding="{Binding Approved}" Value="False">
+                                                                                    <DataTrigger Binding="{Binding Approved}" Value="0">
                                                                                         <Setter Property="Foreground" Value="Red"/>
+                                                                                    </DataTrigger>
+                                                                                    <DataTrigger Binding="{Binding Approved}" Value="2">
+                                                                                        <Setter Property="Foreground" Value="Yellow"/>
                                                                                     </DataTrigger>
                                                                                 </Style.Triggers>
                                                                             </Style>

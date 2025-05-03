@@ -9,14 +9,14 @@ using System.Windows.Data;
 namespace Client.Converters
 {
     [ValueConversion(typeof(bool), typeof(string))]
-    public class BoolToStatusConverter : IValueConverter
+    public class BoolStatusToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not bool)
+            if (value is not bool val)
                 throw new InvalidOperationException("The target must be a bool");
 
-            if ((bool)value)
+            if (val)
                 return "✔️";
             else
                 return "❌";

@@ -23,6 +23,6 @@ namespace Client.Models
         public byte Semester { get; set; }
 
         [JsonPropertyName("approved")]
-        public bool Approved { get; set; }
+        public byte Approved { get; set; }
     }
 }

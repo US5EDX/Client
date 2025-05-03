@@ -123,7 +123,7 @@ namespace Client.PdfDoucments
 
             foreach (var item in disciplines)
             {
-                string color = Color.FromHex(item.ColorStatus);
+                Color color = Color.FromHex(item.ColorStatus);
 
                 SharedElements.AddCell(table, item.DisciplineCode, color);
                 SharedElements.AddCell(table, item.DisciplineName, color);

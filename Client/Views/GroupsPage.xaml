@@ -16,7 +16,7 @@
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="boolToVis"/>
         <conv:EduLevelToEduLevelNameConverter x:Key="EduLevelToEduLevelName"/>
-        <conv:BoolToStatusConverter x:Key="BoolToStatusConverter"/>
+        <conv:BoolStatusToStringConverter x:Key="BoolToStatusConverter"/>
 
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>

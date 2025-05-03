@@ -14,7 +14,7 @@ namespace Client.Models
 
         [ObservableProperty]
         [property: JsonPropertyName("approved")]
-        private bool _approved;
+        private byte _approved;
 
         [ObservableProperty]
         [property: JsonPropertyName("disciplineId")]

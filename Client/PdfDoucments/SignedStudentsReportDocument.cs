@@ -74,7 +74,8 @@ namespace Client.PdfDoucments
 
                 foreach (var item in _studentInfos)
                 {
-                    string color = item.Approved ? Colors.Green.Lighten4 : Colors.Red.Lighten4;
+                    Color color = item.Approved == 1 ? Colors.Green.Lighten4 :
+                    item.Approved == 2 ? Colors.Yellow.Lighten4 : Colors.Red.Lighten4;
 
                     SharedElements.AddCell(table, item.Email, color);
                     SharedElements.AddCell(table, item.FullName, color);

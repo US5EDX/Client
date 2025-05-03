@@ -59,7 +59,7 @@ namespace Client.PdfDoucments
                 .AlignMiddle();
         }
 
-        public static IContainer CellStyleBody(IContainer container, string backgroundColor)
+        public static IContainer CellStyleBody(IContainer container, Color backgroundColor)
         {
             return container
                 .Background(backgroundColor)
@@ -89,7 +89,7 @@ namespace Client.PdfDoucments
             });
         }
 
-        public static void AddCell(TableDescriptor table, string text, string backgroundColor)
+        public static void AddCell(TableDescriptor table, string text, Color backgroundColor)
         {
             table.Cell().Element(c => CellStyleBody(c, backgroundColor)).Text(text);
         }

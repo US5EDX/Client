@@ -30,7 +30,7 @@ namespace Client.ViewModels.CustomControlsViewModels
         private DisciplineShortInfo? _selectedDiscipline;
 
         [ObservableProperty]
-        private bool _status;
+        private byte _status;
 
         [ObservableProperty]
         private bool _isLoading;
@@ -88,7 +88,7 @@ namespace Client.ViewModels.CustomControlsViewModels
             _searchText = disciplineCodeName;
             _status = recordShortInfo.Approved;
 
-            _isEnabled = !_status;
+            _isEnabled = _status == 0;
         }
 
         public bool IsDisciplineChanged()
@@ -101,7 +101,7 @@ namespace Client.ViewModels.CustomControlsViewModels
 
         public async Task<bool> SubmitAsync()
         {
-            if (!IsDisciplineChanged() || Status == true)
+            if (!IsDisciplineChanged() || Status != 0)
                 return false;
 
             ErrorMessage = string.Empty;

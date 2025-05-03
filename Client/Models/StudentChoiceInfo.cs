@@ -24,7 +24,7 @@ namespace Client.Models
     public class DisplayInfo
     {
         [JsonPropertyName("approved")]
-        public bool Approved { get; set; }
+        public byte Approved { get; set; }
 
         [JsonPropertyName("disciplineCode")]
         public string DisciplineCode { get; set; }

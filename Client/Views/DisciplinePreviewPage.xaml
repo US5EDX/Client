@@ -8,17 +8,10 @@
       d:DesignHeight="450" d:DesignWidth="800"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:customcontrols="clr-namespace:Client.CustomControls"
-      xmlns:conv="clr-namespace:Client.Converters"
       Title="DisciplinePreviewPage"
       Width="600" Height="600">
 
     <Page.Resources>
-        <BooleanToVisibilityConverter x:Key="boolToVis"/>
-        <conv:BoolToStatusConverter x:Key="BoolToStatus"/>
-        <conv:SemesterToSemesterNameConverter x:Key="SemToSemName"/>
-        <conv:CatalogTypeToCatalogNameConverter x:Key="CatalogTypeToCatalogName"/>
-        <conv:EduLevelToEduLevelNameConverter x:Key="EduLevelToEduName"/>
-
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>

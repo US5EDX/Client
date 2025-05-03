@@ -7,12 +7,7 @@ using Client.ViewModels.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Client.ViewModels
 {
@@ -156,17 +151,17 @@ namespace Client.ViewModels
         }
 
         [RelayCommand(CanExecute = nameof(IsRecordSelected))]
-        private async Task UpdateRecordStatus()
+        private async Task UpdateRecordStatus(byte status)
         {
             await ExecuteWithWaiting(async () =>
             {
                 (ErrorMessage, _) =
                     await _apiService.PutAsync<object>(
-                        "Record", $"updateRecordStatus/{SelectedRecord.RecordId}", null, _userStore.AccessToken);
+                        "Record", $"updateRecordStatus/{SelectedRecord.RecordId}", status, _userStore.AccessToken);
 
                 if (!HasErrorMessage)
                 {
-                    SelectedRecord.Approved = !SelectedRecord.Approved;
+                    SelectedRecord.Approved = status;
                     SelectedRecord = null;
                 }
             });

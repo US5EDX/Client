@@ -10,7 +10,7 @@ namespace Client.ViewModels
 {
     public partial class DisciplinesForStudentViewModel : ObservableRecipient, IFrameViewModel
     {
-        private const int PAGESIZE = 30;
+        private const int PAGESIZE = 50;
 
         private readonly ApiService _apiService;
         private readonly UserStore _userStore;
@@ -75,6 +75,9 @@ namespace Client.ViewModels
         private string FacultyFilter => SelectedFaculty?.FacultyId == 0 ? string.Empty : $"&facultyFilter={SelectedFaculty.FacultyId}";
 
         private string SemesterFilter => $"&semesterFilter={SelectedSemester?.SemesterId ?? 0}";
+
+        private string CourseFilter => $"&courseFilter={_userStore.StudentInfo.Group.Course +
+            ((_userStore.StudentInfo.Group.Course == 1 && _userStore.StudentInfo.Group.HasEnterChoise) ? 0 : 1)}";
 
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
 
@@ -152,7 +155,7 @@ namespace Client.ViewModels
             (ErrorMessage, var totalSize) =
                 await _apiService.GetAsync<int>("Discipline",
                 $"getCountForStudent?eduLevel={_userStore.StudentInfo.Group.EduLevel}&holding={Holding.EduYear}" +
-                $"{CatalogFilter}{SemesterFilter}{FacultyFilter}",
+                $"{CourseFilter}{CatalogFilter}{SemesterFilter}{FacultyFilter}",
                 _userStore.AccessToken);
 
             if (HasErrorMessage)
@@ -170,7 +173,7 @@ namespace Client.ViewModels
                 await _apiService.GetAsync<ObservableCollection<DisciplineInfoForStudent>>("Discipline",
                 $"getDisciplinesForStudent/{page}/{PageSize}" +
                 $"?eduLevel={_userStore.StudentInfo.Group.EduLevel}&holding={Holding.EduYear}" +
-                $"{CatalogFilter}{SemesterFilter}{FacultyFilter}",
+                $"{CourseFilter}{CatalogFilter}{SemesterFilter}{FacultyFilter}",
                 _userStore.AccessToken);
 
                 if (!HasErrorMessage)

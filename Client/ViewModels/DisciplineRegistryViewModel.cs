@@ -1,4 +1,5 @@
 ﻿using Client.Models;
+using Client.Parsers;
 using Client.Services;
 using Client.Services.MessageService;
 using Client.Stores;
@@ -18,6 +19,9 @@ namespace Client.ViewModels
         private readonly ApiService _apiService;
         private readonly DisciplineReaderService _pdfReaderService;
         private readonly IMessageService _messageService;
+
+        private byte _courseMask;
+        private bool _isCourseBoolUpdating;
 
         public List<CatalogTypeInfo> CatalogTypes { get; init; }
         public List<SpecialtyInfo> Specialties { get; init; }
@@ -70,20 +74,35 @@ namespace Client.ViewModels
         private EduLevelInfo? _eduLevel;
 
         [ObservableProperty]
-        [NotifyDataErrorInfo]
-        [Required]
-        [Length(1, 250)]
-        [NotifyPropertyChangedFor(nameof(CanSubmit))]
-        [NotifyCanExecuteChangedFor(nameof(AddDisciplineCommand))]
-        [NotifyCanExecuteChangedFor(nameof(UpdateDisciplineCommand))]
-        private string _course;
-
-        [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CanSubmit))]
         [NotifyPropertyChangedFor(nameof(IsBoth))]
         [NotifyCanExecuteChangedFor(nameof(AddDisciplineCommand))]
         [NotifyCanExecuteChangedFor(nameof(UpdateDisciplineCommand))]
         private SemesterInfo? _semester;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyCanExecuteChangedFor(nameof(AddDisciplineCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateDisciplineCommand))]
+        private bool _isCourse1Available;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyCanExecuteChangedFor(nameof(AddDisciplineCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateDisciplineCommand))]
+        private bool _isCourse2Available;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyCanExecuteChangedFor(nameof(AddDisciplineCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateDisciplineCommand))]
+        private bool _isCourse3Available;
+
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyCanExecuteChangedFor(nameof(AddDisciplineCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateDisciplineCommand))]
+        private bool _isCourse4Available;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -181,7 +200,9 @@ namespace Client.ViewModels
 
         public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
 
-        public bool CanSubmit => !HasErrors;
+        public bool CanSubmit => !HasErrors && _courseMask != 0 &&
+            CatalogType is not null && Specialty is not null &&
+            EduLevel is not null && Semester is not null;
 
         public bool IsAddMode { get; init; }
 
@@ -237,7 +258,7 @@ namespace Client.ViewModels
             _catalogType = CatalogTypes.FirstOrDefault(c => c.CatalogType == discipline?.CatalogType);
             _specialty = Specialties.FirstOrDefault(s => s.SpecialtyId == discipline?.Specialty?.SpecialtyId) ?? Specialties[0];
             _eduLevel = EduLevels.FirstOrDefault(e => e.EduLevelId == discipline?.EduLevel);
-            _course = discipline?.Course ?? null;
+            _courseMask = CourseParser.ParseFormatedCourseString(discipline?.Course);
             _semester = Semesters.FirstOrDefault(s => s.SemesterId == discipline?.Semester);
             _prerequisites = discipline?.Prerequisites ?? null;
             _interest = discipline?.Interest ?? null;
@@ -246,12 +267,34 @@ namespace Client.ViewModels
             _url = discipline?.Url ?? null;
             _holding = discipline?.Holding ?? holding;
             _isYearLong = discipline?.IsYearLong ?? false;
+
+            UpdateCourseBooleans();
         }
 
         partial void OnSemesterChanged(SemesterInfo? value)
         {
             if (value?.SemesterId != 0)
                 IsYearLong = false;
+        }
+
+        partial void OnIsCourse1AvailableChanged(bool value)
+        {
+            UpdateCourseMask(value, 0);
+        }
+
+        partial void OnIsCourse2AvailableChanged(bool value)
+        {
+            UpdateCourseMask(value, 1);
+        }
+
+        partial void OnIsCourse3AvailableChanged(bool value)
+        {
+            UpdateCourseMask(value, 2);
+        }
+
+        partial void OnIsCourse4AvailableChanged(bool value)
+        {
+            UpdateCourseMask(value, 3);
         }
 
         [RelayCommand(CanExecute = nameof(CanSubmit))]
@@ -270,7 +313,7 @@ namespace Client.ViewModels
                     await _apiService.PostAsync<DisciplineFullInfo>("Discipline", "addDiscipline", newDiscipline, _userStore.AccessToken);
 
                 if (!HasErrorMessage)
-                    OnSubmitAccepted(newDiscipline);
+                    OnSubmitAccepted(addedDiscipline);
             });
         }
 
@@ -284,11 +327,11 @@ namespace Client.ViewModels
 
             await ExecuteWithWaiting(async () =>
             {
-                var updatedDiscipline = InitializeDiscipline();
+                var changedDiscipline = InitializeDiscipline();
 
-                (ErrorMessage, _) =
-                    await _apiService.PutAsync<object>("Discipline", "updateDiscipline",
-                    updatedDiscipline, _userStore.AccessToken);
+                (ErrorMessage, var updatedDiscipline) =
+                    await _apiService.PutAsync<DisciplineFullInfo>("Discipline", "updateDiscipline",
+                    changedDiscipline, _userStore.AccessToken);
 
                 if (!HasErrorMessage)
                     OnSubmitAccepted(updatedDiscipline);
@@ -304,7 +347,7 @@ namespace Client.ViewModels
             if (path is null)
                 return;
 
-            List<string> data;
+            List<string> data = null!;
 
             try
             {
@@ -322,6 +365,7 @@ namespace Client.ViewModels
             var codeAndName = data.ElementAtOrDefault(0);
 
             var code = codeAndName?.Split(' ')[0];
+
             if (code is not null)
                 code = code.Contains('_') ? codeAndName?.Split('_')[0] : code;
 
@@ -335,7 +379,13 @@ namespace Client.ViewModels
             var eduLevelId = eduLevel.ToLower().Contains("перший") ? 1 : (eduLevel.ToLower().Contains("другий") ? 2 : 3);
 
             EduLevel = EduLevels.First(level => level.EduLevelId == eduLevelId);
-            Course = data.ElementAtOrDefault(2).Trim();
+
+            _courseMask = CourseParser.ParseCourseString(data.ElementAtOrDefault(2).Trim());
+            UpdateCourseBooleans();
+
+            var semesterId = SemesterParser.ParseSemesterString(data.ElementAtOrDefault(2).Trim());
+            Semester = Semesters[semesterId];
+
             Prerequisites = data.ElementAtOrDefault(3).Trim();
             Interest = data.ElementAtOrDefault(4).Trim();
 
@@ -344,6 +394,27 @@ namespace Client.ViewModels
 
             isSuccess = int.TryParse(data.ElementAtOrDefault(6), out int minCount);
             MinCount = isSuccess ? minCount : 0;
+        }
+
+        private void UpdateCourseBooleans()
+        {
+            _isCourseBoolUpdating = true;
+            IsCourse1Available = (_courseMask & (1 << 0)) != 0;
+            IsCourse2Available = (_courseMask & (1 << 1)) != 0;
+            IsCourse3Available = (_courseMask & (1 << 2)) != 0;
+            IsCourse4Available = (_courseMask & (1 << 3)) != 0;
+            _isCourseBoolUpdating = false;
+        }
+
+        private void UpdateCourseMask(bool isChecked, byte shift)
+        {
+            if (_isCourseBoolUpdating)
+                return;
+
+            if (isChecked)
+                _courseMask |= (byte)(1 << shift);
+            else
+                _courseMask ^= (byte)(1 << shift);
         }
 
         private void OnSubmitAccepted(DisciplineFullInfo disciplineInfo)
@@ -362,18 +433,18 @@ namespace Client.ViewModels
             IsWaiting = false;
         }
 
-        private DisciplineFullInfo InitializeDiscipline()
+        private DisciplineRegistryInfo InitializeDiscipline()
         {
-            return new DisciplineFullInfo
+            return new DisciplineRegistryInfo
             {
                 DisciplineId = _disciplineId,
                 DisciplineCode = DisciplineCode,
                 CatalogType = CatalogType.CatalogType,
-                Faculty = _faculty,
-                Specialty = (Specialty is null || Specialty.SpecialtyId == 0) ? null : Specialty,
+                FacultyId = _faculty.FacultyId,
+                SpecialtyId = (Specialty is null || Specialty.SpecialtyId == 0) ? null : Specialty.SpecialtyId,
                 DisciplineName = DisciplineName,
                 EduLevel = EduLevel.EduLevelId,
-                Course = Course,
+                Course = _courseMask,
                 Semester = Semester.SemesterId,
                 Prerequisites = Prerequisites,
                 Interest = Interest,

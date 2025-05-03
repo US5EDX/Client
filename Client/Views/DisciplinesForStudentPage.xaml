@@ -86,13 +86,13 @@ SelectedItem="{Binding SelectedDiscipline, Mode=TwoWay, UpdateSourceTrigger=Prop
               Width="0.2*" Binding="{Binding DisciplineCode}" ElementStyle="{StaticResource CenteredCellStyle}" />
 
                         <DataGridTextColumn Header="Назва" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-              Width="0.3*" Binding="{Binding DisciplineName}" ElementStyle="{StaticResource CenteredCellStyle}" />
+              Width="0.35*" Binding="{Binding DisciplineName}" ElementStyle="{StaticResource CenteredCellStyle}" />
 
                         <DataGridTextColumn Header="Курс" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-              Width="0.25*" Binding="{Binding Course}" ElementStyle="{StaticResource CenteredCellStyle}" />
+              Width="0.15*" Binding="{Binding Course}" ElementStyle="{StaticResource CenteredCellStyle}" />
 
                         <DataGridTextColumn Header="Семестр" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-              Width="0.15*">
+              Width="0.15*" SortMemberPath="Semester">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock" BasedOn="{StaticResource CenteredCellStyle}">
                                     <Setter Property="Text" Value="{Binding Semester, Converter={StaticResource SemToSemName}}"/>
@@ -106,7 +106,7 @@ SelectedItem="{Binding SelectedDiscipline, Mode=TwoWay, UpdateSourceTrigger=Prop
                         </DataGridTextColumn>
 
                         <DataGridTextColumn Header="Факультет" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-              Width="0.1*" Binding="{Binding Faculty.FacultyName}" ElementStyle="{StaticResource CenteredCellStyle}" />
+              Width="0.15*" Binding="{Binding Faculty.FacultyName}" ElementStyle="{StaticResource CenteredCellStyle}" />
                     </DataGrid.Columns>
                 </DataGrid>
 

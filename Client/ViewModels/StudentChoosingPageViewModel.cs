@@ -124,14 +124,17 @@ namespace Client.ViewModels
             foreach (var record in madeRecords ?? Enumerable.Empty<RecordShortInfo>())
                 groupedRecords[record.ChosenSemester].Add(record);
 
+            byte searchCourse = (byte)(_userStore.StudentInfo.Group.Course +
+            ((_userStore.StudentInfo.Group.Course == 1 && _userStore.StudentInfo.Group.HasEnterChoise) ? 0 : 1));
+
             for (int i = 0; i < _userStore.StudentInfo.Group.Nonparsemester; i++)
                 OddSemesterChoices.Add(new DisciplineComboBoxViewModel(_apiService, _userStore.AccessToken, Holding.EduYear,
-                    1, _userStore.StudentInfo.Group.EduLevel, $"Осінній семестр — вибір {i + 1}",
+                    searchCourse, 1, _userStore.StudentInfo.Group.EduLevel, $"Осінній семестр — вибір {i + 1}",
                     groupedRecords[FALLSEMESTER].ElementAtOrDefault(i)));
 
             for (int i = 0; i < _userStore.StudentInfo.Group.Parsemester; i++)
                 EvenSemesterChoices.Add(new DisciplineComboBoxViewModel(_apiService, _userStore.AccessToken, Holding.EduYear,
-                    2, _userStore.StudentInfo.Group.EduLevel, $"Весняний семестр — вибір {i + 1}",
+                    searchCourse, 2, _userStore.StudentInfo.Group.EduLevel, $"Весняний семестр — вибір {i + 1}",
                     groupedRecords[SPRINGSEMESTER].ElementAtOrDefault(i)));
         }
 

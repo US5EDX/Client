@@ -25,35 +25,41 @@
 
             <TextBlock Text="Код дисципліни" Margin="0,0,0,5"/>
             <TextBox Margin="0,0,0,30" Text="{Binding DisciplineCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-  MaxLength="50" materialDesign:HintAssist.Hint="1у-05-041" />
+  MaxLength="50" materialDesign:HintAssist.Hint="Введіть код дисципліни" />
 
             <TextBlock Text="Назва дисципліни" Margin="0,0,0,5"/>
             <TextBox Margin="0,0,0,30" VerticalContentAlignment="Stretch" TextWrapping="Wrap" MaxWidth="420"
                      AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True" xml:lang="uk-UA"
                      Text="{Binding DisciplineName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-MaxLength="200" materialDesign:HintAssist.Hint="Комп'ютерна графіка та анімація" />
+MaxLength="200" materialDesign:HintAssist.Hint="Введіть назву дисципліни" />
 
             <TextBlock Text="Тип каталогу" Margin="0,0,0,5"/>
             <ComboBox Margin="0,0,0,30" SelectedItem="{Binding CatalogType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-ItemsSource="{Binding CatalogTypes}" DisplayMemberPath="CatalogName" materialDesign:HintAssist.Hint="УВК" />
+ItemsSource="{Binding CatalogTypes}" DisplayMemberPath="CatalogName" materialDesign:HintAssist.Hint="Оберіть значення зі списку" />
 
             <TextBlock Text="Спеціальність" Margin="0,0,0,5"/>
             <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Specialty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            ItemsSource="{Binding Specialties}" DisplayMemberPath="SpecialtyName" materialDesign:HintAssist.Hint="ІПЗ" />
+            ItemsSource="{Binding Specialties}" DisplayMemberPath="SpecialtyName" materialDesign:HintAssist.Hint="Оберіть значення зі списку" />
 
             <TextBlock Text="Рівень ВО" Margin="0,0,0,5"/>
             <ComboBox Margin="0,0,0,30" SelectedItem="{Binding EduLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-ItemsSource="{Binding EduLevels}" DisplayMemberPath="LevelName" materialDesign:HintAssist.Hint="Бакалавр" />
+ItemsSource="{Binding EduLevels}" DisplayMemberPath="LevelName" materialDesign:HintAssist.Hint="Оберіть значення зі списку" />
 
-            <TextBlock Text="Курс" Margin="0,0,0,5"/>
-            <TextBox Margin="0,0,0,30" VerticalContentAlignment="Stretch" TextWrapping="Wrap" Width="420"
-                     AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True" xml:lang="uk-UA"
-                     Text="{Binding Course, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-MaxLength="250" materialDesign:HintAssist.Hint="для 2 - 4 курсів" />
+            <TextBlock Text="Курси" Margin="0,0,0,5"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,0,0,30">
+                <StackPanel Margin="0,0,50,0">
+                    <CheckBox Content="1 курс" IsChecked="{Binding IsCourse1Available}" FontSize="15" Margin="0,0,0,5" VerticalContentAlignment="Bottom" />
+                    <CheckBox Content="3 курс" IsChecked="{Binding IsCourse3Available}" FontSize="15" VerticalContentAlignment="Bottom" />
+                </StackPanel>
+                <StackPanel>
+                    <CheckBox Content="2 курс" IsChecked="{Binding IsCourse2Available}" FontSize="15" Margin="0,0,0,5" VerticalContentAlignment="Bottom" />
+                    <CheckBox Content="4 курс" IsChecked="{Binding IsCourse4Available}" FontSize="15" VerticalContentAlignment="Bottom" />
+                </StackPanel>
+            </StackPanel>
 
             <TextBlock Text="Семестр" Margin="0,0,0,5"/>
             <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Semester, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-ItemsSource="{Binding Semesters}" DisplayMemberPath="SemesterName" materialDesign:HintAssist.Hint="Обидва" />
+ItemsSource="{Binding Semesters}" DisplayMemberPath="SemesterName" materialDesign:HintAssist.Hint="Оберіть значення зі списку" />
 
             <CheckBox Content="Чи продовжується у другому семестрі?" IsChecked="{Binding IsYearLong}" Margin="0,0,0,30" 
                       Visibility="{Binding IsBoth, Converter={StaticResource boolToVis}}"/>
@@ -73,12 +79,12 @@ MaxLength="1000" materialDesign:HintAssist.Hint="Чому це цікаво/тр
             <TextBlock Text="Максимальна кількість здобувачів" Margin="0,0,0,5"/>
             <TextBox Margin="0,0,0,30" Text="{Binding MaxCount, Mode=TwoWay, 
             UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ByteNullableConv}}" 
-                 materialDesign:HintAssist.Hint="90" />
+                 materialDesign:HintAssist.Hint="Введіть число" />
 
             <TextBlock Text="Мінімальна кількість здобувачів" Margin="0,0,0,5"/>
             <TextBox Margin="0,0,0,30" Text="{Binding MinCount, Mode=TwoWay, 
             UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ByteNullableConv}}" 
-                 materialDesign:HintAssist.Hint="0" />
+                 materialDesign:HintAssist.Hint="Введіть число" />
 
             <TextBlock Text="Посилання на документ" Margin="0,0,0,5"/>
             <TextBox Margin="0,0,0,30" MaxWidth="420" Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -86,7 +92,7 @@ MaxLength="500" materialDesign:HintAssist.Hint="https://www.dnu.dp.ua" />
 
             <TextBlock Text="Навчальний рік" Margin="0,0,0,5"/>
             <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Holding, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-ItemsSource="{Binding Holdings}" materialDesign:HintAssist.Hint="2025" />
+ItemsSource="{Binding Holdings}" />
 
             <TextBlock Margin="0,0,0,15" Text="Очікування результату..." 
                 Visibility="{Binding IsWaiting, Converter={StaticResource boolToVis}}"

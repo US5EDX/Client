@@ -10,6 +10,7 @@ namespace Client.ViewModels.CustomControlsViewModels
         private readonly ApiService _apiService;
         private readonly string _accessToken;
         private readonly short _holding;
+        private readonly byte _course;
         private readonly byte _semester;
         private readonly byte _eduLevel;
 
@@ -51,12 +52,13 @@ namespace Client.ViewModels.CustomControlsViewModels
 
         public ObservableCollection<DisciplineShortInfo> Disciplines { get; init; }
 
-        public DisciplineComboBoxViewModel(ApiService apiService, string accessToken, short holding, byte semester,
+        public DisciplineComboBoxViewModel(ApiService apiService, string accessToken, short holding, byte course, byte semester,
             byte eduLevel, string label, RecordShortInfo? recordShortInfo = null)
         {
             _apiService = apiService;
             _accessToken = accessToken;
             _holding = holding;
+            _course = course;
             _semester = semester;
             _eduLevel = eduLevel;
             Label = label;
@@ -191,7 +193,7 @@ namespace Client.ViewModels.CustomControlsViewModels
                 searchText = searchText[..50];
 
             (ErrorMessage, var result) = await _apiService.GetAsync<List<DisciplineShortInfo>>("Discipline",
-                $"getOptionsInfo?holding={_holding}&eduLevel={_eduLevel}&semester={_semester}&code={searchText}",
+                $"getOptionsInfo?holding={_holding}&eduLevel={_eduLevel}&course={_course}&semester={_semester}&code={searchText}",
                 _accessToken);
 
             return result ?? new List<DisciplineShortInfo>();

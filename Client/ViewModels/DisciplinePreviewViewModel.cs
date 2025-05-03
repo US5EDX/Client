@@ -27,7 +27,7 @@ namespace Client.ViewModels
                 new PreviewPair("Спеціальність", discipline.Specialty?.SpecialtyName ?? "Не вказано"),
                 new PreviewPair("Рівень ВО",
                     (string)new EduLevelToEduLevelNameConverter().Convert(discipline.EduLevel, null, null, null)),
-                new PreviewPair("Курс", discipline.Course),
+                new PreviewPair("Курс", $"Для {discipline.Course} курсу"),
                 new PreviewPair("Семестр",
                     (string)new SemesterToSemesterNameConverter().Convert(discipline.Semester, null, null, null)),
                 new PreviewPair("Розрахована на рік?", discipline.IsYearLong ? "Так" : "Ні"),

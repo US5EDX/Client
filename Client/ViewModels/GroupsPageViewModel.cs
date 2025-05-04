@@ -126,6 +126,7 @@ namespace Client.ViewModels
                 SelectedGroup.Nonparsemester = groupInfo.Nonparsemester;
                 SelectedGroup.Parsemester = groupInfo.Parsemester;
                 SelectedGroup.HasEnterChoise = groupInfo.HasEnterChoise;
+                SelectedGroup.ChoiceDifference = groupInfo.ChoiceDifference;
                 SelectedGroup.CuratorInfo = groupInfo.CuratorInfo;
                 SelectedGroup = null;
                 return;

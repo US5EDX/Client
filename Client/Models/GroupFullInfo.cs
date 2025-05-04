@@ -45,6 +45,10 @@ namespace Client.Models
         public bool _hasEnterChoise;
 
         [ObservableProperty]
+        [property: JsonPropertyName("choiceDifference")]
+        public byte _choiceDifference;
+
+        [ObservableProperty]
         [property: JsonPropertyName("curatorInfo")]
         private WorkerShortInfo? _curatorInfo;
 
@@ -60,7 +64,8 @@ namespace Client.Models
                 AdmissionYear = this.AdmissionYear,
                 Nonparsemester = this.Nonparsemester,
                 Parsemester = this.Parsemester,
-                HasEnterChoise = this.HasEnterChoise
+                HasEnterChoise = this.HasEnterChoise,
+                ChoiceDifference = this.ChoiceDifference,
             };
         }
     }

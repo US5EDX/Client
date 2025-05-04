@@ -56,7 +56,16 @@
             <CheckBox Content="Чи є вибір одразу при вступі?" FontSize="14" Margin="0,0,0,30"
             IsChecked="{Binding HasEnterChoise}"/>
 
-            <TextBlock Text="Група" Margin="0,0,0,5"/>
+            <CheckBox Content="Прискореники?" FontSize="14" Margin="0,0,0,30"
+IsChecked="{Binding IsShortened}"/>
+
+            <StackPanel Visibility="{Binding IsShortened, Converter={StaticResource boolToVis}}">
+                <TextBlock Text="Різниця в роках при виборі" Margin="0,0,0,5"/>
+                <TextBox Margin="0,0,0,30" Text="{Binding ChoiceDifference, Mode=TwoWay, 
+UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ByteNullableConv}}" />
+            </StackPanel>
+
+            <TextBlock Text="Куратор" Margin="0,0,0,5"/>
             <ComboBox Margin="0,0,0,30" SelectedItem="{Binding Worker}"
           ItemsSource="{Binding Workers}" IsEditable="True" Text="{Binding WorkerFullName}" 
           DisplayMemberPath="FullName" materialDesign:HintAssist.Hint="Іванов Іван Іванович">

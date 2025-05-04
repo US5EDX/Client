@@ -22,6 +22,8 @@ namespace Client.Stores
 
         public bool HasEnterChoise { get; set; }
 
+        public byte ChoiceDifference { get; set; }
+
         public bool IsLoadedFromGroupsPage { get; set; }
 
         public void GetInfoFromModel(GroupInfo group)
@@ -34,6 +36,7 @@ namespace Client.Stores
             Nonparsemester = group.Nonparsemester;
             Parsemester = group.Parsemester;
             HasEnterChoise = group.HasEnterChoise;
+            ChoiceDifference = group.ChoiceDifference;
 
             IsLoadedFromGroupsPage = false;
         }

@@ -20,6 +20,8 @@
 
         public bool HasEnterChoise { get; set; }
 
+        public byte ChoiceDifference { get; set; }
+
         public string? CuratorId { get; set; }
     }
 }

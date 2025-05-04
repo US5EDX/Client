@@ -30,5 +30,8 @@ namespace Client.Models
 
         [JsonPropertyName("hasEnterChoise")]
         public bool HasEnterChoise { get; set; }
+
+        [JsonPropertyName("choiceDifference")]
+        public byte ChoiceDifference { get; set; }
     }
 }

@@ -98,6 +98,19 @@ namespace Client.ViewModels
         private bool _hasEnterChoise;
 
         [ObservableProperty]
+        [NotifyDataErrorInfo]
+        [Range(0, 2)]
+        [CustomValidation(typeof(GroupRegistryViewModel),
+            nameof(ValidateChoiceDifference))]
+        [NotifyPropertyChangedFor(nameof(CanSubmit))]
+        [NotifyCanExecuteChangedFor(nameof(AddGroupCommand))]
+        [NotifyCanExecuteChangedFor(nameof(UpdateGroupCommand))]
+        private byte _choiceDifference;
+
+        [ObservableProperty]
+        private bool _isShortened;
+
+        [ObservableProperty]
         private bool _isWaiting;
 
         [ObservableProperty]
@@ -147,9 +160,26 @@ namespace Client.ViewModels
             return ValidationResult.Success;
         }
 
+        public static ValidationResult ValidateChoiceDifference(string name, ValidationContext context)
+        {
+            GroupRegistryViewModel viewModel = (GroupRegistryViewModel)context.ObjectInstance;
+
+            if (viewModel.DurationOfStudy is not null
+                && viewModel.DurationOfStudy + viewModel.ChoiceDifference > 4)
+                return new("Різниця не може бути такою, що студенти будть обирати на курс > 4");
+
+            return ValidationResult.Success;
+        }
+
         partial void OnHasEnterChoiseChanged(bool value)
         {
             ValidateProperty(DurationOfStudy, nameof(DurationOfStudy));
+        }
+
+        partial void OnIsShortenedChanged(bool value)
+        {
+            if (!value)
+                ChoiceDifference = 0;
         }
 
         public GroupRegistryViewModel(UserStore userStore, ApiService apiService, List<SpecialtyInfo> specialtiesInfo,
@@ -183,6 +213,8 @@ namespace Client.ViewModels
             Nonparsemester = groupInfo?.Nonparsemester;
             Parsemester = groupInfo?.Parsemester;
             HasEnterChoise = groupInfo?.HasEnterChoise ?? false;
+            IsShortened = groupInfo?.ChoiceDifference != 0;
+            ChoiceDifference = groupInfo?.ChoiceDifference ?? 0;
 
             if (groupInfo?.CuratorInfo is not null)
             {
@@ -315,6 +347,7 @@ namespace Client.ViewModels
                 Nonparsemester = Nonparsemester.Value,
                 Parsemester = Parsemester.Value,
                 HasEnterChoise = HasEnterChoise,
+                ChoiceDifference = ChoiceDifference,
                 CuratorId = Worker?.WorkerId
             };
         }

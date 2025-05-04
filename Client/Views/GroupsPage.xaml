@@ -17,6 +17,7 @@
         <BooleanToVisibilityConverter x:Key="boolToVis"/>
         <conv:EduLevelToEduLevelNameConverter x:Key="EduLevelToEduLevelName"/>
         <conv:BoolStatusToStringConverter x:Key="BoolToStatusConverter"/>
+        <conv:ShortenedProgrammeConverter x:Key="ShortenedConverter"/>
 
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -69,6 +70,9 @@ Width="Auto" Binding="{Binding AdmissionYear}" />
 
                     <DataGridTextColumn Header="Чи є вибір при вступі" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
 Width="Auto" Binding="{Binding HasEnterChoise, Converter={StaticResource BoolToStatusConverter}}" />
+
+                    <DataGridTextColumn Header="Прискореники" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+Width="Auto" Binding="{Binding ChoiceDifference, Converter={StaticResource ShortenedConverter}}" />
 
                     <DataGridTextColumn Header="Куратор групи" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
                 Width="Auto" Binding="{Binding CuratorInfo.FullName, FallbackValue='Без куратора'}" />

@@ -127,6 +127,8 @@ namespace Client.ViewModels
             byte searchCourse = (byte)(_userStore.StudentInfo.Group.Course +
             ((_userStore.StudentInfo.Group.Course == 1 && _userStore.StudentInfo.Group.HasEnterChoise) ? 0 : 1));
 
+            searchCourse += _userStore.StudentInfo.Group.ChoiceDifference;
+
             for (int i = 0; i < _userStore.StudentInfo.Group.Nonparsemester; i++)
                 OddSemesterChoices.Add(new DisciplineComboBoxViewModel(_apiService, _userStore.AccessToken, Holding.EduYear,
                     searchCourse, 1, _userStore.StudentInfo.Group.EduLevel, $"Осінній семестр — вибір {i + 1}",

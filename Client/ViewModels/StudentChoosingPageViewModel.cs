@@ -125,7 +125,8 @@ namespace Client.ViewModels
                 groupedRecords[record.ChosenSemester].Add(record);
 
             byte searchCourse = (byte)(_userStore.StudentInfo.Group.Course +
-            ((_userStore.StudentInfo.Group.Course == 1 && _userStore.StudentInfo.Group.HasEnterChoise) ? 0 : 1));
+            ((_userStore.StudentInfo.Group.AdmissionYear == Holding.EduYear
+            && _userStore.StudentInfo.Group.HasEnterChoise) ? 0 : 1));
 
             searchCourse += _userStore.StudentInfo.Group.ChoiceDifference;
 

@@ -21,7 +21,8 @@ namespace Client.ViewModels
 
         private string CourseFilter => $"&courseFilter={_userStore.StudentInfo.Group.Course +
             _userStore.StudentInfo.Group.ChoiceDifference +
-            ((_userStore.StudentInfo.Group.Course == 1 && _userStore.StudentInfo.Group.HasEnterChoise) ? 0 : 1)}";
+            ((_userStore.StudentInfo.Group.AdmissionYear == Holding.EduYear
+            && _userStore.StudentInfo.Group.HasEnterChoise) ? 0 : 1)}";
 
         private string SemesterFilter => $"&semesterFilter={SelectedSemester?.SemesterId ?? 0}";
 

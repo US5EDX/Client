@@ -1,10 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2021.DocumentTasks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+﻿using System.Text.RegularExpressions;
 
 namespace Client.Parsers
 {
@@ -16,7 +10,7 @@ namespace Client.Parsers
         [GeneratedRegex(@"^(будь-який|парний,непарний)$", RegexOptions.IgnoreCase, "uk-UA")]
         private static partial Regex BothSemestersAsText();
 
-        public static int ParseSemesterString(string rawText)
+        public static int ParseSemesterString(string? rawText)
         {
             if (string.IsNullOrWhiteSpace(rawText))
                 return 0;

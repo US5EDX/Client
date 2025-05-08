@@ -30,7 +30,7 @@
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Collapsed"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                            <DataTrigger Binding="{Binding IsWaiting}" Value="True">
                                 <Setter Property="Visibility" Value="Visible"/>
                             </DataTrigger>
                         </Style.Triggers>
@@ -43,7 +43,7 @@
                     <Style TargetType="Grid">
                         <Setter Property="Visibility" Value="Visible"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                            <DataTrigger Binding="{Binding IsWaiting}" Value="True">
                                 <Setter Property="Visibility" Value="Collapsed"/>
                             </DataTrigger>
                         </Style.Triggers>

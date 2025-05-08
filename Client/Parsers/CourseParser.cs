@@ -7,7 +7,7 @@ namespace Client.Parsers
         [GeneratedRegex(@"Курс\s*:\s*(.+?)(\.|;|$)", RegexOptions.IgnoreCase, "uk-UA")]
         private static partial Regex CourseRegex();
 
-        public static byte ParseCourseString(string rawText)
+        public static byte ParseCourseString(string? rawText)
         {
             if (string.IsNullOrWhiteSpace(rawText))
                 return 0;

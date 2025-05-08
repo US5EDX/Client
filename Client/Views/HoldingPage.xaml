@@ -25,9 +25,9 @@
         </DataTemplate>
     </Page.Resources>
 
-    <materialDesign:DialogHost IsOpen="{Binding IsRegistryOpen, Mode=OneWay}">
+    <materialDesign:DialogHost IsOpen="{Binding IsModalOpen, Mode=OneWay}">
         <materialDesign:DialogHost.DialogContent>
-            <Frame Content="{Binding HoldingRegistry}" Validation.ErrorTemplate="{x:Null}" />
+            <Frame Content="{Binding SelectedModal}" Validation.ErrorTemplate="{x:Null}" />
         </materialDesign:DialogHost.DialogContent>
 
         <Grid>

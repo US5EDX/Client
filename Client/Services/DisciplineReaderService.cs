@@ -10,14 +10,14 @@ namespace Client.Services
 
         public DisciplineReaderService()
         {
-            _selectedColumns = new HashSet<int>() { 0, 4, 5, 7, 9, 15, 16 };
+            _selectedColumns = [0, 4, 5, 7, 9, 15, 16];
         }
 
         public List<string> ReadDisciplineDocx(string filePath)
         {
-            List<string> data = new List<string>();
+            List<string> data = [];
 
-            using (Document doc = new Document())
+            using (Document doc = new())
             {
                 doc.LoadFromFile(filePath);
 

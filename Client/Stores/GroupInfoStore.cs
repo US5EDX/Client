@@ -1,4 +1,6 @@
 ﻿using Client.Models;
+using Client.Services;
+using System.IO;
 
 namespace Client.Stores
 {
@@ -6,7 +8,7 @@ namespace Client.Stores
     {
         public uint GroupId { get; set; }
 
-        public string GroupCode { get; set; }
+        public string GroupCode { get; set; } = null!;
 
         public byte EduLevel { get; set; }
 
@@ -24,7 +26,25 @@ namespace Client.Stores
 
         public byte ChoiceDifference { get; set; }
 
-        public bool IsLoadedFromGroupsPage { get; set; }
+        public bool IsActual { get; set; }
+
+        public async Task LoadInfoAsync(ApiService apiService, uint groupId, string accessToken)
+        {
+            if (IsActual)
+                return;
+
+            (var errorMessage, var group) =
+                    await apiService.GetAsync<GroupInfo>
+                    ("Group", $"getGroupById/{groupId}", accessToken);
+
+            if (!string.IsNullOrEmpty(errorMessage))
+                throw new Exception(errorMessage);
+
+            if (group is null)
+                throw new InvalidDataException("Не вдалось завантажити дані про групу");
+
+            GetInfoFromModel(group);
+        }
 
         public void GetInfoFromModel(GroupInfo group)
         {
@@ -38,7 +58,7 @@ namespace Client.Stores
             HasEnterChoise = group.HasEnterChoise;
             ChoiceDifference = group.ChoiceDifference;
 
-            IsLoadedFromGroupsPage = false;
+            IsActual = true;
         }
     }
 }

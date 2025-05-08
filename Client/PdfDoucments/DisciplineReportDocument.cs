@@ -8,16 +8,13 @@ namespace Client.PdfDoucments
 {
     public class DisciplineReportDocument : IDocument
     {
-        private readonly List<DisciplinePrintInfo> _disciplines;
-        private readonly Dictionary<byte, List<DisciplinePrintInfo>> _groupedDisciplines;
+        private readonly List<DisciplinePrintInfo> _disciplines = null!;
+        private readonly Dictionary<byte, List<DisciplinePrintInfo>> _groupedDisciplines = null!;
         private readonly string _facultyName;
         private readonly string _catalogType;
         private readonly short _eduYear;
         private readonly int _semester;
         private readonly DisciplineStatusThresholds _thresholds;
-
-        private readonly EduLevelToEduLevelNameConverter _eduLevelConverter;
-        private readonly SemesterToSemesterNameConverter _semesterConverter;
 
         public DisciplineReportDocument(List<DisciplinePrintInfo> disciplines, string facultyName,
             string catalogType, short eduYear, int semester, DisciplineStatusThresholds thresholds)
@@ -41,9 +38,6 @@ namespace Client.PdfDoucments
             _eduYear = eduYear;
             _semester = semester;
             _thresholds = thresholds;
-
-            _eduLevelConverter = new EduLevelToEduLevelNameConverter();
-            _semesterConverter = new SemesterToSemesterNameConverter();
         }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
@@ -93,7 +87,7 @@ namespace Client.PdfDoucments
                 foreach (var group in _groupedDisciplines)
                 {
                     column.Item().PaddingTop(10)
-                    .Text((string)_eduLevelConverter.Convert(group.Key, null, null, null))
+                    .Text(Converter.ConvertEduLevel(group.Key))
                     .AlignCenter().FontSize(12).Bold();
 
                     column.Item().PaddingTop(5).Table(table => CreateTable(table, group.Value));
@@ -131,10 +125,10 @@ namespace Client.PdfDoucments
                 SharedElements.AddCell(table, item.SpecialtyName ?? "-", color);
 
                 if (_disciplines is not null)
-                    SharedElements.AddCell(table, (string)_eduLevelConverter.Convert(item.EduLevel, null, null, null), color);
+                    SharedElements.AddCell(table, Converter.ConvertEduLevel(item.EduLevel), color);
 
                 SharedElements.AddCell(table, item.Course, color);
-                SharedElements.AddCell(table, (string)_semesterConverter.Convert(item.Semester, null, null, null), color);
+                SharedElements.AddCell(table, Converter.ConvertSemester(item.Semester), color);
                 SharedElements.AddCell(table, item.MinCount == 0 ? "-" : item.MinCount.ToString(), color);
                 SharedElements.AddCell(table, item.MaxCount == 0 ? "-" : item.MaxCount.ToString(), color);
                 SharedElements.AddCell(table, item.IsOpen ? "Так" : "Ні", color);

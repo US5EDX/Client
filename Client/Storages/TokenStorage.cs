@@ -21,19 +21,19 @@ namespace Client.Storages
         {
             try
             {
-                using (Aes aes = Aes.Create())
+                using Aes aes = Aes.Create();
+                aes.Key = _key;
+                aes.IV = _iv;
+
+                using (MemoryStream memoryStream = new())
                 {
-                    aes.Key = _key;
-                    aes.IV = _iv;
-                    using (MemoryStream memoryStream = new MemoryStream())
+                    using (CryptoStream cryptoStream = new(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                    using (StreamWriter writer = new(cryptoStream))
                     {
-                        using (CryptoStream cryptoStream = new CryptoStream(memoryStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
-                        using (StreamWriter writer = new StreamWriter(cryptoStream))
-                        {
-                            await writer.WriteAsync(token);
-                        }
-                        await File.WriteAllBytesAsync(_filePath, memoryStream.ToArray());
+                        await writer.WriteAsync(token);
                     }
+
+                    await File.WriteAllBytesAsync(_filePath, memoryStream.ToArray());
                 }
 
                 return true;
@@ -52,16 +52,16 @@ namespace Client.Storages
             try
             {
                 byte[] encryptedData = await File.ReadAllBytesAsync(_filePath);
-                using (Aes aes = Aes.Create())
+
+                using Aes aes = Aes.Create();
+                aes.Key = _key;
+                aes.IV = _iv;
+
+                using (MemoryStream memoryStream = new(encryptedData))
+                using (CryptoStream cryptoStream = new(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                using (StreamReader reader = new(cryptoStream))
                 {
-                    aes.Key = _key;
-                    aes.IV = _iv;
-                    using (MemoryStream memoryStream = new MemoryStream(encryptedData))
-                    using (CryptoStream cryptoStream = new CryptoStream(memoryStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
-                    using (StreamReader reader = new StreamReader(cryptoStream))
-                    {
-                        return await reader.ReadToEndAsync();
-                    }
+                    return await reader.ReadToEndAsync();
                 }
             }
             catch (Exception)

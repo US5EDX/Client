@@ -8,20 +8,10 @@ namespace Client.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is not byte val)
+            if (value is not byte byteVal)
                 throw new InvalidOperationException("The target must be a byte");
 
-            switch (val)
-            {
-                case 0:
-                    return "❌";
-                case 1:
-                    return "✔️";
-                case 2:
-                    return "❔";
-                default:
-                    return string.Empty;
-            }
+            return Converter.ConvertByte(byteVal);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

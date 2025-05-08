@@ -62,15 +62,15 @@ namespace Client.ViewModels.CustomControlsViewModels
             _semester = semester;
             _eduLevel = eduLevel;
             Label = label;
-            Disciplines = new ObservableCollection<DisciplineShortInfo>();
+            Disciplines = [];
 
             _recordId = recordShortInfo?.RecordId;
             _oldDisciplineId = recordShortInfo?.DisciplineId ?? 0;
 
-            _isEnabled = true;
 
             if (recordShortInfo is null)
             {
+                _isEnabled = true;
                 SearchText = string.Empty;
                 return;
             }
@@ -91,13 +91,7 @@ namespace Client.ViewModels.CustomControlsViewModels
             _isEnabled = _status == 0;
         }
 
-        public bool IsDisciplineChanged()
-        {
-            if (SelectedDiscipline is null || _oldDisciplineId == SelectedDiscipline.DisciplineId)
-                return false;
-
-            return true;
-        }
+        public bool IsDisciplineChanged() => !(SelectedDiscipline is null || _oldDisciplineId == SelectedDiscipline.DisciplineId);
 
         public async Task<bool> SubmitAsync()
         {
@@ -196,7 +190,7 @@ namespace Client.ViewModels.CustomControlsViewModels
                 $"getOptionsInfo?holding={_holding}&eduLevel={_eduLevel}&course={_course}&semester={_semester}&code={searchText}",
                 _accessToken);
 
-            return result ?? new List<DisciplineShortInfo>();
+            return result ?? [];
         }
     }
 }

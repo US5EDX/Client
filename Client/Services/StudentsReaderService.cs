@@ -15,11 +15,7 @@ namespace Client.Services
 
             using (var workbook = new XLWorkbook(filePath))
             {
-                var worksheet = workbook.Worksheets.FirstOrDefault();
-
-                if (worksheet == null)
-                    throw new Exception("Файл не містить листів.");
-
+                var worksheet = workbook.Worksheets.FirstOrDefault() ?? throw new Exception("Файл не містить листів.");
                 int rowCount = worksheet.LastRowUsed()?.RowNumber() ?? 0;
                 int colCount = worksheet.LastColumnUsed()?.ColumnNumber() ?? 0;
 
@@ -70,5 +66,8 @@ namespace Client.Services
 
             return students;
         }
+
+        public async Task<List<StudentExcelInfo>> GetStudentsInfoAsync(string filePath) =>
+            await Task.Run(() => GetStudentsInfo(filePath));
     }
 }

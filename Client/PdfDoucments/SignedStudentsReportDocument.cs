@@ -13,8 +13,6 @@ namespace Client.PdfDoucments
         private readonly string _semester;
         private readonly int _total;
 
-        private readonly SemesterToSemesterNameConverter _semesterConverter;
-
         public SignedStudentsReportDocument(IEnumerable<RecordWithStudentInfo> studentInfos, string disciplineName,
             string semester, int total)
         {
@@ -22,8 +20,6 @@ namespace Client.PdfDoucments
             _disciplineName = disciplineName;
             _semester = semester;
             _total = total;
-
-            _semesterConverter = new SemesterToSemesterNameConverter();
         }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
@@ -81,7 +77,7 @@ namespace Client.PdfDoucments
                     SharedElements.AddCell(table, item.FullName, color);
                     SharedElements.AddCell(table, item.FacultyName, color);
                     SharedElements.AddCell(table, item.GroupCode, color);
-                    SharedElements.AddCell(table, (string)_semesterConverter.Convert(item.Semester, null, null, null), color);
+                    SharedElements.AddCell(table, Converter.ConvertSemester(item.Semester), color);
                 }
             });
         }

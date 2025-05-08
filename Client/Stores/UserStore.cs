@@ -8,15 +8,15 @@ namespace Client.Stores
     {
         public bool IsTokenTriedForLogin { get; set; }
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
-        public string Email { get; set; }
+        public string Email { get; set; } = null!;
 
         public byte Role { get; set; }
 
-        public string AccessToken { get; set; }
+        public string AccessToken { get; set; } = null!;
 
-        public string RefreshToken { get; set; }
+        public string RefreshToken { get; set; } = null!;
 
         public StudentInfo? StudentInfo { get; set; }
 
@@ -46,8 +46,6 @@ namespace Client.Stores
 
             StudentInfo = null;
             WorkerInfo = JsonSerializer.Deserialize<WorkerInfo>(userInfo["workerInfo"]);
-
-            return;
         }
     }
 }

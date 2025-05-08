@@ -34,7 +34,7 @@
 
                 <TextBlock Margin="5,0,5,15" Text="Очікування результату..." Visibility="{Binding IsWaiting, Converter={StaticResource boolToVis}}"
                HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Foreground="Green"/>
-                <TextBlock Text="{Binding SubmitErrorMessage}" Visibility="{Binding HasSubmitErrorMessage, Converter={StaticResource boolToVis}}"
+                <TextBlock Text="{Binding ErrorMessage}" Visibility="{Binding HasErrorMessage, Converter={StaticResource boolToVis}}"
                Margin="5,0,5,15" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red" TextAlignment="Center" />
 
             </StackPanel>

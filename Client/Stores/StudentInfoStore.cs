@@ -2,9 +2,9 @@
 {
     public class StudentInfoStore
     {
-        public string StudentId { get; set; }
+        public string StudentId { get; set; } = null!;
 
-        public string FullName { get; set; }
+        public string FullName { get; set; } = null!;
 
         public uint GroupId { get; set; }
 

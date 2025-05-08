@@ -11,10 +11,7 @@ namespace Client.Converters
             if (value is not byte val)
                 throw new InvalidOperationException("The target must be a byte");
 
-            if (val == 0)
-                return "Ні";
-            else
-                return $"Так ({val})";
+            return Converter.ConvertShortenedProgramme(val);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

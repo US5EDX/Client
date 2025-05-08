@@ -9,7 +9,7 @@ namespace Client.Services
         private readonly FrameNavigationStore _frameNavigationStore;
         private readonly Func<TViewModel> _createFrameViewModel;
 
-        public event Func<string, Task> OnNavigationRequested;
+        public event Func<string, Task> OnNavigationRequested = null!;
 
         public FrameNavigationService(FrameNavigationStore frameNavigationStore, Func<TViewModel> createFrameViewModel)
         {

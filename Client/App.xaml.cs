@@ -42,6 +42,7 @@ namespace Client
                 services.AddSingleton<DisciplineReaderService>();
                 services.AddSingleton<StudentsReaderService>();
                 services.AddSingleton<StudentInfoStore>();
+                services.AddSingleton<LecturerInfoStore>();
 
                 services.AddSingleton(sp =>
                 {

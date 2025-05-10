@@ -34,11 +34,16 @@ namespace Client.ViewModels
 
         public bool IsRecordSelected => SelectedRecord is not null;
 
+        public bool IsAdmin => _userStore.Role == 2;
+
         public StudentYearChoicesViewModel(ApiService apiService, UserStore userStore, IMessageService messageService,
             GroupInfoStore groupInfoStore, StudentInfoStore studentInfoStore,
             FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService) :
             base(apiService, userStore)
         {
+            if (_userStore.Role != 2 && _userStore.Role != 3)
+                throw new Exception("У доступі відмовлено");
+
             _messageService = messageService;
             _groupInfoStore = groupInfoStore;
             _studentInfoStore = studentInfoStore;

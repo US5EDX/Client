@@ -39,11 +39,16 @@ namespace Client.ViewModels
 
         public Func<object, string, bool> Filter { get; init; }
 
+        public bool IsCuratorActionsVisible => _userStore.Role == 2 || _userStore.Role == 3;
+
         public GroupPageViewModel(ApiService apiService, UserStore userStore, GroupInfoStore groupInfoStore,
             IMessageService messageService, StudentsReaderService studentsReaderService,
             FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService,
             StudentInfoStore studentInfoStore) : base(apiService, userStore)
         {
+            if (_userStore.StudentInfo is not null && !_userStore.StudentInfo.Headman)
+                throw new Exception("У доступі відмовлено");
+
             _groupInfoStore = groupInfoStore;
             _messageService = messageService;
             _studentsReaderService = studentsReaderService;
@@ -60,6 +65,12 @@ namespace Client.ViewModels
 
         public override async Task LoadContentAsync()
         {
+            if (_groupInfoStore.GroupId == 0 && _userStore.StudentInfo is null)
+                throw new InvalidOperationException("Помилка в даних");
+
+            if (_userStore.StudentInfo is not null)
+                _groupInfoStore.GroupId = _userStore.StudentInfo.Group.GroupId;
+
             await _groupInfoStore.LoadInfoAsync(_apiService, _groupInfoStore.GroupId, _userStore.AccessToken);
 
             Header = _groupInfoStore.GroupCode;

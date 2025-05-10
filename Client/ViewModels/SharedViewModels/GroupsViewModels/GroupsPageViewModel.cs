@@ -32,10 +32,15 @@ namespace Client.ViewModels
 
         public Func<object, string, bool> Filter { get; init; }
 
+        public bool IsAdmin => _userStore.Role == 2;
+
         public GroupsPageViewModel(ApiService apiService, UserStore userStore, GroupInfoStore groupStore,
             IMessageService messenger, FrameNavigationService<GroupPageViewModel> groupNavigationService) :
             base(apiService, userStore)
         {
+            if (_userStore.Role > 3)
+                throw new Exception("доступ обмежено");
+
             _messenger = messenger;
             _groupStore = groupStore;
             _groupNavigationService = groupNavigationService;
@@ -50,18 +55,13 @@ namespace Client.ViewModels
 
         public override async Task LoadContentAsync()
         {
-            (ErrorMessage, var specialties) =
-                await _apiService.GetAsync<List<SpecialtyInfo>>
-                ("Specialty", $"getSpecialties/{_userStore.WorkerInfo.Faculty.FacultyId}", _userStore.AccessToken);
-
-            if (HasErrorMessage)
-                throw new Exception(ErrorMessage);
-
-            _specialtiesInfo.AddRange(specialties ?? Enumerable.Empty<SpecialtyInfo>());
+            if (IsAdmin)
+                await LoadSpecialtiesAsync();
 
             (ErrorMessage, var groups) =
                 await _apiService.GetAsync<ObservableCollection<GroupFullInfo>>
-                ("Group", $"getByFacultyId?facultyId={_userStore.WorkerInfo.Faculty.FacultyId}", _userStore.AccessToken);
+                ("Group", $"getByFacultyId?facultyId={_userStore.WorkerInfo.Faculty.FacultyId}",
+                _userStore.AccessToken);
 
             if (HasErrorMessage)
                 throw new Exception(ErrorMessage);
@@ -80,6 +80,18 @@ namespace Client.ViewModels
                 Groups.Add(groupInfo);
 
             SelectedGroup = null;
+        }
+
+        private async Task LoadSpecialtiesAsync()
+        {
+            (ErrorMessage, var specialties) =
+                await _apiService.GetAsync<List<SpecialtyInfo>>
+                ("Specialty", $"getSpecialties/{_userStore.WorkerInfo.Faculty.FacultyId}", _userStore.AccessToken);
+
+            if (HasErrorMessage)
+                throw new Exception(ErrorMessage);
+
+            _specialtiesInfo.AddRange(specialties ?? Enumerable.Empty<SpecialtyInfo>());
         }
 
         [RelayCommand]

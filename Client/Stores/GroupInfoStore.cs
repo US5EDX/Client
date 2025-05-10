@@ -43,6 +43,9 @@ namespace Client.Stores
             if (group is null)
                 throw new InvalidDataException("Не вдалось завантажити дані про групу");
 
+            if (GroupId == 0)
+                GroupId = groupId;
+
             GetInfoFromModel(group);
         }
 

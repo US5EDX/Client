@@ -16,11 +16,13 @@ namespace Client.ViewModels
         private readonly DisciplineMainInfoStore _disciplineStore;
         private readonly IMessageService _messageService;
         private readonly DisciplineReaderService _pdfReaderService;
+        private readonly LecturerInfoStore _lecturerInfoStore;
 
         private readonly List<SpecialtyInfo> _specialtiesInfo;
 
         public List<CatalogTypeInfo> CatalogTypes { get; init; }
         public List<short> Holdings { get; init; }
+        public List<SemesterInfo> Semesters { get; init; }
 
         public ObservableCollection<DisciplineWithSubCounts> Disciplines { get; init; }
 
@@ -41,31 +43,60 @@ namespace Client.ViewModels
         [NotifyPropertyChangedFor(nameof(HoldingFilter))]
         private short? _selectedHolding;
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(SemesterFilter))]
+        private SemesterInfo? _selectedSemester;
+
         public bool IsDisciplineSelected => SelectedDiscipline is not null;
+
+        public bool IsAdmin => _userStore.Role == 2;
+
+        public bool IsMainNavigation { get; init; }
+
+        public bool CanOpenPrint => IsAdmin && IsMainNavigation;
 
         private string CatalogFilter => SelectedCatalog?.CatalogType == 0 ? string.Empty :
             $"&catalogFilter={SelectedCatalog.CatalogType}";
 
         private string HoldingFilter => SelectedHolding is null ? string.Empty : $"&holdingFilter={SelectedHolding.Value}";
 
+        private string SemesterFilter => SelectedSemester?.SemesterId == 0 ? string.Empty :
+            $"&semesterFilter={SelectedSemester.SemesterId}";
+
+        private string LecturerFilter => _userStore.Role == 3 ? $"&lecturerFilter={_userStore.UserId}" :
+            IsMainNavigation ? string.Empty : $"&lecturerFilter={_lecturerInfoStore.LecturerId}";
+
         public DisciplinesPageViewModel(ApiService apiService, UserStore userStore,
-            IMessageService messageService, DisciplineReaderService pdfReaderService, DisciplineMainInfoStore disciplineStore) :
+            IMessageService messageService, DisciplineReaderService pdfReaderService, DisciplineMainInfoStore disciplineStore,
+            LecturerInfoStore lecturerInfoStore) :
             base(apiService, userStore)
         {
-            _messageService = messageService;
-            _pdfReaderService = pdfReaderService;
-
             if (_userStore.Role > 3)
                 throw new UnauthorizedAccessException("У доступі відмовлено");
 
+            _messageService = messageService;
+            _pdfReaderService = pdfReaderService;
+            _lecturerInfoStore = lecturerInfoStore;
+
+            IsMainNavigation = !_lecturerInfoStore.IsActual;
+
             CatalogTypes =
             [
-                new CatalogTypeInfo() { CatalogType = 0, CatalogName = "Обидва"},
-                new CatalogTypeInfo() { CatalogType = 1, CatalogName = "УВК"},
-                new CatalogTypeInfo() { CatalogType = 2, CatalogName = "ФВК"},
+                new() { CatalogType = 0, CatalogName = "Обидва"},
+                new() { CatalogType = 1, CatalogName = "УВК"},
+                new() { CatalogType = 2, CatalogName = "ФВК"},
             ];
 
             _selectedCatalog = CatalogTypes[0];
+
+            Semesters =
+            [
+                new() {SemesterId = 0, SemesterName = "Обидва"},
+                new() {SemesterId = 1, SemesterName = "Осінній"},
+                new() {SemesterId = 2, SemesterName = "Весняний"},
+            ];
+
+            _selectedSemester = Semesters[0];
 
             Holdings = [];
             Disciplines = [];
@@ -108,11 +139,15 @@ namespace Client.ViewModels
 
             if (HasErrorMessage)
                 throw new Exception(ErrorMessage);
+
+            _lecturerInfoStore.IsActual = false;
         }
 
         async partial void OnSelectedCatalogChanged(CatalogTypeInfo? value) => await UpdateListingAsync();
 
         async partial void OnSelectedHoldingChanged(short? value) => await UpdateListingAsync();
+
+        async partial void OnSelectedSemesterChanged(SemesterInfo? value) => await UpdateListingAsync();
 
         protected override async Task LoadDataAsync(int page)
         {
@@ -121,7 +156,8 @@ namespace Client.ViewModels
                 (ErrorMessage, var disciplines) =
                 await _apiService.GetAsync<ObservableCollection<DisciplineWithSubCounts>>("Discipline",
                 $"getDisciplines?pageNumber={page}&pageSize={PageSize}" +
-                $"&facultyId={_userStore.WorkerInfo.Faculty.FacultyId}{HoldingFilter}{CatalogFilter}",
+                $"&facultyId={_userStore.WorkerInfo.Faculty.FacultyId}" +
+                $"{HoldingFilter}{CatalogFilter}{SemesterFilter}{LecturerFilter}",
                 _userStore.AccessToken);
 
                 if (!HasErrorMessage)
@@ -140,7 +176,8 @@ namespace Client.ViewModels
         private async Task UpdateListingAsync()
         {
             await ExecuteWithWaiting(async () => await LoadTotalPagesAsync("Discipline",
-                $"getCount?facultyId={_userStore.WorkerInfo.Faculty.FacultyId}{HoldingFilter}{CatalogFilter}"));
+                $"getCount?facultyId={_userStore.WorkerInfo.Faculty.FacultyId}" +
+                $"{HoldingFilter}{CatalogFilter}{SemesterFilter}{LecturerFilter}"));
 
             if (HasErrorMessage) return;
 

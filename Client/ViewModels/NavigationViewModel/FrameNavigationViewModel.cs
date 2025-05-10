@@ -112,6 +112,33 @@ namespace Client.ViewModels.NavigationViewModel
             }
         }
 
+        public async Task LecturerNavigate(string destination)
+        {
+            switch (destination)
+            {
+                case "Home":
+                    _homeNavigationService.Navigate();
+                    break;
+                case "Disciplines":
+                    await _disciplinesNavigationService.NavigateAsync();
+                    break;
+                case "Groups":
+                    await _groupsNavigationService.NavigateAsync();
+                    break;
+                case "Group":
+                    await _groupNavigationService.NavigateAsync();
+                    break;
+                case "AllChoices":
+                    await _allStudentChoicesNavigationService.NavigateAsync();
+                    break;
+                case "YearChoices":
+                    await _studentYearChoicesNavigationService.NavigateAsync();
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public async Task StudentNavigate(string destination)
         {
             switch (destination)
@@ -127,6 +154,9 @@ namespace Client.ViewModels.NavigationViewModel
                     break;
                 case "MyChoices":
                     await _studentChoicesNavigationService.NavigateAsync();
+                    break;
+                case "Group":
+                    await _groupNavigationService.NavigateAsync();
                     break;
                 default:
                     break;

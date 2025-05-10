@@ -30,7 +30,11 @@
             <DataTemplate DataType="{x:Type vms:StudentChoicesViewModel}">
                 <views:StudentChoicesPage />
             </DataTemplate>
-            
+
+            <DataTemplate DataType="{x:Type vms:GroupPageViewModel}">
+                <views:GroupPage />
+            </DataTemplate>
+
         </ResourceDictionary>
     </UserControl.Resources>
 

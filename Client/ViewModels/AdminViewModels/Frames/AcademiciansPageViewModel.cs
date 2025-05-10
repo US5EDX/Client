@@ -14,6 +14,10 @@ namespace Client.ViewModels
     public partial class AcademiciansPageViewModel : PaginationFrameViewModelBase
     {
         private readonly IMessageService _messageService;
+        private readonly LecturerInfoStore _lecturerInfoStore;
+        private readonly StudentInfoStore _studentInfoStore;
+        private readonly FrameNavigationService<DisciplinesPageViewModel> _disciplineNavigation;
+        private readonly FrameNavigationService<AllStudentChoicesViewModel> _allStudentCohicesNavigationService;
 
         public ObservableCollection<UserFullInfo> Academicians { get; init; }
         public ObservableCollection<RoleInfo> RolesInfo { get; init; }
@@ -37,10 +41,17 @@ namespace Client.ViewModels
 
         private string RoleFilter => SelectedRole?.RoleId == 0 ? string.Empty : $"&roleFilter={SelectedRole.RoleId}";
 
-        public AcademiciansPageViewModel(ApiService apiService, UserStore userStore, IMessageService messageService) :
+        public AcademiciansPageViewModel(ApiService apiService, UserStore userStore,
+            IMessageService messageService, LecturerInfoStore lecturerInfoStore, StudentInfoStore studentInfoStore,
+            FrameNavigationService<DisciplinesPageViewModel> disciplineNavigation,
+            FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService) :
             base(apiService, userStore)
         {
             _messageService = messageService;
+            _lecturerInfoStore = lecturerInfoStore;
+            _studentInfoStore = studentInfoStore;
+            _disciplineNavigation = disciplineNavigation;
+            _allStudentCohicesNavigationService = allStudentCohicesNavigationService;
 
             if (_userStore.Role != 2)
                 throw new UnauthorizedAccessException("У доступі відмовлено");
@@ -167,7 +178,18 @@ namespace Client.ViewModels
         [RelayCommand(CanExecute = nameof(IsAcademicianSelected))]
         private async Task NavigateToSelected()
         {
-            // not implemented
+            if (IsWorkerSelected)
+            {
+                _lecturerInfoStore.LecturerId = SelectedAcademician.Id;
+                _lecturerInfoStore.IsActual = true;
+                _disciplineNavigation.RequestNavigation("Disciplines");
+                return;
+            }
+
+            _studentInfoStore.StudentId = SelectedAcademician.Id;
+            _studentInfoStore.FullName = SelectedAcademician.FullName;
+            _studentInfoStore.GroupId = SelectedAcademician.StudentGroupId;
+            _allStudentCohicesNavigationService.RequestNavigation("AllChoices");
         }
 
         private bool FilterAcademicians(object academician, string filter)

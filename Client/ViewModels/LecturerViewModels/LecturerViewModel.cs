@@ -1,15 +1,44 @@
-﻿using Client.ViewModels.Interfaces;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Client.Services;
+using Client.Stores.NavigationStores;
+using Client.ViewModels.Base.PageBase;
+using Client.ViewModels.NavigationViewModel;
 
 namespace Client.ViewModels
 {
-    public partial class LecturerViewModel : ObservableRecipient, IPageViewModel
+    public partial class LecturerViewModel : PageViewModelBase
     {
+        private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
+        private readonly FrameNavigationService<AllStudentChoicesViewModel> _allStudentCohicesNavigationService;
+        private readonly FrameNavigationService<StudentYearChoicesViewModel> _studentYearChoicesNavigationService;
 
+        public LecturerViewModel(SuccsefulLoginViewModel succsefulLoginViewModel,
+        FrameNavigationStore frameNavigationStore, FrameNavigationViewModel frameNavigation,
+            FrameNavigationService<GroupPageViewModel> groupNavigationService,
+            FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService,
+            FrameNavigationService<StudentYearChoicesViewModel> studentYearChoicesNavigationService) :
+            base(succsefulLoginViewModel, frameNavigationStore)
+        {
+            _frameNavigationStore.CurrentFrameViewModelChanged += OnCurrentFrameViewModelChanged;
+            ChangeFrame = frameNavigation.LecturerNavigate;
+
+            _allStudentCohicesNavigationService = allStudentCohicesNavigationService;
+            _studentYearChoicesNavigationService = studentYearChoicesNavigationService;
+            _groupNavigationService = groupNavigationService;
+
+            _groupNavigationService.OnNavigationRequested += Navigate;
+            _allStudentCohicesNavigationService.OnNavigationRequested += Navigate;
+            _studentYearChoicesNavigationService.OnNavigationRequested += Navigate;
+            Task.Run(async () => await Navigate("Home"));
+        }
+
+        protected override void OnDeactivated()
+        {
+            _frameNavigationStore.CurrentFrameViewModelChanged -= OnCurrentFrameViewModelChanged;
+            _groupNavigationService.OnNavigationRequested -= Navigate;
+            _allStudentCohicesNavigationService.OnNavigationRequested -= Navigate;
+            _studentYearChoicesNavigationService.OnNavigationRequested -= Navigate;
+
+            base.OnDeactivated();
+        }
     }
 }

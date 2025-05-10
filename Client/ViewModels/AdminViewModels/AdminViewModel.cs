@@ -10,12 +10,14 @@ namespace Client.ViewModels
         private readonly FrameNavigationService<GroupPageViewModel> _groupNavigationService;
         private readonly FrameNavigationService<AllStudentChoicesViewModel> _allStudentCohicesNavigationService;
         private readonly FrameNavigationService<StudentYearChoicesViewModel> _studentYearChoicesNavigationService;
+        private readonly FrameNavigationService<DisciplinesPageViewModel> _disciplinesPageNavigationService;
 
         public AdminViewModel(SuccsefulLoginViewModel succsefulLoginViewModel,
         FrameNavigationStore frameNavigationStore, FrameNavigationViewModel frameNavigation,
             FrameNavigationService<GroupPageViewModel> groupNavigationService,
             FrameNavigationService<AllStudentChoicesViewModel> allStudentCohicesNavigationService,
-            FrameNavigationService<StudentYearChoicesViewModel> studentYearChoicesNavigationService) :
+            FrameNavigationService<StudentYearChoicesViewModel> studentYearChoicesNavigationService,
+            FrameNavigationService<DisciplinesPageViewModel> disciplinesPageNavigationService) :
             base(succsefulLoginViewModel, frameNavigationStore)
         {
             _frameNavigationStore.CurrentFrameViewModelChanged += OnCurrentFrameViewModelChanged;
@@ -24,10 +26,12 @@ namespace Client.ViewModels
             _allStudentCohicesNavigationService = allStudentCohicesNavigationService;
             _studentYearChoicesNavigationService = studentYearChoicesNavigationService;
             _groupNavigationService = groupNavigationService;
+            _disciplinesPageNavigationService = disciplinesPageNavigationService;
 
             _groupNavigationService.OnNavigationRequested += Navigate;
             _allStudentCohicesNavigationService.OnNavigationRequested += Navigate;
             _studentYearChoicesNavigationService.OnNavigationRequested += Navigate;
+            _disciplinesPageNavigationService.OnNavigationRequested += Navigate;
 
             Task.Run(async () => await Navigate("Home"));
         }
@@ -38,6 +42,7 @@ namespace Client.ViewModels
             _groupNavigationService.OnNavigationRequested -= Navigate;
             _allStudentCohicesNavigationService.OnNavigationRequested -= Navigate;
             _studentYearChoicesNavigationService.OnNavigationRequested -= Navigate;
+            _disciplinesPageNavigationService.OnNavigationRequested -= Navigate;
 
             base.OnDeactivated();
         }

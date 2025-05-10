@@ -33,6 +33,9 @@ namespace Client.Models
         [property: JsonPropertyName("position")]
         private string _position;
 
+        [JsonPropertyName("studentGroupId")]
+        public uint StudentGroupId { get; set; }
+
         public void UpdateInfo(in UserFullInfo? workerInfo)
         {
             if (workerInfo is null)

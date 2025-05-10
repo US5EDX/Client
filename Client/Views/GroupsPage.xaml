@@ -10,11 +10,12 @@
       xmlns:vms="clr-namespace:Client.ViewModels"
       xmlns:conv="clr-namespace:Client.Converters"
       mc:Ignorable="d" 
+      d:DataContext="{d:DesignInstance Type=vms:GroupsPageViewModel}"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="GroupsPage">
 
     <Page.Resources>
-        <BooleanToVisibilityConverter x:Key="boolToVis"/>
+        <conv:BoolToVisibilityConverter x:Key="boolToVis"/>
         <conv:EduLevelToEduLevelNameConverter x:Key="EduLevelToEduLevelName"/>
         <conv:BoolStatusToStringConverter x:Key="BoolToStatusConverter"/>
         <conv:ShortenedProgrammeConverter x:Key="ShortenedConverter"/>
@@ -89,9 +90,12 @@ Width="Auto" Binding="{Binding ChoiceDifference, Converter={StaticResource Short
                     <TextBlock Text="{Binding ErrorMessage}" Visibility="{Binding HasErrorMessage, Converter={StaticResource boolToVis}}"
            Margin="5,0,5,15" HorizontalAlignment="Center" TextWrapping="Wrap" Foreground="Red" TextAlignment="Center" />
 
-                    <Button Content="Додати" Margin="0,0,0,15" Command="{Binding OpenAddModalCommand}"/>
-                    <Button Content="Оновити" Margin="0,0,0,15" Command="{Binding OpenUpdateModalCommand}"/>
-                    <Button Content="Видалити" Margin="0,0,0,30" Command="{Binding DeleteGroupCommand}"/>
+                    <Button Content="Додати" Margin="0,0,0,15" Command="{Binding OpenAddModalCommand}" 
+                            Visibility="{Binding IsAdmin, Converter={StaticResource boolToVis}}"/>
+                    <Button Content="Оновити" Margin="0,0,0,15" Command="{Binding OpenUpdateModalCommand}"
+                            Visibility="{Binding IsAdmin, Converter={StaticResource boolToVis}}"/>
+                    <Button Content="Видалити" Margin="0,0,0,30" Command="{Binding DeleteGroupCommand}"
+                            Visibility="{Binding IsAdmin, Converter={StaticResource boolToVis}}"/>
 
                     <Button Content="Перейти" Margin="0,0,0,15" Command="{Binding NavigateCommand}"/>
                     <!--<Button Margin="0,0,0,15" Height="Auto" Command="{Binding UpdateCourseCommand}">

@@ -1,0 +1,28 @@
+﻿using Client.Models;
+using System.Globalization;
+using System.Windows.Data;
+using System.Windows.Media;
+
+namespace Client.Converters
+{
+    public class ThresholdsToColorConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Length < 2 || values[0] is null || values[1] is null
+                || values[0] is not int count || values[1] is not DisciplineStatusThresholds thresholds)
+                return Brushes.Transparent;
+
+            if (count < thresholds.NotEnough)
+                return Brushes.LightPink;
+
+            if (count < thresholds.PartiallyFilled)
+                return Brushes.LightYellow;
+
+            return Brushes.LightGreen;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture) =>
+            throw new NotImplementedException();
+    }
+}

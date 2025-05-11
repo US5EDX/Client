@@ -20,6 +20,7 @@
         <conv:SemesterToSemesterNameConverter x:Key="SemToSemName"/>
         <conv:CatalogTypeToCatalogNameConverter x:Key="CatalogTypeToCatalogName"/>
         <conv:EduLevelToEduLevelNameConverter x:Key="EduLevelToEduName"/>
+        <conv:ThresholdsToColorConverter x:Key="ThresholdsConverter"/>
 
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -27,6 +28,49 @@
 
         <Style x:Key="CenteredCell" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="NonParSemesterColoredRow" TargetType="DataGridRow">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <MultiBinding Converter="{StaticResource ThresholdsConverter}">
+                        <Binding Path="NonparsemesterCount"/>
+                        <Binding Path="DataContext.DisciplineStatusThresholds"
+                         RelativeSource="{RelativeSource AncestorType=Page}"/>
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ParSemesterColoredRow" TargetType="DataGridRow">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <MultiBinding Converter="{StaticResource ThresholdsConverter}">
+                        <Binding Path="ParsemesterCount"/>
+                        <Binding Path="DataContext.DisciplineStatusThresholds"
+                         RelativeSource="{RelativeSource AncestorType=Page}"/>
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DataGridWithColorsByRule" TargetType="DataGrid" BasedOn="{StaticResource MaterialDesignDataGrid}">
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsThresholdsVisible}" Value="True"/>
+                        <Condition Binding="{Binding SelectedSemester.SemesterId}" Value="1"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="RowStyle" Value="{StaticResource NonParSemesterColoredRow}"/>
+                </MultiDataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsThresholdsVisible}" Value="True"/>
+                        <Condition Binding="{Binding SelectedSemester.SemesterId}" Value="2"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="RowStyle" Value="{StaticResource ParSemesterColoredRow}"/>
+                </MultiDataTrigger>
+            </Style.Triggers>
         </Style>
 
         <DataTemplate DataType="{x:Type vms:DisciplineRegistryViewModel}">
@@ -63,10 +107,13 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
+                <FrameworkElement x:Name="dummyElement" Visibility="Collapsed"/>
+
                 <DataGrid CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True"
 ItemsSource="{Binding Disciplines, UpdateSourceTrigger=PropertyChanged}"
 AutoGenerateColumns="False" TextBlock.TextAlignment="Center"
-SelectedItem="{Binding SelectedDiscipline, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+SelectedItem="{Binding SelectedDiscipline, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                          Style="{StaticResource DataGridWithColorsByRule}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Код дисципліни" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
               Width="Auto" Binding="{Binding DisciplineCode}" ElementStyle="{StaticResource CenteredCell}" />
@@ -81,10 +128,14 @@ SelectedItem="{Binding SelectedDiscipline, Mode=TwoWay, UpdateSourceTrigger=Prop
                         </DataGridTextColumn>
 
                         <DataGridTextColumn Header="Кількість студентів на непарний" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-              Width="Auto" Binding="{Binding NonparsemesterCount}" ElementStyle="{StaticResource CenteredCell}" />
+              Width="Auto" Binding="{Binding NonparsemesterCount}" ElementStyle="{StaticResource CenteredCell}" 
+                                            Visibility="{Binding DataContext.IsNonParSemesterVisible, 
+                            Source={x:Reference dummyElement}, Converter={StaticResource boolToVis}}"/>
 
                         <DataGridTextColumn Header="Кількість студентів на парний" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
-              Width="Auto" Binding="{Binding ParsemesterCount}" ElementStyle="{StaticResource CenteredCell}" />
+              Width="Auto" Binding="{Binding ParsemesterCount}" ElementStyle="{StaticResource CenteredCell}"
+                                            Visibility="{Binding DataContext.IsParSemesterVisible, 
+                            Source={x:Reference dummyElement}, Converter={StaticResource boolToVis}}"/>
 
                         <DataGridTextColumn Header="Статус" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
               Width="Auto" Binding="{Binding IsOpen, Converter={StaticResource BoolToStatus}}" ElementStyle="{StaticResource CenteredCell}" />
@@ -159,8 +210,12 @@ Width="Auto" Binding="{Binding EduLevel, Converter={StaticResource EduLevelToEdu
                     <Button Content="Список студентів" Margin="0,0,0,15" Command="{Binding NavigateToStudentsCommand}" IsEnabled="{Binding IsNotLocked}"/>
                     <Button Content="Оновити статус" Margin="0,0,0,15" Command="{Binding UpdateStatusCommand}" IsEnabled="{Binding IsNotLocked}"
                             Visibility="{Binding IsAdmin, Converter={StaticResource boolToVis}}"/>
-                    <Button Content="Сформувати відомість" Command="{Binding OpenPrintCommand}" IsEnabled="{Binding IsNotLocked}"
+                    <Button Content="Сформувати відомість" Margin="0,0,0,15" Command="{Binding OpenPrintCommand}" IsEnabled="{Binding IsNotLocked}"
                             Visibility="{Binding CanOpenPrint, Converter={StaticResource boolToVis}}"/>
+                    <Button Command="{Binding ThresholdsCommand}" Height="Auto" IsEnabled="{Binding IsNotLocked}"
+                            Visibility="{Binding IsThresholdsButtonVisible, Converter={StaticResource boolToVis}}">
+                        <TextBlock Text="Відобразити / приховати пороги набраності кольором" TextAlignment="Center" TextWrapping="WrapWithOverflow" />
+                    </Button>
                 </StackPanel>
             </StackPanel>
         </Grid>

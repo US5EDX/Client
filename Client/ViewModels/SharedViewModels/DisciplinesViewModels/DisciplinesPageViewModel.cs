@@ -20,6 +20,8 @@ namespace Client.ViewModels
 
         private readonly List<SpecialtyInfo> _specialtiesInfo;
 
+        public DisciplineStatusThresholds DisciplineStatusThresholds { get; set; }
+
         public List<CatalogTypeInfo> CatalogTypes { get; init; }
         public List<short> Holdings { get; init; }
         public List<SemesterInfo> Semesters { get; init; }
@@ -45,7 +47,13 @@ namespace Client.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(SemesterFilter))]
+        [NotifyPropertyChangedFor(nameof(IsThresholdsButtonVisible))]
+        [NotifyPropertyChangedFor(nameof(IsNonParSemesterVisible))]
+        [NotifyPropertyChangedFor(nameof(IsParSemesterVisible))]
         private SemesterInfo? _selectedSemester;
+
+        [ObservableProperty]
+        private bool _isThresholdsVisible;
 
         public bool IsDisciplineSelected => SelectedDiscipline is not null;
 
@@ -54,6 +62,10 @@ namespace Client.ViewModels
         public bool IsMainNavigation { get; init; }
 
         public bool CanOpenPrint => IsAdmin && IsMainNavigation;
+
+        public bool IsThresholdsButtonVisible => SelectedSemester?.SemesterId != 0;
+        public bool IsNonParSemesterVisible => SelectedSemester?.SemesterId != 2;
+        public bool IsParSemesterVisible => SelectedSemester?.SemesterId != 1;
 
         private string CatalogFilter => SelectedCatalog?.CatalogType == 0 ? string.Empty :
             $"&catalogFilter={SelectedCatalog.CatalogType}";
@@ -134,6 +146,15 @@ namespace Client.ViewModels
                 throw new Exception(ErrorMessage);
 
             _specialtiesInfo.AddRange(specialties ?? Enumerable.Empty<SpecialtyInfo>());
+
+            (ErrorMessage, var thresholds) =
+                await _apiService.GetAsync<DisciplineStatusThresholds>
+                ("Discipline", $"getTresholds", _userStore.AccessToken);
+
+            if (HasErrorMessage)
+                throw new Exception(ErrorMessage);
+
+            DisciplineStatusThresholds = thresholds;
 
             await UpdateListingAsync();
 
@@ -276,6 +297,9 @@ namespace Client.ViewModels
         [RelayCommand]
         private void OpenPrint() => SelectedModal = new PrintDisciplinesPageViewModel(_apiService, _userStore,
                 _messageService, CloseModalCommand, CatalogTypes.Skip(1), Holdings.Take(3));
+
+        [RelayCommand]
+        private void Thresholds() => IsThresholdsVisible = !IsThresholdsVisible;
 
         private bool FilterDisciplines(object discipline, string filter)
         {

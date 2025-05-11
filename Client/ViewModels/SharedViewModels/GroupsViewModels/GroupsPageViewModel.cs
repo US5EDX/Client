@@ -123,6 +123,33 @@ namespace Client.ViewModels
             });
         }
 
+        [RelayCommand]
+        private async Task DeleteGraduated()
+        {
+            bool isOk = _messenger.ShowQuestion($"Ви дійсно хочете видалити випущені групи.\n" +
+                $"Ця дія є незворотньою, рекомендується збергіти усю важливу інформацію перед видаленням");
+
+            if (!isOk) return;
+
+            isOk = _messenger.ShowQuestion($"Підтвердить видалення випущених груп.\n");
+
+            if (!isOk) return;
+
+            (ErrorMessage, _) =
+                    await _apiService.DeleteAsync<object>(
+                        "Group", $"deleteGraduaded/{_userStore.WorkerInfo.Faculty.FacultyId}", _userStore.AccessToken);
+
+            if (!HasErrorMessage)
+            {
+                var currDate = DateTime.Today;
+
+                for (int i = Groups.Count - 1; i >= 0; i--)
+                    if (Groups[i].DurationOfStudy < ((currDate.Month > 6 ? currDate.Year : (currDate.Year - 1))
+                    - Groups[i].AdmissionYear + 1))
+                        Groups.RemoveAt(i);
+            }
+        }
+
         [RelayCommand(CanExecute = nameof(IsGroupSelected))]
         private void Navigate()
         {

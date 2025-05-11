@@ -96,11 +96,12 @@ Width="Auto" Binding="{Binding ChoiceDifference, Converter={StaticResource Short
                             Visibility="{Binding IsAdmin, Converter={StaticResource boolToVis}}"/>
                     <Button Content="Видалити" Margin="0,0,0,30" Command="{Binding DeleteGroupCommand}"
                             Visibility="{Binding IsAdmin, Converter={StaticResource boolToVis}}"/>
+                    <Button Margin="0,0,0,30" Height="Auto" Command="{Binding DeleteGraduatedCommand}"
+                            Visibility="{Binding IsAdmin, Converter={StaticResource boolToVis}}">
+                        <TextBlock Text="Видалити випущені групи" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </Button>
 
-                    <Button Content="Перейти" Margin="0,0,0,15" Command="{Binding NavigateCommand}"/>
-                    <!--<Button Margin="0,0,0,15" Height="Auto" Command="{Binding UpdateCourseCommand}">
-                        <TextBlock Text="Видалити випущені групи" MaxWidth="250" TextWrapping="Wrap" TextAlignment="Center"/>
-                    </Button>-->
+                    <Button Content="Перейти" Command="{Binding NavigateCommand}"/>
                 </StackPanel>
             </StackPanel>
         </Grid>

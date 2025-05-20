@@ -11,7 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Client.ViewModels
 {
-    public partial class GroupRegistryViewModel : ViewModelBaseWithValidation
+    public partial class GroupRegistryViewModel : ViewModelBaseValidationExtended
     {
         private CancellationTokenSource _cts = null!;
 

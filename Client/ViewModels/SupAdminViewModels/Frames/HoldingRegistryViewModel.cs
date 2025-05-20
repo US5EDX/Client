@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Client.ViewModels
 {
-    public partial class HoldingRegistryViewModel : ViewModelBaseWithValidation
+    public partial class HoldingRegistryViewModel : ViewModelBaseValidationExtended
     {
         [ObservableProperty]
         [NotifyDataErrorInfo]

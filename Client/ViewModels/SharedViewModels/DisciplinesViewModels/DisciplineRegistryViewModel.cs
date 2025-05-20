@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Client.ViewModels
 {
-    public partial class DisciplineRegistryViewModel : ViewModelBaseWithValidation
+    public partial class DisciplineRegistryViewModel : ViewModelBaseValidationExtended
     {
         private readonly DisciplineReaderService _pdfReaderService;
         private readonly IMessageService _messageService;

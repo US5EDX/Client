@@ -80,7 +80,6 @@ namespace Client.ViewModels
                 (ErrorMessage, _) =
                 await _apiService.PutAsync<object>("User", "updatePassword", new UpdatePasswordInfo()
                 {
-                    UserId = _userStore.UserId,
                     OldPassword = OldPassword,
                     NewPassword = NewPassword
                 }, _userStore.AccessToken);

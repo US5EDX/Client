@@ -70,8 +70,9 @@ namespace Client.PdfDoucments
                 column.Item().Element(container => SharedElements.LabelTextRow(container, "Семестр", _semester == 1 ? "Осінній" : "Весняний"));
                 column.Item().Element(SharedElements.ComposeDateHeader);
 
-                column.Item().PaddingTop(10).Text(text => SharedElements.ItalicLabelText(text, "Пороги",
-                    $"<{_thresholds.NotEnough} — Недостатньо, <{_thresholds.PartiallyFilled} — Умовно набрана, інше — Набрана"));
+                AddThresholdsParagraph(column, _thresholds.Bachelor, "бакалавра");
+                AddThresholdsParagraph(column, _thresholds.Master, "магістра");
+                AddThresholdsParagraph(column, _thresholds.PhD, "PHD");
             });
         }
 
@@ -93,6 +94,13 @@ namespace Client.PdfDoucments
                     column.Item().PaddingTop(5).Table(table => CreateTable(table, group.Value));
                 }
             });
+        }
+
+        private void AddThresholdsParagraph(in ColumnDescriptor column, ThresholdValue thresholdValue, string eduLevel)
+        {
+            column.Item().PaddingTop(10).Text(text => SharedElements.ItalicLabelText(text, $"Пороги для {eduLevel}",
+                    $"<{thresholdValue.NotEnough} — Недостатньо, " +
+                    $"<{thresholdValue.PartiallyFilled} — Умовно набрана, інше — Набрана"));
         }
 
         private void CreateTable(TableDescriptor table, List<DisciplinePrintInfo> disciplines)

@@ -19,6 +19,7 @@ namespace Client.ViewModels.NavigationViewModel
         private readonly FrameNavigationService<StudentChoosingPageViewModel> _studentChoosingNavigationService;
         private readonly FrameNavigationService<DisciplinesForStudentViewModel> _disciplinesForStudentNavigationService;
         private readonly FrameNavigationService<StudentChoicesViewModel> _studentChoicesNavigationService;
+        private readonly FrameNavigationService<SettingsPageViewModel> _settingsNavigationService;
 
         public FrameNavigationViewModel(
             FrameNavigationStore frameNavigationStore,
@@ -35,7 +36,8 @@ namespace Client.ViewModels.NavigationViewModel
             FrameNavigationService<StudentYearChoicesViewModel> studentYearChoicesNavigationService,
             FrameNavigationService<StudentChoosingPageViewModel> studentChoosingNavigationService,
             FrameNavigationService<DisciplinesForStudentViewModel> disciplinesForStudentNavigationService,
-            FrameNavigationService<StudentChoicesViewModel> studentChoicesNavigationService
+            FrameNavigationService<StudentChoicesViewModel> studentChoicesNavigationService,
+            FrameNavigationService<SettingsPageViewModel> settingsNavigationService
             )
         {
             _homeNavigationService = homeNavigationService;
@@ -52,6 +54,7 @@ namespace Client.ViewModels.NavigationViewModel
             _studentChoosingNavigationService = studentChoosingNavigationService;
             _disciplinesForStudentNavigationService = disciplinesForStudentNavigationService;
             _studentChoicesNavigationService = studentChoicesNavigationService;
+            _settingsNavigationService = settingsNavigationService;
         }
 
         public async Task SupAdminNavigate(string destination)
@@ -73,6 +76,9 @@ namespace Client.ViewModels.NavigationViewModel
                 case "Database":
                     break;
                 case "Log":
+                    break;
+                case "Settings":
+                    await _settingsNavigationService.NavigateAsync();
                     break;
                 default:
                     break;

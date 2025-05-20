@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Client.ViewModels
 {
-    public partial class WorkerRegistryViewModel : ViewModelBaseWithValidation
+    public partial class WorkerRegistryViewModel : ViewModelBaseValidationExtended
     {
         private readonly string? _id;
 
@@ -135,10 +135,10 @@ namespace Client.ViewModels
 
             await ExecuteWithWaiting(async () =>
             {
-                var updatedWorker = InithializeInstance();
+                var updatingWorker = InithializeInstance();
 
-                (ErrorMessage, _) =
-                    await _apiService.PutAsync<UserFullInfo>("Worker", "updateWorker", updatedWorker, _userStore.AccessToken);
+                (ErrorMessage, var updatedWorker) =
+                    await _apiService.PutAsync<UserFullInfo>("Worker", "updateWorker", updatingWorker, _userStore.AccessToken);
 
                 if (!HasErrorMessage)
                     OnSubmitAccepted(updatedWorker);
@@ -160,15 +160,15 @@ namespace Client.ViewModels
             _position = workerInfo?.Position ?? string.Empty;
         }
 
-        private UserFullInfo InithializeInstance()
+        private WorkerRegistryInfo InithializeInstance()
         {
-            return new UserFullInfo
+            return new WorkerRegistryInfo
             {
-                Id = _id,
+                WorkerId = _id,
                 Email = Email,
                 Role = Role.RoleId,
                 FullName = FullName,
-                Faculty = Faculty,
+                FacultyId = Faculty.FacultyId,
                 Department = Department,
                 Position = Position,
             };

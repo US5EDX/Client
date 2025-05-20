@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Client.ViewModels
 {
-    public partial class StudentRegistryViewModel : ViewModelBaseWithValidation
+    public partial class StudentRegistryViewModel : ViewModelBaseValidationExtended
     {
         private readonly GroupInfoStore _groupInfoStore;
 

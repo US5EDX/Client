@@ -137,7 +137,7 @@ namespace Client.ViewModels
 
             (ErrorMessage, _) =
                     await _apiService.DeleteAsync<object>(
-                        "Group", $"deleteGraduaded/{_userStore.WorkerInfo.Faculty.FacultyId}", _userStore.AccessToken);
+                        "Group", $"deleteGraduated/{_userStore.WorkerInfo.Faculty.FacultyId}", _userStore.AccessToken);
 
             if (!HasErrorMessage)
             {

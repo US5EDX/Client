@@ -30,6 +30,10 @@
             <DataTemplate DataType="{x:Type vms:WorkersPageViewModel}">
                 <views:WorkersPage />
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vms:SettingsPageViewModel}">
+                <views:SettingsPage />
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -46,6 +50,7 @@
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Users" ContentInfo="Користувачі" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Faculties" ContentInfo="Факультети" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Holding" ContentInfo="Проведення" Margin="10,0,0,0"/>
+                    <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Settings" ContentInfo="Налаштування" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="" ContentInfo="Робота з базою даних" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="" ContentInfo="Журнал дій" Margin="10,0,0,0"/>
                 </StackPanel>
@@ -93,7 +98,8 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Style>
-                <Frame Margin="10, 25, 10, 10" NavigationUIVisibility="Hidden" Content="{Binding CurrentFrameViewModel}" />
+                <Frame Margin="10, 25, 10, 10" NavigationUIVisibility="Hidden" Content="{Binding CurrentFrameViewModel}" 
+                       Validation.ErrorTemplate="{x:Null}" />
             </Grid>
         </Grid>
 

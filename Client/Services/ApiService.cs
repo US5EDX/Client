@@ -51,8 +51,7 @@ namespace Client.Services
         private async Task<(string? ErrorMessage, T? ResponseContent)> ProcessResponse<T>(
             HttpResponseMessage? response, bool isLoginViewModel = false)
         {
-            var errorMessage = await ApiResponseStatusCodeHandler.HandleApiResponse(
-                response, _userStore, _navigationService, isLoginViewModel);
+            var errorMessage = await ApiResponseStatusCodeHandler.HandleApiResponse(response, isLoginViewModel);
 
             if (errorMessage != null)
                 return (errorMessage, default);

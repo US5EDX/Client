@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace Client.ViewModels
 {
-    public partial class RecordRegistryViewModel : ViewModelBaseWithValidation
+    public partial class RecordRegistryViewModel : ViewModelBaseValidationExtended
     {
         private CancellationTokenSource _cts = null!;
 

@@ -37,6 +37,7 @@
                         <Binding Path="NonparsemesterCount"/>
                         <Binding Path="DataContext.DisciplineStatusThresholds"
                          RelativeSource="{RelativeSource AncestorType=Page}"/>
+                        <Binding Path="EduLevel"/>
                     </MultiBinding>
                 </Setter.Value>
             </Setter>
@@ -49,6 +50,7 @@
                         <Binding Path="ParsemesterCount"/>
                         <Binding Path="DataContext.DisciplineStatusThresholds"
                          RelativeSource="{RelativeSource AncestorType=Page}"/>
+                        <Binding Path="EduLevel"/>
                     </MultiBinding>
                 </Setter.Value>
             </Setter>

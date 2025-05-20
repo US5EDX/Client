@@ -4,6 +4,7 @@ using Client.ViewModels;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace Client.Handlers
 {
@@ -11,8 +12,6 @@ namespace Client.Handlers
     {
         public static async Task<string?> HandleApiResponse(
             HttpResponseMessage? responseMessage,
-            UserStore userStore,
-            NavigationService<LoginViewModel> navigationService,
             bool isLoginViewModel)
         {
             if (responseMessage == null)
@@ -27,7 +26,7 @@ namespace Client.Handlers
 
                 case HttpStatusCode.Unauthorized:
                     if (isLoginViewModel)
-                        return "Неправильна пошта або пароль";
+                        return await GetErrorMessage(responseMessage);
                     else
                     {
                         //To do
@@ -38,16 +37,9 @@ namespace Client.Handlers
                     }
 
                 case HttpStatusCode.Forbidden:
-                    return "У доступі відмовлено";
-
                 case HttpStatusCode.BadRequest:
-                    return await GetErrorMessage(responseMessage) ?? "Некоректний запит";
-
                 case HttpStatusCode.NotFound:
-                    {
-                        var message = await GetErrorMessage(responseMessage);
-                        return message is null ? "Дані не знайдено" : message == string.Empty ? "Ресурс не знайдено" : message;
-                    }
+                    return await GetErrorMessage(responseMessage);
 
                 case HttpStatusCode.InternalServerError:
                     return "Сталася помилка сервера";
@@ -60,9 +52,19 @@ namespace Client.Handlers
             }
         }
 
-        private static async Task<string?> GetErrorMessage(HttpResponseMessage responseMessage)
+        private static async Task<string> GetErrorMessage(HttpResponseMessage responseMessage)
         {
-            return await responseMessage.Content.ReadAsStringAsync();
+            var content = await responseMessage.Content.ReadAsStringAsync();
+
+            if (content is null) return "Некоректний запит";
+
+            if (content.Length == 0) return "Ресурс не знайдено";
+
+            var jsonObject = JsonSerializer.Deserialize<JsonObject>(content);
+
+            if (jsonObject is null) return "Некоректний запит";
+
+            return JsonSerializer.Deserialize<string?>(jsonObject["detail"]) ?? "Сталась помилка, але деталі не було надано";
         }
     }
 }

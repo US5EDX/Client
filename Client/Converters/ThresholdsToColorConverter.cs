@@ -9,14 +9,19 @@ namespace Client.Converters
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values.Length < 2 || values[0] is null || values[1] is null
-                || values[0] is not int count || values[1] is not DisciplineStatusThresholds thresholds)
+            if (values.Length < 3 || values[0] is null || values[1] is null || values[2] is null
+                || values[0] is not int count || values[1] is not DisciplineStatusThresholds thresholds
+                || values[2] is not byte eduLevel)
                 return Brushes.Transparent;
 
-            if (count < thresholds.NotEnough)
+            var thresholdsValue = thresholds.GetValue(eduLevel);
+
+            if (thresholdsValue is null) return Brushes.Transparent;
+
+            if (count < thresholdsValue.NotEnough)
                 return Brushes.LightPink;
 
-            if (count < thresholds.PartiallyFilled)
+            if (count < thresholdsValue.PartiallyFilled)
                 return Brushes.LightYellow;
 
             return Brushes.LightGreen;

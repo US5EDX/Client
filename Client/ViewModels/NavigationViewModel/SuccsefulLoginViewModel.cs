@@ -65,7 +65,7 @@ namespace Client.ViewModels.NavigationViewModel
 
             (var errorMessage, _) = await _apiService.PostAsync<object>("Auth", "logout", _userStore.RefreshToken, null, true);
 
-            if (errorMessage != null)
+            if (!string.IsNullOrEmpty(errorMessage))
             {
                 _userStore.UserId = tempUserIdStore;
                 return errorMessage;

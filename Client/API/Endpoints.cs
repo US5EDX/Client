@@ -45,6 +45,10 @@ namespace Client.API
                 {
                     _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 }
+                else
+                {
+                    _client.DefaultRequestHeaders.Authorization = null; //fast fix can be rewrited later
+                }
 
                 var jsonContent = JsonSerializer.Serialize(newObject);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");

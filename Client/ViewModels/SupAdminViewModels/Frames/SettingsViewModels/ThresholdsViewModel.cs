@@ -4,13 +4,12 @@ using Client.Services.MessageService;
 using Client.Stores;
 using Client.ViewModels.Base;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Client.ViewModels
 {
-    public partial class SettingsPageViewModel(ApiService apiService, UserStore userStore, IMessageService messageService) :
-        ViewModelBaseWithValidation(apiService, userStore), IFrameViewModel
+    public partial class ThresholdsViewModel : SettingViewModel<DisciplineStatusThresholds>
     {
         [ObservableProperty]
         [Required]
@@ -54,53 +53,34 @@ namespace Client.ViewModels
 
         [ObservableProperty]
         [Required]
+        [NotNull]
         [Range(0, 100)]
         [NotifyDataErrorInfo]
         [NotifyPropertyChangedFor(nameof(CanSubmit))]
         [NotifyCanExecuteChangedFor(nameof(SubmitChangesCommand))]
         private int _phDPartiallyFilled;
 
-        public bool CanSubmit => !HasErrors;
+        public ThresholdsViewModel(ApiService apiService, UserStore userStore, IMessageService messageService) :
+        base(apiService, userStore, messageService) => Key = "Thresholds";
 
-        public async Task LoadContentAsync()
+        public override bool CanSubmit => !HasErrors;
+
+        protected override void SetProperties(DisciplineStatusThresholds value)
         {
-            (ErrorMessage, var thresholds) =
-                await _apiService.GetAsync<DisciplineStatusThresholds>
-                ("Discipline", $"getTresholds", _userStore.AccessToken);
-
-            if (HasErrorMessage)
-                throw new Exception(ErrorMessage);
-
-            BachelorNotEnough = thresholds.Bachelor.NotEnough;
-            BachelorPartiallyFilled = thresholds.Bachelor.PartiallyFilled;
-            MasterNotEnough = thresholds.Master.NotEnough;
-            MasterPartiallyFilled = thresholds.Master.PartiallyFilled;
-            PhDNotEnough = thresholds.PhD.NotEnough;
-            PhDPartiallyFilled = thresholds.PhD.PartiallyFilled;
+            BachelorNotEnough = value.Bachelor.NotEnough;
+            BachelorPartiallyFilled = value.Bachelor.PartiallyFilled;
+            MasterNotEnough = value.Master.NotEnough;
+            MasterPartiallyFilled = value.Master.PartiallyFilled;
+            PhDNotEnough = value.PhD.NotEnough;
+            PhDPartiallyFilled = value.PhD.PartiallyFilled;
         }
 
-        [RelayCommand(CanExecute = nameof(CanSubmit))]
-        private async Task SubmitChanges()
-        {
-            ValidateAllProperties();
-
-            if (HasErrors) return;
-
-            var thresholds = new DisciplineStatusThresholds
+        protected override DisciplineStatusThresholds InithializeInstance() =>
+            new()
             {
                 Bachelor = new ThresholdValue { NotEnough = BachelorNotEnough, PartiallyFilled = BachelorPartiallyFilled },
                 Master = new ThresholdValue { NotEnough = MasterNotEnough, PartiallyFilled = MasterPartiallyFilled },
                 PhD = new ThresholdValue { NotEnough = PhDNotEnough, PartiallyFilled = PhDPartiallyFilled },
             };
-
-            await ExecuteWithWaiting(async () =>
-            {
-                (ErrorMessage, _) =
-                    await _apiService.PutAsync<object?>("Discipline", "updateTresholds", thresholds, _userStore.AccessToken);
-
-                if (!HasErrorMessage)
-                    messageService.ShowInfoMessage("Зміни успішно внесено");
-            });
-        }
     }
 }

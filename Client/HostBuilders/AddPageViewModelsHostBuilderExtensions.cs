@@ -74,6 +74,10 @@ namespace Client.HostBuilders
                 services.AddSingleton<Func<SettingsPageViewModel>>((s) => () => s.GetRequiredService<SettingsPageViewModel>());
                 services.AddSingleton<FrameNavigationService<SettingsPageViewModel>>();
 
+                services.AddTransient<AuditLogsViewModel>();
+                services.AddSingleton<Func<AuditLogsViewModel>>((s) => () => s.GetRequiredService<AuditLogsViewModel>());
+                services.AddSingleton<FrameNavigationService<AuditLogsViewModel>>();
+
                 services.AddScoped<FrameNavigationViewModel>();
             });
 

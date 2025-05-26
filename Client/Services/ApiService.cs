@@ -9,6 +9,8 @@ namespace Client.Services
 {
     public class ApiService
     {
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+
         private readonly Endpoints _endpoints;
         private readonly UserStore _userStore;
         private readonly NavigationService<LoginViewModel> _navigationService;
@@ -61,7 +63,7 @@ namespace Client.Services
             if (string.IsNullOrEmpty(responseContent))
                 return (null, default);
 
-            var deserializedContent = JsonSerializer.Deserialize<T>(responseContent);
+            var deserializedContent = JsonSerializer.Deserialize<T>(responseContent, _jsonSerializerOptions);
 
             if (deserializedContent == null)
                 return ("Некоректна відповідь від сервера", default);

@@ -34,6 +34,10 @@
             <DataTemplate DataType="{x:Type vms:SettingsPageViewModel}">
                 <views:SettingsPage />
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vms:AuditLogsViewModel}">
+                <views:AuditLogsPage />
+            </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -51,7 +55,7 @@
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Faculties" ContentInfo="Факультети" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Holding" ContentInfo="Проведення" Margin="10,0,0,0"/>
                     <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Settings" ContentInfo="Налаштування" Margin="10,0,0,0"/>
-                    <customcontrols:NavButton Command="" ContentInfo="Журнал дій" Margin="10,0,0,0"/>
+                    <customcontrols:NavButton Command="{Binding NavigateCommand}" CommandParameter="Logs" ContentInfo="Журнал дій" Margin="10,0,0,0"/>
                     <!--<customcontrols:NavButton Command="" ContentInfo="Робота з базою даних" Margin="10,0,0,0"/>-->
                 </StackPanel>
                 <Button Command="{Binding LogoutCommand}" Margin="0,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Вийти"/>

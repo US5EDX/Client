@@ -20,6 +20,7 @@ namespace Client.ViewModels.NavigationViewModel
         private readonly FrameNavigationService<DisciplinesForStudentViewModel> _disciplinesForStudentNavigationService;
         private readonly FrameNavigationService<StudentChoicesViewModel> _studentChoicesNavigationService;
         private readonly FrameNavigationService<SettingsPageViewModel> _settingsNavigationService;
+        private readonly FrameNavigationService<AuditLogsViewModel> _auditLogsNavigationService;
 
         public FrameNavigationViewModel(
             FrameNavigationStore frameNavigationStore,
@@ -37,7 +38,8 @@ namespace Client.ViewModels.NavigationViewModel
             FrameNavigationService<StudentChoosingPageViewModel> studentChoosingNavigationService,
             FrameNavigationService<DisciplinesForStudentViewModel> disciplinesForStudentNavigationService,
             FrameNavigationService<StudentChoicesViewModel> studentChoicesNavigationService,
-            FrameNavigationService<SettingsPageViewModel> settingsNavigationService
+            FrameNavigationService<SettingsPageViewModel> settingsNavigationService,
+            FrameNavigationService<AuditLogsViewModel> auditLogsNavigationService
             )
         {
             _homeNavigationService = homeNavigationService;
@@ -55,6 +57,7 @@ namespace Client.ViewModels.NavigationViewModel
             _disciplinesForStudentNavigationService = disciplinesForStudentNavigationService;
             _studentChoicesNavigationService = studentChoicesNavigationService;
             _settingsNavigationService = settingsNavigationService;
+            _auditLogsNavigationService = auditLogsNavigationService;
         }
 
         public async Task SupAdminNavigate(string destination)
@@ -73,9 +76,8 @@ namespace Client.ViewModels.NavigationViewModel
                 case "Holding":
                     await _holdingNavigationService.NavigateAsync();
                     break;
-                case "Database":
-                    break;
-                case "Log":
+                case "Logs":
+                    await _auditLogsNavigationService.NavigateAsync();
                     break;
                 case "Settings":
                     await _settingsNavigationService.NavigateAsync();

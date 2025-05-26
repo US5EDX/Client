@@ -32,9 +32,9 @@
         </DataTemplate>
     </Window.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
         <Grid Margin="10 10">
             <ContentControl Content="{Binding CurrentViewModel}"/>
         </Grid>
-    </ScrollViewer>
+    <!--</ScrollViewer>-->
 </Window>

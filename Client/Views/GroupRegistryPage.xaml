@@ -5,7 +5,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Client.Views"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
       xmlns:conv="clr-namespace:Client.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="650" d:DesignWidth="800"
@@ -34,17 +33,14 @@
     UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ByteNullableConv}}" 
          materialDesign:HintAssist.Hint="4" />
             <TextBlock Text="Рік зарахування" Margin="0,0,0,5"/>
-            <xctk:DateTimePicker Value="{Binding AdmissionYear}"
-    Margin="0,0,0,30" HorizontalAlignment="Stretch" TextAlignment="Left"
-                     Format="Custom"
-                     FormatString="yyyy"
-                     TimePickerVisibility="Collapsed"
-                     CalendarDisplayMode="Decade"
-                     CurrentDateTimePart="Year"
-                     ShowDropDownButton="False"
-                     Minimum="2020-01-01"
-                     Maximum="2155-01-01"
-                     ClipValueToMinMax="True"/>
+            <materialDesign:NumericUpDown Minimum="2020" Maximum="2155" ValueStep="1" Value="{Binding AdmissionYear}" Margin="0,0,0,30">
+                <materialDesign:NumericUpDown.DecreaseContent>
+                    <materialDesign:PackIcon Kind="MenuDown"/>
+                </materialDesign:NumericUpDown.DecreaseContent>
+                <materialDesign:NumericUpDown.IncreaseContent>
+                    <materialDesign:PackIcon Kind="MenuUp"/>
+                </materialDesign:NumericUpDown.IncreaseContent>
+            </materialDesign:NumericUpDown>
             <TextBlock Text="Кількість дисциплін непарного семестру" Margin="0,0,0,5"/>
             <TextBox Margin="0,0,0,30" Text="{Binding Nonparsemester, Mode=TwoWay, 
             UpdateSourceTrigger=PropertyChanged, Converter={StaticResource ByteNullableConv}}" 

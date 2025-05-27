@@ -62,11 +62,6 @@
 ItemsSource="{Binding Logs, UpdateSourceTrigger=PropertyChanged}"
 AutoGenerateColumns="False" TextBlock.TextAlignment="Center"
 SelectedItem="{Binding SelectedLog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Копіювати значення" Click="CopyCellValue_Click" />
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Часова мітка" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
               Width="0.12*" Binding="{Binding Timestamp, StringFormat={}{0:dd MMMM yyyy HH:mm:ss} UTC}" 

@@ -5,7 +5,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Client.Views"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
       xmlns:customcontrols="clr-namespace:Client.CustomControls"
       xmlns:views="clr-namespace:Client.Views"
       xmlns:vms="clr-namespace:Client.ViewModels"

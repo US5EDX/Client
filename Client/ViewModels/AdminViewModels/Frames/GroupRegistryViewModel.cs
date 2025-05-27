@@ -64,7 +64,7 @@ namespace Client.ViewModels
         [NotifyPropertyChangedFor(nameof(CanSubmit))]
         [NotifyCanExecuteChangedFor(nameof(AddCommand))]
         [NotifyCanExecuteChangedFor(nameof(UpdateCommand))]
-        private DateTime _admissionYear;
+        private int _admissionYear;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -121,7 +121,7 @@ namespace Client.ViewModels
         {
             GroupRegistryViewModel viewModel = (GroupRegistryViewModel)context.ObjectInstance;
 
-            if (viewModel.AdmissionYear.Year > 2019 && viewModel.AdmissionYear.Year < DateTime.UtcNow.Year + 1)
+            if (viewModel.AdmissionYear > 2019 && viewModel.AdmissionYear < DateTime.UtcNow.Year + 1)
                 return ValidationResult.Success;
 
             return new("Навчальний рік повинен бути у межах 2020 - 2155");
@@ -289,7 +289,7 @@ namespace Client.ViewModels
             _specialty = Specialties.FirstOrDefault(sp => sp.SpecialtyId == groupInfo?.Specialty.SpecialtyId);
             _eduLevel = EduLevels.FirstOrDefault(level => level.EduLevelId == groupInfo?.EduLevel);
             _durationOfStudy = groupInfo?.DurationOfStudy;
-            _admissionYear = new DateTime(groupInfo?.AdmissionYear ?? DateTime.Now.Year, 1, 1);
+            _admissionYear = groupInfo?.AdmissionYear ?? DateTime.Now.Year;
             _nonparsemester = groupInfo?.Nonparsemester;
             _parsemester = groupInfo?.Parsemester;
             _hasEnterChoise = groupInfo?.HasEnterChoise ?? false;
@@ -316,7 +316,7 @@ namespace Client.ViewModels
                 SpecialtyId = Specialty.SpecialtyId,
                 EduLevel = EduLevel.EduLevelId,
                 DurationOfStudy = DurationOfStudy.Value,
-                AdmissionYear = (short)AdmissionYear.Year,
+                AdmissionYear = (short)AdmissionYear,
                 Nonparsemester = Nonparsemester.Value,
                 Parsemester = Parsemester.Value,
                 HasEnterChoise = HasEnterChoise,

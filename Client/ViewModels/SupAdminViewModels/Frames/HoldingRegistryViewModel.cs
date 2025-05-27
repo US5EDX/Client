@@ -19,7 +19,7 @@ namespace Client.ViewModels
         [NotifyPropertyChangedFor(nameof(CanSubmit))]
         [NotifyCanExecuteChangedFor(nameof(AddCommand))]
         [NotifyCanExecuteChangedFor(nameof(UpdateCommand))]
-        private DateTime _eduYear;
+        private int _eduYear;
 
         [ObservableProperty]
         [NotifyDataErrorInfo]
@@ -52,7 +52,7 @@ namespace Client.ViewModels
         {
             HoldingRegistryViewModel viewModel = (HoldingRegistryViewModel)context.ObjectInstance;
 
-            if (viewModel.EduYear.Year > 2019 && viewModel.EduYear.Year < 2156)
+            if (viewModel.EduYear > 2019 && viewModel.EduYear < 2156)
                 return ValidationResult.Success;
 
             return new("Навчальний рік повинен бути у межах 2020 - 2155");
@@ -77,7 +77,7 @@ namespace Client.ViewModels
 
             Header = IsAddMode ? "Додати навчальний рік" : "Редагувати навчальний рік";
 
-            EduYear = new DateTime(holdingInfo?.EduYear ?? DateTime.Now.Year, 1, 1);
+            EduYear = holdingInfo?.EduYear ?? DateTime.Today.Year;
             StartDate = holdingInfo?.StartDate.ToDateTime(TimeOnly.MinValue) ?? DateTime.Now;
             EndDate = holdingInfo?.EndDate.ToDateTime(TimeOnly.MinValue) ?? DateTime.Now.AddDays(1);
         }
@@ -128,7 +128,7 @@ namespace Client.ViewModels
         {
             return new HoldingInfo
             {
-                EduYear = (short)EduYear.Year,
+                EduYear = (short)EduYear,
                 StartDate = DateOnly.FromDateTime(StartDate),
                 EndDate = DateOnly.FromDateTime(EndDate)
             };

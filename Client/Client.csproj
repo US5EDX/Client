@@ -20,7 +20,6 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.7.25103.5738" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="FreeSpire.Doc" Version="12.2.0" />
     <PackageReference Include="MaterialDesignThemes" Version="5.2.1" />

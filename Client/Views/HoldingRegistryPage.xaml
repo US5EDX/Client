@@ -5,7 +5,6 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Client.Views"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
       xmlns:customcontrols="clr-namespace:Client.CustomControls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -18,17 +17,15 @@
     <StackPanel Margin="30, 10">
         <TextBlock Text="{Binding Header}" FontSize="20" HorizontalAlignment="Center" FontWeight="Bold" Margin="0,0,0, 10"/>
         <TextBlock Text="Рік" Margin="0,0,0,5"/>
-        <xctk:DateTimePicker Value="{Binding EduYear}" IsEnabled="{Binding IsAddMode}"
-            Margin="0,0,0,30" HorizontalAlignment="Stretch" TextAlignment="Left"
-                             Format="Custom"
-                             FormatString="yyyy"
-                             TimePickerVisibility="Collapsed"
-                             CalendarDisplayMode="Decade"
-                             CurrentDateTimePart="Year"
-                             ShowDropDownButton="False"
-                             Minimum="2020-01-01"
-                             Maximum="2155-01-01"
-                             ClipValueToMinMax="True"/>
+        <materialDesign:NumericUpDown Minimum="2020" Maximum="2155" ValueStep="1" 
+                                      Value="{Binding EduYear}" IsEnabled="{Binding IsAddMode}" Margin="0,0,0,30">
+            <materialDesign:NumericUpDown.DecreaseContent>
+                <materialDesign:PackIcon Kind="MenuDown"/>
+            </materialDesign:NumericUpDown.DecreaseContent>
+            <materialDesign:NumericUpDown.IncreaseContent>
+                <materialDesign:PackIcon Kind="MenuUp"/>
+            </materialDesign:NumericUpDown.IncreaseContent>
+        </materialDesign:NumericUpDown>
         <TextBlock Text="Початок"/>
         <DatePicker Margin="0,0,0,30" SelectedDate="{Binding StartDate}"/>
         <TextBlock Text="Кінець"/>

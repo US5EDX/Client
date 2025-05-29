@@ -1,7 +1,4 @@
-﻿using Client.Services;
-using Client.Stores;
-using Client.ViewModels;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Nodes;

@@ -1,0 +1,127 @@
+﻿<Page x:Class="Client.Views.AuditLogsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Client.Views"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:customcontrols="clr-namespace:Client.CustomControls"
+      xmlns:conv="clr-namespace:Client.Converters"
+      xmlns:views="clr-namespace:Client.Views"
+      xmlns:vms="clr-namespace:Client.ViewModels"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      d:DataContext="{d:DesignInstance Type=vms:AuditLogsViewModel}"
+      xml:lang="uk-UA"
+      Title="AuditLogsPage">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVis"/>
+        <conv:SemesterToSemesterNameConverter x:Key="SemToSemName"/>
+
+        <DataTemplate DataType="{x:Type vms:LogDetailsViewModel}">
+            <views:LogDetailsPage />
+        </DataTemplate>
+    </Page.Resources>
+
+    <materialDesign:DialogHost IsOpen="{Binding IsModalOpen, Mode=OneWay}">
+        <materialDesign:DialogHost.DialogContent>
+            <Frame Content="{Binding SelectedModal}" MaxWidth="800" MaxHeight="600"
+       Style="{StaticResource FrameStyle}"
+       Width="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
+    RelativeSource={RelativeSource AncestorType=Page}, Path=ActualWidth, 
+    Converter={StaticResource AxisPercentageConverter}, ConverterParameter='0,9'}"
+       Height="{Binding Mode=OneWay, UpdateSourceTrigger=PropertyChanged, 
+    RelativeSource={RelativeSource AncestorType=Page}, Path=ActualHeight, 
+    Converter={StaticResource AxisPercentageConverter}, ConverterParameter='0,9'}"/>
+        </materialDesign:DialogHost.DialogContent>
+
+        <Grid IsEnabled="{Binding IsNotLocked}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.75*" />
+                <ColumnDefinition Width="0.25*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <DataGrid ItemsSource="{Binding Logs, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedLog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Style="{StaticResource ReadOnlyDataGridStyle}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Часова мітка" Width="0.12*"
+                                            Binding="{Binding Timestamp, StringFormat={}{0:dd MMMM yyyy HH:mm:ss} UTC}"
+                                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"
+                                            ElementStyle="{StaticResource CenteredCellStyle}" />
+
+                        <DataGridTextColumn Header="Виконавець" Width="0.22*"
+                                            Binding="{Binding UserId}"
+                                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"
+                                            ElementStyle="{StaticResource CenteredCellStyle}" />
+
+                        <DataGridTextColumn Header="Адреса виконавця" Width="0.11*"
+                                            Binding="{Binding IpAddress}"
+                                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"
+                                            ElementStyle="{StaticResource CenteredCellStyle}" />
+
+                        <DataGridTextColumn Header="Тип дії" Width="0.09*"
+                                            Binding="{Binding ActionType}"
+                                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"
+                                            ElementStyle="{StaticResource CenteredCellStyle}" />
+
+                        <DataGridTextColumn Header="Об'єкт" Width="0.1*"
+                                            Binding="{Binding EntityName}"
+                                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"
+                                            ElementStyle="{StaticResource CenteredCellStyle}" />
+
+                        <DataGridTextColumn Header="Id об'єкта" Width="0.22*"
+                                            Binding="{Binding EntityId}"
+                                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"
+                                            ElementStyle="{StaticResource CenteredCellStyle}" />
+
+                        <DataGridTextColumn Header="Опис дії" Width="0.14*"
+                                            Binding="{Binding Description}"
+                                            HeaderStyle="{StaticResource CenterGridHeaderStyle}"
+                                            ElementStyle="{StaticResource CenteredCellStyle}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <customcontrols:TableNavigation Grid.Row="1" PreviousPageCommand="{Binding PreviousPageCommand}"
+                                NextPageCommand="{Binding NextPageCommand}"
+                                CurrentPage="{Binding CurrentPage}"
+                                TotalPages="{Binding TotalPages}"/>
+            </Grid>
+
+            <ScrollViewer Grid.Column="1" Margin="5,0,0,0" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="0,0,5,0">
+                    <customcontrols:SearchBlock Margin="0,0,0,30" CanSearch="True" CanDeepSearch="False"
+                                            Collection="{Binding Logs}" Filter="{Binding Filter}"/>
+
+                    <TextBlock Visibility="{Binding IsWaiting, Converter={StaticResource boolToVis}}"
+                           Style="{StaticResource WaitingMessageStyle}"/>
+
+                    <TextBlock Text="{Binding ErrorMessage}"
+                           Visibility="{Binding HasErrorMessage, Converter={StaticResource boolToVis}}"
+                           Style="{StaticResource ErrorMessageStyle}"/>
+
+                    <TextBlock Text="Тип дії:" TextWrapping="WrapWithOverflow"/>
+                    <ComboBox Margin="0,0,0,15" ItemsSource="{Binding ActionTypes}" SelectedItem="{Binding SelectedActionType}" />
+
+                    <TextBlock Text="З:" TextWrapping="WrapWithOverflow"/>
+                    <DatePicker Margin="0,0,0,15" SelectedDate="{Binding LeftBorder}" />
+
+                    <TextBlock Text="По:" TextWrapping="WrapWithOverflow"/>
+                    <DatePicker Margin="0,0,0,15" SelectedDate="{Binding RightBorder}" />
+
+                    <CheckBox Margin="0,0,0,15" Content="Чи містить опис?" VerticalContentAlignment="Center"
+                          IsChecked="{Binding HasDescription}"/>
+
+                    <Button Content="Переглянути зміни" Command="{Binding OpenLogDetailsCommand}"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </materialDesign:DialogHost>
+</Page>

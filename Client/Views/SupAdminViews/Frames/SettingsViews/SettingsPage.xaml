@@ -1,0 +1,48 @@
+﻿<Page x:Class="Client.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:views="clr-namespace:Client.Views"
+      xmlns:vms="clr-namespace:Client.ViewModels"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      mc:Ignorable="d"
+      d:DataContext="{d:DesignInstance Type=vms:SettingsPageViewModel}"
+      Title="SettingsPage">
+
+    <Page.Resources>
+        <DataTemplate DataType="{x:Type vms:ThresholdsViewModel}">
+            <views:ThresholdsPage />
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+            <TextBlock Text="Налаштування" FontSize="18" FontWeight="Bold" Margin="0,0,0,20" />
+            <ListBox ItemsSource="{Binding SettingTabs}"
+                     SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
+                     materialDesign:ColorZoneAssist.Mode="PrimaryLight">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <materialDesign:PackIcon Kind="{Binding Icon}" Width="24" Height="24" Margin="0,0,10,0"/>
+                            <TextBlock Text="{Binding Title}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <Border Grid.Column="1"
+                Background="{DynamicResource MaterialDesignPaper}"
+                Padding="20"
+                CornerRadius="10">
+            <Frame Content="{Binding SelectedTab.Content}" Style="{StaticResource PageStyle}" />
+        </Border>
+    </Grid>
+</Page>

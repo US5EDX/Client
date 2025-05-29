@@ -42,10 +42,10 @@ namespace Client.ViewModels
             SemesterInfos = [];
 
             if (_disciplineStore.Semester == 0 || _disciplineStore.Semester == 1)
-                SemesterInfos.Add(new SemesterInfo() { SemesterId = 1, SemesterName = "Непарний" });
+                SemesterInfos.Add(new SemesterInfo() { SemesterId = 1, SemesterName = "Осінній" });
 
             if (_disciplineStore.Semester == 0 || _disciplineStore.Semester == 2)
-                SemesterInfos.Add(new SemesterInfo() { SemesterId = 2, SemesterName = "Парний" });
+                SemesterInfos.Add(new SemesterInfo() { SemesterId = 2, SemesterName = "Весняний" });
 
             if (SemesterInfos.Count == 0)
                 throw new InvalidDataException("Неправильно передані дані");

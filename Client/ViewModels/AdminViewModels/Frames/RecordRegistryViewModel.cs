@@ -54,10 +54,10 @@ namespace Client.ViewModels
             Semesters = new List<SemesterInfo>(2);
 
             if (IsAddMode || record.ChosenSemester == 1)
-                Semesters.Add(new() { SemesterId = 1, SemesterName = "Непарний" });
+                Semesters.Add(new() { SemesterId = 1, SemesterName = "Осінній" });
 
             if (IsAddMode || record.ChosenSemester == 2)
-                Semesters.Add(new() { SemesterId = 2, SemesterName = "Парний" });
+                Semesters.Add(new() { SemesterId = 2, SemesterName = "Весняний" });
 
             _semester = Semesters[0];
 

@@ -1,0 +1,51 @@
+﻿<Page x:Class="Client.Views.NewStudentsPreviewPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Client.Views"
+      xmlns:viewmodels="clr-namespace:Client.ViewModels"
+      mc:Ignorable="d" 
+      d:DataContext="{d:DesignInstance Type=viewmodels:NewStudentsViewModel}"
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="NewStudentsPreviewPage">
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="boolToVis"/>
+    </Page.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Нові студенти" Style="{StaticResource RegistryHeaderStyle}"/>
+
+        <DataGrid Grid.Row="1" Style="{StaticResource ReadOnlyDataGridStyle}"
+ItemsSource="{Binding NewStudents, UpdateSourceTrigger=PropertyChanged}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Email" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+              Width="*" Binding="{Binding Email}" ElementStyle="{StaticResource CenteredCellStyle}" />
+
+                <DataGridTextColumn Header="ПІБ" HeaderStyle="{StaticResource CenterGridHeaderStyle}" 
+              Width="*" Binding="{Binding FullName}" ElementStyle="{StaticResource CenteredCellStyle}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2">
+            <TextBlock Margin="5,10,5,5" Visibility="{Binding IsWaiting, Converter={StaticResource boolToVis}}"
+           Style="{StaticResource WaitingMessageStyle}"/>
+
+            <TextBlock Text="{Binding ErrorMessage}"
+           Visibility="{Binding HasErrorMessage, Converter={StaticResource boolToVis}}"
+           Style="{StaticResource ErrorMessageStyle}"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                <Button Content="Додати" Width="150" Command="{Binding AddNewStudentsCommand}" Margin="0,0,20,0" />
+                <Button Content="Відмінити" Width="150" Command="{Binding CloseCommand}"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>
